@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>go-redis 连接池的实现源码解析 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="前言 在fpm模式下，php中不存在连接池这种东西，顶多是用pconnect的方法使连接保留在fpm进程内，达到复用连接的目的。但如果是go这" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/go/connection-pool-in-go-redis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="go-redis 连接池的实现源码解析" />
+<meta property="og:description" content="前言 在fpm模式下，php中不存在连接池这种东西，顶多是用pconnect的方法使连接保留在fpm进程内，达到复用连接的目的。但如果是go这" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/go/connection-pool-in-go-redis/" />
+<meta property="article:published_time" content="2020-08-18T21:43:54+08:00" />
+<meta property="article:modified_time" content="2020-08-18T21:43:54+08:00" />
+<meta itemprop="name" content="go-redis 连接池的实现源码解析">
+<meta itemprop="description" content="前言 在fpm模式下，php中不存在连接池这种东西，顶多是用pconnect的方法使连接保留在fpm进程内，达到复用连接的目的。但如果是go这">
+<meta itemprop="datePublished" content="2020-08-18T21:43:54&#43;08:00" />
+<meta itemprop="dateModified" content="2020-08-18T21:43:54&#43;08:00" />
+<meta itemprop="wordCount" content="3027">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="go-redis 连接池的实现源码解析"/>
+<meta name="twitter:description" content="前言 在fpm模式下，php中不存在连接池这种东西，顶多是用pconnect的方法使连接保留在fpm进程内，达到复用连接的目的。但如果是go这"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">go-redis 连接池的实现源码解析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-08-18 </span>
+        <div class="post-category">
+            <a href="/categories/go/"> go </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">前言</a></li>
+    <li><a href="#heading-1">先思考一下</a></li>
+    <li><a href="#heading-2">接口定义</a></li>
+    <li><a href="#heading-3">创建连接池</a></li>
+    <li><a href="#heading-4">创建连接</a></li>
+    <li><a href="#heading-5">获取连接</a></li>
+    <li><a href="#heading-6">放回连接</a></li>
+    <li><a href="#heading-7">清理过期连接</a></li>
+    <li><a href="#heading-8">总结</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="heading">前言</h2>
+<p>在fpm模式下，php中不存在连接池这种东西，顶多是用<code>pconnect</code>的方法使连接保留在fpm进程内，达到复用连接的目的。但如果是go这种常驻内存的语言，连接池就是必不可少的部分。</p>
+<p><a href="https://github.com/go-redis/redis">go-redis</a>是我比较喜欢用的库。这两天看了一下连接池的实现，做个总结。</p>
+<h2 id="heading-1">先思考一下</h2>
+<p>在进入源码之前，我们可以先思考一下连接池应该具备哪些功能。其实从客户端的角度讲，只需要连接池提供两个方法，如下接口所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Pooler</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">Get</span><span class="p">(</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Conn</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="c1">// 获取一个连接
+</span><span class="c1"></span>    <span class="nf">Put</span><span class="p">(</span><span class="o">*</span><span class="nx">Conn</span><span class="p">)</span> <span class="c1">// 将使用过的连接放回池中
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当然，连接池本身肯定也需要有些数据结构来存放现有的连接，在获取和释放的时候也要有相应的同步机制保证数据一致性，最常用的肯定是锁。</p>
+<h2 id="heading-2">接口定义</h2>
+<p>先看一下go-redis中连接池的接口定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Pooler</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">NewConn</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Conn</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="c1">// 获取一个新连接
+</span><span class="c1"></span>    <span class="nf">CloseConn</span><span class="p">(</span><span class="o">*</span><span class="nx">Conn</span><span class="p">)</span> <span class="kt">error</span> <span class="c1">// 关闭连接
+</span><span class="c1"></span>    <span class="nf">Get</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Conn</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="c1">// 从连接池中获取连接
+</span><span class="c1"></span>    <span class="nf">Put</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="o">*</span><span class="nx">Conn</span><span class="p">)</span> <span class="c1">// 连接放回池中
+</span><span class="c1"></span>    <span class="nf">Remove</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="o">*</span><span class="nx">Conn</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="c1">// 删除连接
+</span><span class="c1"></span>    <span class="nf">Len</span><span class="p">(</span><span class="p">)</span> <span class="kt">int</span> <span class="c1">// 当前连接池长度
+</span><span class="c1"></span>    <span class="nf">IdleLen</span><span class="p">(</span><span class="p">)</span> <span class="kt">int</span> <span class="c1">// 当前空闲连接池长度
+</span><span class="c1"></span>    <span class="nf">Stats</span><span class="p">(</span><span class="p">)</span> <span class="o">*</span><span class="nx">Stats</span> <span class="c1">// 统计数据，可以先忽略
+</span><span class="c1"></span>    <span class="nf">Close</span><span class="p">(</span><span class="p">)</span> <span class="kt">error</span> <span class="c1">// 关闭连接池
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>对应的连接池实现结构：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">ConnPool</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">opt</span> <span class="o">*</span><span class="nx">Options</span> <span class="c1">// 连接池的参数
+</span><span class="c1"></span>    <span class="nx">dialErrorsNum</span> <span class="kt">uint32</span> <span class="c1">// 创建连接时错误的数量，通过原子操作增减。
+</span><span class="c1"></span>    <span class="nx">lastDialError</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span> <span class="c1">// 最近一次创建连接时的错误，通过原子操作赋值
+</span><span class="c1"></span>    <span class="nx">queue</span> <span class="kd">chan</span> <span class="kd">struct</span><span class="p">{</span><span class="p">}</span> <span class="c1">// 获取连接前需要先排队，通过channel实现
+</span><span class="c1"></span>    <span class="nx">connsMu</span>      <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span> <span class="c1">// 保护下边的几个数据
+</span><span class="c1"></span>    <span class="nx">conns</span>        <span class="p">[</span><span class="p">]</span><span class="o">*</span><span class="nx">Conn</span> <span class="c1">// 存放所有连接
+</span><span class="c1"></span>    <span class="nx">idleConns</span>    <span class="p">[</span><span class="p">]</span><span class="o">*</span><span class="nx">Conn</span> <span class="c1">// 存放空闲连接
+</span><span class="c1"></span>    <span class="nx">poolSize</span>     <span class="kt">int</span> <span class="c1">// 当前连接池大小
+</span><span class="c1"></span>    <span class="nx">idleConnsLen</span> <span class="kt">int</span> <span class="c1">// 空间连接数量
+</span><span class="c1"></span>    
+    <span class="nx">stats</span> <span class="nx">Stats</span> <span class="c1">// 统计数据，可以先忽略
+</span><span class="c1"></span>    
+    <span class="nx">_closed</span>  <span class="kt">uint32</span> <span class="c1">// 连接池是否已关闭，原子操作
+</span><span class="c1"></span>    <span class="nx">closedCh</span> <span class="kd">chan</span> <span class="kd">struct</span><span class="p">{</span><span class="p">}</span> <span class="c1">// 连接池是否已关闭，用来通知后台处理过期连接的goroutine退出
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// 对tcp连接的封闭
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Conn</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">usedAt</span>  <span class="kt">int64</span> <span class="c1">// 最近使用时间，用于过期清理
+</span><span class="c1"></span>    <span class="nx">netConn</span> <span class="nx">net</span><span class="p">.</span><span class="nx">Conn</span> <span class="c1">// 底层的tcp连接
+</span><span class="c1"></span>    
+    <span class="nx">rd</span> <span class="o">*</span><span class="nx">proto</span><span class="p">.</span><span class="nx">Reader</span> <span class="c1">// 三个读写的buffer
+</span><span class="c1"></span>    <span class="nx">bw</span> <span class="o">*</span><span class="nx">bufio</span><span class="p">.</span><span class="nx">Writer</span>
+    <span class="nx">wr</span> <span class="o">*</span><span class="nx">proto</span><span class="p">.</span><span class="nx">Writer</span>
+    
+    <span class="nx">Inited</span>    <span class="kt">bool</span> <span class="c1">// 是否初始化
+</span><span class="c1"></span>    <span class="nx">pooled</span>    <span class="kt">bool</span> <span class="c1">// 是否属于连接池
+</span><span class="c1"></span>    <span class="nx">createdAt</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span> <span class="c1">// 创建时间
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="heading-3">创建连接池</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 创建新连接池
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewConnPool</span><span class="p">(</span><span class="nx">opt</span> <span class="o">*</span><span class="nx">Options</span><span class="p">)</span> <span class="o">*</span><span class="nx">ConnPool</span> <span class="p">{</span>
+	<span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">ConnPool</span><span class="p">{</span>
+		<span class="nx">opt</span><span class="p">:</span> <span class="nx">opt</span><span class="p">,</span>
+
+		<span class="nx">queue</span><span class="p">:</span>     <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{</span><span class="p">}</span><span class="p">,</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">PoolSize</span><span class="p">)</span><span class="p">,</span>
+		<span class="nx">conns</span><span class="p">:</span>     <span class="nb">make</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="o">*</span><span class="nx">Conn</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">PoolSize</span><span class="p">)</span><span class="p">,</span>
+		<span class="nx">idleConns</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="o">*</span><span class="nx">Conn</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">PoolSize</span><span class="p">)</span><span class="p">,</span>
+		<span class="nx">closedCh</span><span class="p">:</span>  <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{</span><span class="p">}</span><span class="p">)</span><span class="p">,</span>
+	<span class="p">}</span>
+
+    <span class="c1">// 这里要生成配置参数里最少空闲数量的连接
+</span><span class="c1"></span>	<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">checkMinIdleConns</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">(</span><span class="p">)</span>
+
+	<span class="c1">// 清理过期连接
+</span><span class="c1"></span>	<span class="k">if</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">IdleTimeout</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">IdleCheckFrequency</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">go</span> <span class="nx">p</span><span class="p">.</span><span class="nf">reaper</span><span class="p">(</span><span class="nx">opt</span><span class="p">.</span><span class="nx">IdleCheckFrequency</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">p</span>
+<span class="p">}</span>
+
+<span class="c1">// 生成空闲连接
+</span><span class="c1"></span><span class="c1">// 这个方法不是协程安全的，需要加了锁再调用
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">checkMinIdleConns</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">opt</span><span class="p">.</span><span class="nx">MinIdleConns</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="c1">// 生成MinIdleConns个空闲连接
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">p</span><span class="p">.</span><span class="nx">poolSize</span> <span class="p">&lt;</span> <span class="nx">p</span><span class="p">.</span><span class="nx">opt</span><span class="p">.</span><span class="nx">PoolSize</span> <span class="o">&amp;&amp;</span> <span class="nx">p</span><span class="p">.</span><span class="nx">idleConnsLen</span> <span class="p">&lt;</span> <span class="nx">p</span><span class="p">.</span><span class="nx">opt</span><span class="p">.</span><span class="nx">MinIdleConns</span> <span class="p">{</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nx">poolSize</span><span class="o">++</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nx">idleConnsLen</span><span class="o">++</span>
+		<span class="c1">// 建立新连接是耗时操作，所以这里启动新协程并发创建连接
+</span><span class="c1"></span>		<span class="c1">// 但是加入队列是按锁顺序的
+</span><span class="c1"></span>		<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">addIdleConn</span><span class="p">(</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="c1">// 如果创建失败，需要把相应的数量减掉
+</span><span class="c1"></span>				<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">(</span><span class="p">)</span>
+				<span class="nx">p</span><span class="p">.</span><span class="nx">poolSize</span><span class="o">--</span>
+				<span class="nx">p</span><span class="p">.</span><span class="nx">idleConnsLen</span><span class="o">--</span>
+				<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">(</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="p">}</span><span class="p">(</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 创建空闲连接
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">addIdleConn</span><span class="p">(</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="nx">cn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">dialConn</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">TODO</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="c1">// 建立连接
+</span><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+    <span class="c1">// 本方法在单独协程里运行，所以需要加锁。将成功创建的连接放到连接池中
+</span><span class="c1"></span>	<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">conns</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">conns</span><span class="p">,</span> <span class="nx">cn</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">,</span> <span class="nx">cn</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="heading-4">创建连接</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 核心的创建连接的流程在这个方法里
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">dialConn</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">pooled</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Conn</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nf">closed</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">ErrClosed</span>
+	<span class="p">}</span>
+
+	<span class="c1">// 如果创建产生的错误量比池大小还多，就没有必要再尝试创建了
+</span><span class="c1"></span>	<span class="k">if</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">LoadUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">p</span><span class="p">.</span><span class="nx">dialErrorsNum</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">opt</span><span class="p">.</span><span class="nx">PoolSize</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nf">getLastDialError</span><span class="p">(</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Dialer 在 newConnPool 中定义，而真正的 Dialer 方法，其实是在 redis.Options.init 方法里通过net.Dialer建立连接
+</span><span class="c1"></span>	<span class="nx">netConn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">opt</span><span class="p">.</span><span class="nf">Dialer</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nf">setLastDialError</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+		<span class="c1">// 如果拨号错误数量等于池大小，说明错误很多，不再做同步的请求，而是启动一个新goroutine继续尝试连接
+</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">AddUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">p</span><span class="p">.</span><span class="nx">dialErrorsNum</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">opt</span><span class="p">.</span><span class="nx">PoolSize</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">go</span> <span class="nx">p</span><span class="p">.</span><span class="nf">tryDial</span><span class="p">(</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+	<span class="nx">internal</span><span class="p">.</span><span class="nx">NewConnectionsCounter</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="nx">cn</span> <span class="o">:=</span> <span class="nf">NewConn</span><span class="p">(</span><span class="nx">netConn</span><span class="p">)</span> <span class="c1">// 创建一个封装的连接对象
+</span><span class="c1"></span>	<span class="nx">cn</span><span class="p">.</span><span class="nx">pooled</span> <span class="p">=</span> <span class="nx">pooled</span>
+	<span class="k">return</span> <span class="nx">cn</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="c1">// 创建连接错误数达到连接池大小时会启动单独的协程尝试连接
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">tryDial</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nf">closed</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+
+		<span class="c1">// 这里会一直拨号到天荒地老，感觉可能是个坑点
+</span><span class="c1"></span>		<span class="nx">conn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">opt</span><span class="p">.</span><span class="nf">Dialer</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">Background</span><span class="p">(</span><span class="p">)</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">p</span><span class="p">.</span><span class="nf">setLastDialError</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+			<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+			<span class="k">continue</span>
+		<span class="p">}</span>
+
+		<span class="c1">// 只要有一次能拨号成功，就会清除掉错误计数
+</span><span class="c1"></span>		<span class="nx">atomic</span><span class="p">.</span><span class="nf">StoreUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">p</span><span class="p">.</span><span class="nx">dialErrorsNum</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="nx">_</span> <span class="p">=</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">Close</span><span class="p">(</span><span class="p">)</span> <span class="c1">// 好不容易才拨号成功，直接就关闭了？
+</span><span class="c1"></span>		<span class="k">return</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="heading-5">获取连接</h2>
+<p>获取连接的思路也比较清晰，先排队获取已有的连接，如果没有可用连接就创建新连接。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">Get</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Conn</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nf">closed</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">ErrClosed</span>
+	<span class="p">}</span>
+
+	<span class="c1">// 获取连接前要先排个队，排队可以保证同时获取连接的协程数不超过连接池大小。排队失败，说明连接池满了，可以直接返回。
+</span><span class="c1"></span>	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">waitTurn</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+	<span class="c1">// 排到队再尝试去拿连接
+</span><span class="c1"></span>	<span class="k">for</span> <span class="p">{</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">(</span><span class="p">)</span>
+		<span class="nx">cn</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">popIdle</span><span class="p">(</span><span class="p">)</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">(</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="nx">cn</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+
+		<span class="c1">// 如果过期了就要关闭
+</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nf">isStaleConn</span><span class="p">(</span><span class="nx">cn</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">_</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">CloseConn</span><span class="p">(</span><span class="nx">cn</span><span class="p">)</span>
+			<span class="k">continue</span>
+		<span class="p">}</span>
+
+		<span class="nx">atomic</span><span class="p">.</span><span class="nf">AddUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">p</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">Hits</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nx">cn</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+
+	<span class="nx">atomic</span><span class="p">.</span><span class="nf">AddUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">p</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">Misses</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+	<span class="c1">// 如果没有空闲连接，创建新连接，也是调用p.dialConn方法
+</span><span class="c1"></span>	<span class="nx">newcn</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">newConn</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+	   <span class="c1">// 注意这里。之前排队会向p.queue插入一个元素，如果获取失败，就需要取出元素
+</span><span class="c1"></span>		<span class="nx">p</span><span class="p">.</span><span class="nf">freeTurn</span><span class="p">(</span><span class="p">)</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">newcn</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="c1">// 获取连接前排队
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">waitTurn</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">select</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nx">ctx</span><span class="p">.</span><span class="nf">Err</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">default</span><span class="p">:</span>
+	<span class="p">}</span>
+
+<span class="c1">// 如果能直接放到channel里，说明当前连接数还没有超过池上限
+</span><span class="c1"></span><span class="c1">// 这里其实可以跳过直接走下边的三个case，这里单独处理一次，我理解是如果能直接排到队，就避免了计时器的存取处理，效率更高
+</span><span class="c1"></span>	<span class="k">select</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="nx">p</span><span class="p">.</span><span class="nx">queue</span> <span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{</span><span class="p">}</span><span class="p">{</span><span class="p">}</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="k">default</span><span class="p">:</span>
+	<span class="p">}</span>
+
+<span class="c1">// 这里通过sync.Pool复用了timer对象
+</span><span class="c1"></span>	<span class="nx">timer</span> <span class="o">:=</span> <span class="nx">timers</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="p">(</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Timer</span><span class="p">)</span>
+	<span class="nx">timer</span><span class="p">.</span><span class="nf">Reset</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">opt</span><span class="p">.</span><span class="nx">PoolTimeout</span><span class="p">)</span>
+
+<span class="c1">// 这里是三个条件的判断
+</span><span class="c1"></span>	<span class="k">select</span> <span class="p">{</span>
+	<span class="c1">// context超时
+</span><span class="c1"></span>	<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span><span class="p">:</span>
+	<span class="c1">// 注意这里的细节，如果计时器停止失败，说明事件已经触发过了，需要把channel里的值取出来，不然影响下次使用
+</span><span class="c1"></span>		<span class="k">if</span> <span class="p">!</span><span class="nx">timer</span><span class="p">.</span><span class="nf">Stop</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+			<span class="o">&lt;-</span><span class="nx">timer</span><span class="p">.</span><span class="nx">C</span>
+		<span class="p">}</span>
+		<span class="nx">timers</span><span class="p">.</span><span class="nf">Put</span><span class="p">(</span><span class="nx">timer</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nx">ctx</span><span class="p">.</span><span class="nf">Err</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">case</span> <span class="nx">p</span><span class="p">.</span><span class="nx">queue</span> <span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{</span><span class="p">}</span><span class="p">{</span><span class="p">}</span><span class="p">:</span>
+	<span class="c1">// 只有这种情况是排队成功
+</span><span class="c1"></span>		<span class="k">if</span> <span class="p">!</span><span class="nx">timer</span><span class="p">.</span><span class="nf">Stop</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+			<span class="o">&lt;-</span><span class="nx">timer</span><span class="p">.</span><span class="nx">C</span>
+		<span class="p">}</span>
+		<span class="nx">timers</span><span class="p">.</span><span class="nf">Put</span><span class="p">(</span><span class="nx">timer</span><span class="p">)</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">timer</span><span class="p">.</span><span class="nx">C</span><span class="p">:</span> <span class="c1">// 计时器超时，就可以返回超时错误了
+</span><span class="c1"></span>		<span class="nx">timers</span><span class="p">.</span><span class="nf">Put</span><span class="p">(</span><span class="nx">timer</span><span class="p">)</span>
+		<span class="nx">atomic</span><span class="p">.</span><span class="nf">AddUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">p</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">Timeouts</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nx">ErrPoolTimeout</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">popIdle</span><span class="p">(</span><span class="p">)</span> <span class="o">*</span><span class="nx">Conn</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+
+<span class="c1">// 注意这里是否idelConns的末尾取的
+</span><span class="c1"></span>	<span class="nx">idx</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+	<span class="nx">cn</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">[</span><span class="nx">idx</span><span class="p">]</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">[</span><span class="p">:</span><span class="nx">idx</span><span class="p">]</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">idleConnsLen</span><span class="o">--</span>
+<span class="c1">// 每次取用，都要检查一下剩余的空闲连接是否满足配置要求
+</span><span class="c1"></span>	<span class="nx">p</span><span class="p">.</span><span class="nf">checkMinIdleConns</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">cn</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="heading-6">放回连接</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">Put</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">cn</span> <span class="o">*</span><span class="nx">Conn</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1">// 容错处理，避免后续用到有问题的连接
+</span><span class="c1"></span>	<span class="k">if</span> <span class="nx">cn</span><span class="p">.</span><span class="nx">rd</span><span class="p">.</span><span class="nf">Buffered</span><span class="p">(</span><span class="p">)</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">internal</span><span class="p">.</span><span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&#34;Conn has unread data&#34;</span><span class="p">)</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nf">Remove</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">cn</span><span class="p">,</span> <span class="nx">BadConnError</span><span class="p">{</span><span class="p">}</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+<span class="c1">// pooled为true的才会放回池里，否则直接关闭
+</span><span class="c1"></span>	<span class="k">if</span> <span class="p">!</span><span class="nx">cn</span><span class="p">.</span><span class="nx">pooled</span> <span class="p">{</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nf">Remove</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">cn</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+<span class="c1">// 放回到空闲队列的末尾
+</span><span class="c1"></span>	<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">,</span> <span class="nx">cn</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">idleConnsLen</span><span class="o">++</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">(</span><span class="p">)</span>
+	<span class="c1">// 放回之后，要删除一个排队的元素
+</span><span class="c1"></span>	<span class="nx">p</span><span class="p">.</span><span class="nf">freeTurn</span><span class="p">(</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="heading-7">清理过期连接</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 创建连接池时如果设置了闲置超时时间，就会启动单独的协程处理过期连接
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">reaper</span><span class="p">(</span><span class="nx">frequency</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">ticker</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">NewTicker</span><span class="p">(</span><span class="nx">frequency</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">ticker</span><span class="p">.</span><span class="nf">Stop</span><span class="p">(</span><span class="p">)</span>
+<span class="c1">// 本质就上就是启动一个定时器，定时判断连接是否超时
+</span><span class="c1"></span>	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ticker</span><span class="p">.</span><span class="nx">C</span><span class="p">:</span>
+			<span class="c1">// 这里是个小细节。ticker的channel和p.closedCh可能同时发生，但是go的select机制会随便选一个分支执行，所以这里多加了一个连接池是否已经关闭的判断
+</span><span class="c1"></span>			<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nf">closed</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">return</span>
+			<span class="p">}</span>
+			<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">ReapStaleConns</span><span class="p">(</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="nx">internal</span><span class="p">.</span><span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">Background</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="s">&#34;ReapStaleConns failed: %s&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+				<span class="k">continue</span>
+			<span class="p">}</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">p</span><span class="p">.</span><span class="nx">closedCh</span><span class="p">:</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">ReapStaleConns</span><span class="p">(</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">n</span> <span class="kt">int</span>
+	<span class="k">for</span> <span class="p">{</span>
+	<span class="c1">// 清理时也要排队，这里很巧妙，如果排不上队，说明连接池里的所有连接都在被使用中，没有必要清理。
+</span><span class="c1"></span>		<span class="nx">p</span><span class="p">.</span><span class="nf">getTurn</span><span class="p">(</span><span class="p">)</span>
+
+		<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">(</span><span class="p">)</span>
+		<span class="nx">cn</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">reapStaleConn</span><span class="p">(</span><span class="p">)</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nx">connsMu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">(</span><span class="p">)</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nf">freeTurn</span><span class="p">(</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="nx">cn</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">_</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">closeConn</span><span class="p">(</span><span class="nx">cn</span><span class="p">)</span>
+			<span class="nx">n</span><span class="o">++</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="nx">atomic</span><span class="p">.</span><span class="nf">AddUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">p</span><span class="p">.</span><span class="nx">stats</span><span class="p">.</span><span class="nx">StaleConns</span><span class="p">,</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">n</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">ConnPool</span><span class="p">)</span> <span class="nf">reapStaleConn</span><span class="p">(</span><span class="p">)</span> <span class="o">*</span><span class="nx">Conn</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+
+<span class="c1">// put的时候会把连接放在idleConns的末尾，也就是说idleConns[0]是最有可能过期的连接
+</span><span class="c1"></span>	<span class="nx">cn</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="k">if</span> <span class="p">!</span><span class="nx">p</span><span class="p">.</span><span class="nf">isStaleConn</span><span class="p">(</span><span class="nx">cn</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+
+<span class="c1">// 如果真是过期连接，就修改空闲连接队列，把后边的连接往前挪
+</span><span class="c1"></span>	<span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">[</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">idleConns</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="p">]</span><span class="o">...</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">idleConnsLen</span><span class="o">--</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nf">removeConn</span><span class="p">(</span><span class="nx">cn</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="nx">cn</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="heading-8">总结</h2>
+<p>go-redis的连接池代码简单清晰，很好理解。使用两个slice保存连接信息，用锁保护。获取和放回连接都是在slice末尾操作，方便检查过期连接时从头部检查。用channel实现排队的功能很值得学习。</p>
+<p>go-redis中的连接池只在内部使用，并不对外暴露，连接的取用和放回也是在client中进行管理。这样应用层只需要考虑业务逻辑，不需要管连接状态，爽歪歪。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-08-18
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/go/context-sourcecode-analysis/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">context源码解析</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/php/get_headers-pitfalls/">
+            <span class="next-text nav-default">get_headers的一个小坑</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>javascript on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/categories/javascript/</link>
+    <description>Recent content in javascript on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 09 Jan 2013 13:47:03 +0000</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/categories/javascript/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>bind?live?delegate?还是on？–jquery事件绑定方法研究</title>
+      <link>https://sosonemo.me/posts/js/bind-live-delegate-or-on.html/</link>
+      <pubDate>Wed, 09 Jan 2013 13:47:03 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/js/bind-live-delegate-or-on.html/</guid>
+      <description>最近写项目页面用了不少jquery的东西，过程当中对jquery的事件绑定方法有些疑惑，经过学习各种资料，现在终于明白不少。恰巧有同学和我有</description>
+    </item>
+    
+    <item>
+      <title>js中获取鼠标点击位置和按键值</title>
+      <link>https://sosonemo.me/posts/js/js-get-mouse-position/</link>
+      <pubDate>Tue, 30 Oct 2012 11:42:38 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/js/js-get-mouse-position/</guid>
+      <description>看一下下面这段代码 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 &amp;lt;html&amp;gt; &amp;lt;head&amp;gt; &amp;lt;script type=&amp;#34;text/javascript&amp;#34; charset=&amp;#34;utf-8&amp;#34;&amp;gt; function mousemove() { document.myForm.screenx.value=event.clientX; document.myForm.screeny.value=event.clientY; } &amp;lt;/script&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;form action=&amp;#34;test_submit&amp;#34; method=&amp;#34;get&amp;#34; name=&amp;#34;myForm&amp;#34;&amp;gt; &amp;lt;img src=&amp;#34;./aaa.png&amp;#34; onmousemove=&amp;#34;mousemove()&amp;#34;/&amp;gt; &amp;lt;input type=&amp;#34;text&amp;#34; name=&amp;#34;screenx&amp;#34; value=&amp;#34;change when mousemove&amp;#34;/&amp;gt; &amp;lt;input type=&amp;#34;text&amp;#34; name=&amp;#34;screeny&amp;#34; value=&amp;#34;change when mousemove&amp;#34;/&amp;gt; &amp;lt;/form&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 这段代码在ie</description>
+    </item>
+    
+  </channel>
+</rss>

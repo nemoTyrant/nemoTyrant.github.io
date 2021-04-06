@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>ntfs支持及libreoffice安装 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="今天在电脑上工作了很久，但是只做了两件事： 增加centos对ntfs支持； 安装libreoffice并解决它带来的问题。 今天上午登录博客的时" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/linux/ntfs-and-libreoffice.html/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="ntfs支持及libreoffice安装" />
+<meta property="og:description" content="今天在电脑上工作了很久，但是只做了两件事： 增加centos对ntfs支持； 安装libreoffice并解决它带来的问题。 今天上午登录博客的时" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/linux/ntfs-and-libreoffice.html/" />
+<meta property="article:published_time" content="2012-07-24T01:25:05+00:00" />
+<meta property="article:modified_time" content="2012-07-24T01:25:05+00:00" />
+<meta itemprop="name" content="ntfs支持及libreoffice安装">
+<meta itemprop="description" content="今天在电脑上工作了很久，但是只做了两件事： 增加centos对ntfs支持； 安装libreoffice并解决它带来的问题。 今天上午登录博客的时">
+<meta itemprop="datePublished" content="2012-07-24T01:25:05&#43;00:00" />
+<meta itemprop="dateModified" content="2012-07-24T01:25:05&#43;00:00" />
+<meta itemprop="wordCount" content="895">
+
+
+
+<meta itemprop="keywords" content="libreoffice,ntfs," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ntfs支持及libreoffice安装"/>
+<meta name="twitter:description" content="今天在电脑上工作了很久，但是只做了两件事： 增加centos对ntfs支持； 安装libreoffice并解决它带来的问题。 今天上午登录博客的时"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">ntfs支持及libreoffice安装</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2012-07-24 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> linux </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>今天在电脑上工作了很久，但是只做了两件事：</p>
+<ol>
+<li>增加centos对ntfs支持；</li>
+<li>安装libreoffice并解决它带来的问题。</li>
+</ol>
+<p>今天上午登录博客的时候发现上不去了，再上godaddy的网站也上不去了，于是便用代理上了godaddy把域名解析改到了dnspod上。结果到晚上了还没生效，一会能上一会不能上的。</p>
+<p>我的godaddy账号密码保存在ntfs格式的盘里，我又不想重启到win7再复制到fat32格式的盘里，所以我上网寻求让linux支持ntfs的方法。</p>
+<p>显然，有人比我想的要多而且长远。网上已经有了相当成熟的方法－－<a href="http://www.tuxera.com/community/ntfs-3g-download">ntfs-3g</a>。安装和使用方法很简单，照着人家写的做就好了，所以这事没用多长时间。</p>
+<p>等域名解析生效的功夫，我想离线写一下文章，于是想起了大名鼎鼎的libreoffice。没想到悲剧就这样发生了。</p>
+<p>我从官网下了最新的3.5.5版，也遵照官网上的安装步骤进行了安装。然而当我企图从应用程序－办公里打开它时，我能看到的只是一闪而过的欢迎界面，然后就什么都没了。我很自然地想到删除重装，但是依然如此。</p>
+<p>于是我开始了漫长的搜索之路，但是一直无果。一位网友的话某种程序上给了我一丝希望，他说不能运行可能是因为不是文件的所有者。果然，我去到lo的目录下看了眼权限，整个目录都是属于root的。于是我在终端里以root身份运行soffice，结果居然运行起来了。我想，如果把目录的权限交给一般用户，那说不定就能运行。之后我便在鸟哥的私房菜里阅读了权限部分的内容，但是无论我把权限改为777还是把拥有者给到一般用户，情况都像之前一样。而且我还发现一个问题，就算我不辞辛苦跑到lo的目录里并在终端以root身份运行，ibus输入法居然说找不到输入窗口。就算我解决了lo的启动问题，我还得再解决输入法的问题。</p>
+<p>最终，我实在没办法了，于是选择了放弃。我把装好的lo删掉，并在终端里yum install libreoffice，一切就这么轻松地解决了。虽然版本比官网上的低，但是能正常打开，并且能用ibus输入法输入了，现在的这篇文章就是在lo里完成的。</p>
+<p>官方软件仓库里的软件果然是稳定啊，但是我不爽的是这次遇到问题没有解决。</p>
+<p>2012.07.22 22:27</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2012-07-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/libreoffice/">libreoffice</a>
+          <a href="/tags/ntfs/">ntfs</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/posts/php/lamp/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">lamp环境配置</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/essay/online-again/">
+            <span class="next-text nav-default">网站终于能访问了！</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

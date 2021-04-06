@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>lamp环境配置 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="使用centos的最初目的就是搭建lamp平台开始php之旅，所以在解决了前面一些问题之后，我开始研究lamp的建设。 lamp中的l自不用说" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/php/lamp/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="lamp环境配置" />
+<meta property="og:description" content="使用centos的最初目的就是搭建lamp平台开始php之旅，所以在解决了前面一些问题之后，我开始研究lamp的建设。 lamp中的l自不用说" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/php/lamp/" />
+<meta property="article:published_time" content="2012-07-24T01:28:41+00:00" />
+<meta property="article:modified_time" content="2012-07-24T01:28:41+00:00" />
+<meta itemprop="name" content="lamp环境配置">
+<meta itemprop="description" content="使用centos的最初目的就是搭建lamp平台开始php之旅，所以在解决了前面一些问题之后，我开始研究lamp的建设。 lamp中的l自不用说">
+<meta itemprop="datePublished" content="2012-07-24T01:28:41&#43;00:00" />
+<meta itemprop="dateModified" content="2012-07-24T01:28:41&#43;00:00" />
+<meta itemprop="wordCount" content="1360">
+
+
+
+<meta itemprop="keywords" content="lamp," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="lamp环境配置"/>
+<meta name="twitter:description" content="使用centos的最初目的就是搭建lamp平台开始php之旅，所以在解决了前面一些问题之后，我开始研究lamp的建设。 lamp中的l自不用说"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">lamp环境配置</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2012-07-24 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> linux </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>使用centos的最初目的就是搭建lamp平台开始php之旅，所以在解决了前面一些问题之后，我开始研究lamp的建设。</p>
+<p>lamp中的l自不用说了，已经装好了。其中的a也是系统自带的，只需要配置好就行。</p>
+<p>于是我兴奋地在<code>/var/www/html</code>下放了个网页，在浏览器里打开localhost，结果页面出错了，原来是apache的服务没有打开。centos有个图形界面的服务管理程序，也可以在终端下service httpd start。如此，测试页打开了。</p>
+<p>但是有一个问题，<code>/var/www/html</code>这个目录是属于<code>root</code>的，我只能在其他位置写好文件，再以root身份复制过来，才能在浏览器里看到。这样太麻烦了，所以我想把<code>apache</code>的<code>DocumentRoot</code>改到一般用户的目录里。但是改完之后图形界面的服务管理程序里重启apache时，一直显示服务在刷新，不成功也没有错误提示。</p>
+<p>这里就不得不说，想在linux下玩得转，就必须得会在终端下用命令发号施令。终端下<code>service httpd start</code>，结果就有出错提示了，大意是<code>DocumentRoot</code>指向的必须是一个目录。我检查了好几遍，确实没输错，而且确实是一个目录，于是我只好开始搜索了。</p>
+<p>原来，是<code>selinux</code>在捣鬼。不得不说，linux的安全性正是靠着一个又一个像<code>selinux</code>之类的安全管理策略实现的，但是对于新手来说，过多的安全策略反而会引发让人摸不着头脑的问题。</p>
+<p>参考<a href="http://www.coderbolg.com/content/33.html">这篇文章</a>，其中大致讲述了se的原理和修改DR出错的解决方法。于是我照着他的说法，修改了目录策略类型，apache服务顺利启动了。但是又一个悲剧的事情发生了，我在目录里随便写个html之后，在浏览器里打开居然出现了403错误。我的目录权限是777，而且se策略也是更改过的！</p>
+<p>我晕了，天知道又出什么鬼问题了。文章里的解决办法是干脆禁用掉selinux，但是直接修改se的配置文件<code>/etc/selinux/config</code>并不能马上生效，还需要重启电脑。一方面，我懒得重启，另一方面，为了实现某个功能而禁用另一个原本没有冲突的功能实在不是什么理想的解决方案。</p>
+<p>我从另一篇文章中得知，除了在配置文件里更改se设置外，还可以在终端里用<code>getenforce/setenforce [1|0]</code>实时更改。虽然不能实时关闭，但是可以将se改为permissive状态。然而，我改完之后，apache可以正常启动，但403依然存在。</p>
+<p>现在看来，解决的方法是把<code>/var/www/html</code>的权限放开。我这么做了，能在里面随心所欲建文件，浏览器里也能打开了。不过这样的方法在安全性上总让我有点不安，好在这电脑只是用来学习，不是当服务器用的，就算有点安全问题也没有大碍。</p>
+<p>接下来就是mysql了。系统自带了mysql客户端，我不知道它有什么用，但是我们得安装服务端，图形界面或yum安装轻松搞定。</p>
+<p>然后就是参考<a href="http://www.jb51.net/article/23255.htm">这篇文章</a>进行mysql的配置。主要有两点：</p>
+<ol>
+<li>调整默认字符集为utf8</li>
+<li>为root账户设定密码及删除空用户。</li>
+</ol>
+<p>我还顺便下了个navicat for mysql的linux版，他们太懒了，居然动用了wine。</p>
+<p>接下来就是php了，<code>yum install php</code>轻松搞定。据说还得装个<code>php-mysql</code>，为mysql提供php支持，我不知道到底用不用，但是我装了。</p>
+<p>至此，lamp环境配置完成。</p>
+<p>2012.07.23</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2012-07-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/lamp/">lamp</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/posts/linux/centos-minimal-and-mouse-issue.html/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">悲剧的一天－－安装6.3minimal及鼠标问题</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/linux/ntfs-and-libreoffice.html/">
+            <span class="next-text nav-default">ntfs支持及libreoffice安装</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

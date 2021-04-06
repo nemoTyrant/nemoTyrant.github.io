@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/tags/</link>
+    <description>Recent content in Tags on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 29 Jan 2013 03:07:57 +0000</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>php</title>
+      <link>https://sosonemo.me/tags/php/</link>
+      <pubDate>Tue, 29 Jan 2013 03:07:57 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/php/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>socket</title>
+      <link>https://sosonemo.me/tags/socket/</link>
+      <pubDate>Tue, 29 Jan 2013 03:07:57 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/socket/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lamp</title>
+      <link>https://sosonemo.me/tags/lamp/</link>
+      <pubDate>Sun, 30 Dec 2012 08:30:06 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/lamp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>opensuse</title>
+      <link>https://sosonemo.me/tags/opensuse/</link>
+      <pubDate>Sat, 13 Oct 2012 02:14:53 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/opensuse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rime</title>
+      <link>https://sosonemo.me/tags/rime/</link>
+      <pubDate>Sat, 13 Oct 2012 02:14:53 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/rime/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>挂载 iso 镜像</title>
+      <link>https://sosonemo.me/tags/%E6%8C%82%E8%BD%BD-iso-%E9%95%9C%E5%83%8F/</link>
+      <pubDate>Fri, 28 Sep 2012 15:39:38 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/%E6%8C%82%E8%BD%BD-iso-%E9%95%9C%E5%83%8F/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>深度音乐播放器</title>
+      <link>https://sosonemo.me/tags/%E6%B7%B1%E5%BA%A6%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/</link>
+      <pubDate>Fri, 27 Jul 2012 12:17:02 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/%E6%B7%B1%E5%BA%A6%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>libreoffice</title>
+      <link>https://sosonemo.me/tags/libreoffice/</link>
+      <pubDate>Tue, 24 Jul 2012 01:25:05 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/libreoffice/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ntfs</title>
+      <link>https://sosonemo.me/tags/ntfs/</link>
+      <pubDate>Tue, 24 Jul 2012 01:25:05 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/ntfs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>centos</title>
+      <link>https://sosonemo.me/tags/centos/</link>
+      <pubDate>Sat, 21 Jul 2012 10:32:57 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/centos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mime</title>
+      <link>https://sosonemo.me/tags/mime/</link>
+      <pubDate>Thu, 21 Jun 2012 12:29:08 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/mime/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>goagent</title>
+      <link>https://sosonemo.me/tags/goagent/</link>
+      <pubDate>Thu, 14 Jun 2012 14:51:32 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/goagent/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>中文摘要</title>
+      <link>https://sosonemo.me/tags/%E4%B8%AD%E6%96%87%E6%91%98%E8%A6%81/</link>
+      <pubDate>Tue, 17 Jan 2012 10:15:19 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/tags/%E4%B8%AD%E6%96%87%E6%91%98%E8%A6%81/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

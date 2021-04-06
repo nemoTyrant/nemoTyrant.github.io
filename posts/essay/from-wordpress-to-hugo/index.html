@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>从wordpress迁移到hugo - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="一. 为什么用hugo 2012年就建立了自己的博客，可是回望过去，并没有写过多少有用的东西。最近又想鼓捣一下树莓派和arduino，顺便写写学" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/essay/from-wordpress-to-hugo/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="从wordpress迁移到hugo" />
+<meta property="og:description" content="一. 为什么用hugo 2012年就建立了自己的博客，可是回望过去，并没有写过多少有用的东西。最近又想鼓捣一下树莓派和arduino，顺便写写学" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/essay/from-wordpress-to-hugo/" />
+<meta property="article:published_time" content="2019-12-19T22:08:22+08:00" />
+<meta property="article:modified_time" content="2019-12-19T22:08:22+08:00" />
+<meta itemprop="name" content="从wordpress迁移到hugo">
+<meta itemprop="description" content="一. 为什么用hugo 2012年就建立了自己的博客，可是回望过去，并没有写过多少有用的东西。最近又想鼓捣一下树莓派和arduino，顺便写写学">
+<meta itemprop="datePublished" content="2019-12-19T22:08:22&#43;08:00" />
+<meta itemprop="dateModified" content="2019-12-19T22:08:22&#43;08:00" />
+<meta itemprop="wordCount" content="2640">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="从wordpress迁移到hugo"/>
+<meta name="twitter:description" content="一. 为什么用hugo 2012年就建立了自己的博客，可是回望过去，并没有写过多少有用的东西。最近又想鼓捣一下树莓派和arduino，顺便写写学"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">从wordpress迁移到hugo</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%BF%83%E6%83%85%E7%A9%BA%E9%97%B4/"> 心情空间 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#-hugo">一. 为什么用hugo</a></li>
+    <li><a href="#-hugo-1">二. 阅读hugo文档</a></li>
+    <li><a href="#-wordpresshugo">三. 导出wordpress文章到hugo</a></li>
+    <li><a href="#-">四. 编辑器选择</a></li>
+    <li><a href="#--1">五. 如何组织目录</a></li>
+    <li><a href="#--2">六. 如何组织项目</a></li>
+    <li><a href="#-nginx">七. nginx部署</a></li>
+    <li><a href="#--3">八. 评论系统和统计系统</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="-hugo">一. 为什么用hugo</h2>
+<p>2012年就建立了自己的博客，可是回望过去，并没有写过多少有用的东西。最近又想鼓捣一下树莓派和arduino，顺便写写学习的文章。可是一想到要用wordpress，就有点脑壳疼。wordpress虽然一直在更新，但是始终感觉用得不爽，不知道是因为vps在国外还是它本身运行就慢，点一个按钮就得反应半天。这种状态的话，完全不想拿它写东西。而且说实话，我只是需要有个地方写写文章，也不需要有什么炫酷的功能，所以用wordpress也算是有点杀鸡用牛刀。</p>
+<p>我虽然自己写的文章少，但是看别人写的很多，我也发现越来越多的博客开始使用静态页面了。想想也是，博客本来就是很简单的东西，能显示文章，再有个评论系统和读者交流就够了，不需要什么花里胡哨的东西。静态页面，访问速度快，而且安全性还提高了，不用总担心wordpress又出什么漏洞还得升级。所以我就想借着这个机会，把博客也迁移到静态页面。</p>
+<p>静态网站生成器这块主要流行的有Jekyll、hexo和hugo。其实很长一段时间之前就知道这些工具，但是一直懒得研究。这次迁移直接就选择了hugo，主要原因有三点：1.  生成速度（号称）最快; 2. 我对go语言感兴趣，有余力的话还可以看看人家代码怎么写的; 3. 我对ruby不感兴趣，对js的兴趣仅限于写页面。</p>
+<h2 id="-hugo-1">二. 阅读hugo文档</h2>
+<p>决定了用hugo，第一步当然是把<a href="https://gohugo.io/documentation/">hugo的文档</a>过一遍。这里不得不吐槽一下hugo的文档了。虽然有一个Get Started告诉你如果创建一个项目，但是创建好之前再往后该怎么做，就缺少循序渐进的引导了。有些地方写的比较模糊，看完不知道啥意思，还有一些概念性的东西解释得有点晦涩，比如page bundles那一篇就看得我云里雾里。</p>
+<p>要是换了以前犯懒，到这里我可能就不继续了。但是这次下定了决心要把事情搞定，所以硬着头皮继续搞。好在文档只是写得不好，又不是不能用，基本的功能摸索一下还是能搞定的。</p>
+<h2 id="-wordpresshugo">三. 导出wordpress文章到hugo</h2>
+<p>hugo简易的demo搞定，接下来就要想想怎么把wordpress的文章导入进来了，好在文档里写了从各个博客平台迁移的工具 <a href="https://gohugo.io/tools/migrations/">https://gohugo.io/tools/migrations/</a> 。我用wordpress-to-hugo-exporter很快就把文章导出成了hugo的格式，我看了一下，大体上导出质量还是很好的。毕竟wordpress用的是html编辑器，完全转成markdown也不现实，所以还是有很多细节的地方需要手工修改一下，尤其是遇到图片和代码的地方。还好我之前的文章数量不多，就这我还弄了三四个小时才搞定。如果文章多一点，怕是又要打退堂鼓了。好在这次把文章都换成markdown格式的话，以后通用性会更强一点。</p>
+<h2 id="-">四. 编辑器选择</h2>
+<p>用markdown写文章，自然需要一款支持markdown的编辑器，没想到这个环节竟然让人有些脑壳疼。</p>
+<p>之前付费购买的mweb倒是有目录管理的功能，但是只能打开markdown的文件，别的图片和配置文件还得用别的编辑器打开。太不方便。也可能是我用法不对吧。</p>
+<p>又尝试用sublime text，它也支持目录管理，但是一来不能拖动文件位置，二来对markdown的支持也不能说太好。</p>
+<p>最后，我竟然选择了平时写代码用的PHPStorm。既能管理目录，又有markdown预览功能，其他格式的文件也能打开，文件移动更是不在话下。</p>
+<h2 id="--1">五. 如何组织目录</h2>
+<p>基本功能能用，内容也有了，接下来就得考虑一下怎么组织目录了。对于hugo来说，content目录下都是要输出的文章，但是我们自己管理内容，不能把所有的文章都写到一个目录下吧。所以我采用了按分类建文件夹的方式，按照原来文章的分类，把它们分别放在不同的目录下。但是这里要注意一点，除非在front matter里指定文章的url，不然放在不同目录是会影响到最终的url的，所以这一步还是得想清楚。毕竟谁都不希望别人收藏了你的文章，结果过一段时间打不开了。</p>
+<p>我之前用wordpress的时候，文章都是指定url的，这也算是给自己挖了个坑。如果内容全是文字，倒也无所谓，导出工具把对应的url也导出来了。但是遇到有配图的文章的时候，就犯难了，图片应该放哪？</p>
+<p>wordpress是有专门的图片管理功能的，而且图片的url是固定在上传文件里的，文章里直接引用就好。但是现在你面对只有文件夹，而且放在不同目录会影响到最终的url。我想到三种管理方式：</p>
+<ol>
+<li>使用图床或cdn。这样可以直接引用图片，对于hugo来说，只是管理文字。但是有一个问题，把图片传到图床上难道本地就不留存了？如果要留存的话，那不还是要涉及到保存在哪的问题？放在hugo项目里有点尴尬，放到别的地方又会脱节。</li>
+<li>使用static目录。本来hugo就准备了一个目录用来放图片之类的静态文件，当然可以把图片放到这个目录里。然而日积月累有了很多图片之后，你还能分清哪张图片是哪篇文章用的吗？我觉得我是不行。当然可以按文章建目录，但是图片和文章就不在一起存放，管理起来多少有些不方便。</li>
+<li>package bundle 这个之前让我有些迷惑的概念。其实说白了就是把文章要用的图片都放到一个目录里。之所以说文章指定url是个坑也是和这个功能有关系。如果文章url是指定的，那么bundle里的图片url就是相对于根目录的。这样一来，如果不同的文章里有同名的图片，编译之后就变成指向同一张图片了。为此，我把所有的文章都改成了指定slug的形式，这样图片url也变成相对文章slug的了，避免了同名问题。然而弊端是文章的url都变了，如果以前有人收藏过我的文章，现在就打不开了。不过我想想之前的文章都比较水，应该没有人收藏吧，哇哈哈。</li>
+</ol>
+<h2 id="--2">六. 如何组织项目</h2>
+<p>前面的问题搞定后，下一个问题就是管理hugo项目本身了。作为程序员，第一个想到的就是用git了。这里有一个细节问题，是把hugo项目本身和编译出的静态文件放在一个git里还是分两个git。我选择的是分开存放。这样部署的时候只拉public目录的git即可，不用拉一堆没用的东西。</p>
+<h2 id="-nginx">七. nginx部署</h2>
+<p>这块其实没啥可说的，把之前wordpress的配置里php相关的删掉即可。注意404的页面需要单独配一下，不然输入不存在的url直接亮出nginx的404也不太好</p>
+<h2 id="--3">八. 评论系统和统计系统</h2>
+<p>我选择的主题自带了很多评论系统的支持，我之前用disqus，只需要配置一个参数就好了。至于以前的评论，数量不是很多，我也懒得迁移了。</p>
+<p>同样的，之前用google analytics，主题支持，配置一个参数就好。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/electronics/spi-protocol-introduction/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">SPI协议简介</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/php/php-parser-introduction/">
+            <span class="next-text nav-default">PHP-Parser 学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

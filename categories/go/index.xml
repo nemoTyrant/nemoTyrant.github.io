@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>go on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/categories/go/</link>
+    <description>Recent content in go on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 29 Nov 2020 22:56:09 +0800</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/categories/go/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>context源码解析</title>
+      <link>https://sosonemo.me/posts/go/context-sourcecode-analysis/</link>
+      <pubDate>Sun, 29 Nov 2020 22:56:09 +0800</pubDate>
+      
+      <guid>https://sosonemo.me/posts/go/context-sourcecode-analysis/</guid>
+      <description>为什么会有这个包？ 我们知道goroutine之间是相互独立的，没有父子关系，一个goroutine无法主动关闭另一个goroutine，只能</description>
+    </item>
+    
+    <item>
+      <title>go-redis 连接池的实现源码解析</title>
+      <link>https://sosonemo.me/posts/go/connection-pool-in-go-redis/</link>
+      <pubDate>Tue, 18 Aug 2020 21:43:54 +0800</pubDate>
+      
+      <guid>https://sosonemo.me/posts/go/connection-pool-in-go-redis/</guid>
+      <description>前言 在fpm模式下，php中不存在连接池这种东西，顶多是用pconnect的方法使连接保留在fpm进程内，达到复用连接的目的。但如果是go这</description>
+    </item>
+    
+    <item>
+      <title>(译文)用go语言处理每分钟1百万次请求</title>
+      <link>https://sosonemo.me/posts/go/handling-one-million-requests-with-golang/</link>
+      <pubDate>Tue, 16 Jun 2020 22:02:11 +0800</pubDate>
+      
+      <guid>https://sosonemo.me/posts/go/handling-one-million-requests-with-golang/</guid>
+      <description>(本文编译自这篇文章，略去一些与技术无关的介绍文字) 面临的问题 我们正在构建一个匿名数据统计系统，希望能够处理来自数百万个终端的POST请求。</description>
+    </item>
+    
+  </channel>
+</rss>

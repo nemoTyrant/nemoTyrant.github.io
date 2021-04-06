@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>socket on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/tags/socket/</link>
+    <description>Recent content in socket on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 29 Jan 2013 03:07:57 +0000</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/tags/socket/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>php socket 编程文章推荐</title>
+      <link>https://sosonemo.me/posts/php/php-socket-articles/</link>
+      <pubDate>Tue, 29 Jan 2013 03:07:57 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/php/php-socket-articles/</guid>
+      <description>一直想做一个在线聊天的程序，不免搜集一些资料。对于实时通信，目前流传广泛并且已经成熟的技术是ajax长轮询（具体介绍请百度，不是本文主要内容</description>
+    </item>
+    
+  </channel>
+</rss>

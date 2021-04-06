@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>laravel route 重定向的一个小坑 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="今天做项目发现一个奇怪的现象，我的路由配置里有如下配置： 1 2 3 4 5 6 7 8 &amp;lt;?php Route::group(array(&amp;#39;prefix&amp;#39;=&amp;gt;&amp;#39;admin&amp;#39;,&amp;#39;before&amp;#39;=&amp;gt;&amp;#39;adminauth&amp;#39;),function(){ // 管理员登录 Route::get(&amp;#39;/&amp;#39;,function(){ return Redirect::to(&amp;#39;admin/login&amp;#39;); }); Route::get(&amp;#39;login&amp;#39;,&amp;#39;UserController@adminLogin&amp;#39;); }; 目的是无论用户输入admin，还是adm" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/php/laravel-route-pitfall/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="laravel route 重定向的一个小坑" />
+<meta property="og:description" content="今天做项目发现一个奇怪的现象，我的路由配置里有如下配置： 1 2 3 4 5 6 7 8 &lt;?php Route::group(array(&#39;prefix&#39;=&gt;&#39;admin&#39;,&#39;before&#39;=&gt;&#39;adminauth&#39;),function(){ // 管理员登录 Route::get(&#39;/&#39;,function(){ return Redirect::to(&#39;admin/login&#39;); }); Route::get(&#39;login&#39;,&#39;UserController@adminLogin&#39;); }; 目的是无论用户输入admin，还是adm" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/php/laravel-route-pitfall/" />
+<meta property="article:published_time" content="2014-12-05T04:20:59+00:00" />
+<meta property="article:modified_time" content="2014-12-05T04:20:59+00:00" />
+<meta itemprop="name" content="laravel route 重定向的一个小坑">
+<meta itemprop="description" content="今天做项目发现一个奇怪的现象，我的路由配置里有如下配置： 1 2 3 4 5 6 7 8 &lt;?php Route::group(array(&#39;prefix&#39;=&gt;&#39;admin&#39;,&#39;before&#39;=&gt;&#39;adminauth&#39;),function(){ // 管理员登录 Route::get(&#39;/&#39;,function(){ return Redirect::to(&#39;admin/login&#39;); }); Route::get(&#39;login&#39;,&#39;UserController@adminLogin&#39;); }; 目的是无论用户输入admin，还是adm">
+<meta itemprop="datePublished" content="2014-12-05T04:20:59&#43;00:00" />
+<meta itemprop="dateModified" content="2014-12-05T04:20:59&#43;00:00" />
+<meta itemprop="wordCount" content="651">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="laravel route 重定向的一个小坑"/>
+<meta name="twitter:description" content="今天做项目发现一个奇怪的现象，我的路由配置里有如下配置： 1 2 3 4 5 6 7 8 &lt;?php Route::group(array(&#39;prefix&#39;=&gt;&#39;admin&#39;,&#39;before&#39;=&gt;&#39;adminauth&#39;),function(){ // 管理员登录 Route::get(&#39;/&#39;,function(){ return Redirect::to(&#39;admin/login&#39;); }); Route::get(&#39;login&#39;,&#39;UserController@adminLogin&#39;); }; 目的是无论用户输入admin，还是adm"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">laravel route 重定向的一个小坑</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-12-05 </span>
+        <div class="post-category">
+            <a href="/categories/php%E4%B9%8B%E8%B7%AF/"> php之路 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>今天做项目发现一个奇怪的现象，我的路由配置里有如下配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nx">Route</span><span class="o">::</span><span class="na">group</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;prefix&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;before&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;adminauth&#39;</span><span class="p">),</span><span class="k">function</span><span class="p">(){</span>
+    <span class="c1">// 管理员登录
+</span><span class="c1"></span>    <span class="nx">Route</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="k">function</span><span class="p">(){</span>
+        <span class="k">return</span> <span class="nx">Redirect</span><span class="o">::</span><span class="na">to</span><span class="p">(</span><span class="s1">&#39;admin/login&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="nx">Route</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">,</span><span class="s1">&#39;UserController@adminLogin&#39;</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>目的是无论用户输入<code>admin</code>，还是<code>admin/login</code>都能跳转到登录界面。然而现实情况是输入<code>admin</code>之后，浏览器会无限重定向，firebug记录如下：</p>
+<blockquote>
+<p>GET /public/admin/       301 Moved Permanently  
+GET admin                301 Moved Permanently<br>
+GET admin                301 Moved Permanently<br>
+GET /public/admin/       301 Moved Permanently<br>
+GET admin                301 Moved Permanently<br>
+GET /public/admin/       301 Moved Permanently<br>
+GET admin                301 Moved Permanently<br>
+&hellip;.</p>
+</blockquote>
+<p>经过一番搜索后试验，终于得出结论，问题有两点：</p>
+<ol>
+<li>
+<p>public目录下正好有个admin目录，存放后台相关js和css</p>
+</li>
+<li>
+<p>laravel自带的.htaccess的这样一条规则：</p>
+<blockquote>
+<p>RewriteEngine On<br>
+# Redirect Trailing Slashes&hellip;<br>
+RewriteRule ^(.*)/$ /public/$1 [L,R=301]   #注意这条<br>
+# Handle Front Controller&hellip;<br>
+RewriteCond %{REQUEST_FILENAME} !-d<br>
+RewriteCond %{REQUEST_FILENAME} !-f<br>
+RewriteRule ^ index.php [L]</p>
+</blockquote>
+</li>
+</ol>
+<p>解释一下原理：</p>
+<p>访问<code>public/admin</code>目录时，apache会自动转成<code>public/admin/</code>的形式，而这种形式正好符合重写的规则，又被重写回<code>public/admin</code>的形式。因为public/admin目录确实存在，所以请求根本不会到达index.php。</p>
+<p>所以故事就是这样，因为301那条规则的存在，无限重定向产生了。</p>
+<p>解决方案：</p>
+<ol>
+<li>不要把public目录下已有的目录名做为路由地址</li>
+<li>301规则前加一条<code>RewriteCond %{REQUEST_FILENAME} !-d</code>，但是这样会使该目录被直接访问。建议生产环境中关掉apache的autoindex模块(呃，我发现我用的wamp关掉这个模块apache就启动不了了- -!)。</li>
+</ol>
+<p>补充：</p>
+<p>经过一些实验，建议将.htaccess文件改成如下：</p>
+<blockquote>
+<p>RewriteEngine On<br>
+# Redirect Trailing Slashes&hellip;<br>
+RewriteCond %{REQUEST_FILENAME} !-d     #防止真实目录导致循环重定向<br>
+RewriteRule ^(.*)/$ /public/$1 [L,R=301]<br>
+# Handle Front Controller&hellip;<br>
+#RewriteCond %{REQUEST_FILENAME} !-d   #防止用户直接打开真实目录<br>
+RewriteCond %{REQUEST_FILENAME} !-f<br>
+RewriteRule ^ index.php [L]</p>
+</blockquote>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-12-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/php/understanding-laravel-facade/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">理解 laravel 的Facade</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/wordpress/pitfalls-to-https/">
+            <span class="next-text nav-default">网站转 https 遇到的几个坑</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>中文摘要 on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/tags/%E4%B8%AD%E6%96%87%E6%91%98%E8%A6%81/</link>
+    <description>Recent content in 中文摘要 on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 17 Jan 2012 10:15:19 +0000</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/tags/%E4%B8%AD%E6%96%87%E6%91%98%E8%A6%81/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>wordpress首页摘要问题</title>
+      <link>https://sosonemo.me/posts/wordpress/wordpress-excerpt-issue/</link>
+      <pubDate>Tue, 17 Jan 2012 10:15:19 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/wordpress/wordpress-excerpt-issue/</guid>
+      <description>兴奋地搭建完wp之后，首先感觉到的问题不是界面的简朴之类的，而是默认没有摘要功能，首页文章全部以全文显示，这可真是要命。 于是本人只好开始了百</description>
+    </item>
+    
+  </channel>
+</rss>

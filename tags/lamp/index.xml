@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>lamp on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/tags/lamp/</link>
+    <description>Recent content in lamp on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 30 Dec 2012 08:30:06 +0000</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/tags/lamp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>阿里云centos6.2lamp源码安装手记</title>
+      <link>https://sosonemo.me/posts/php/centos6.2-lamp.html/</link>
+      <pubDate>Sun, 30 Dec 2012 08:30:06 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/php/centos6.2-lamp.html/</guid>
+      <description>前些日子，获得一枚阿里云的优惠券，于是弄了台低配服务器，装centos6.2安全加固版。本来想用yum方式搭建lamp环境，结果装完php页</description>
+    </item>
+    
+    <item>
+      <title>lamp环境配置</title>
+      <link>https://sosonemo.me/posts/php/lamp/</link>
+      <pubDate>Tue, 24 Jul 2012 01:28:41 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/php/lamp/</guid>
+      <description>使用centos的最初目的就是搭建lamp平台开始php之旅，所以在解决了前面一些问题之后，我开始研究lamp的建设。 lamp中的l自不用说</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Algorithms Part I week 1: union-find - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="Theses days, I took a MOOC course named Algorithms instructed by Robert Sedgewick and Kevin Wayne from Princton University. To solidify my understanding of the course and for future reference, I&#39;m going to write some notes on the subject. And from this post on, I decide to write technical articles in English, which is a good way to improve my written English skill.
+Basic steps There are some steps we can follow to develop a usable algorithm." /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/algorithm/algorithms-part-i-week-1-union-find/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Algorithms Part I week 1: union-find" />
+<meta property="og:description" content="Theses days, I took a MOOC course named Algorithms instructed by Robert Sedgewick and Kevin Wayne from Princton University. To solidify my understanding of the course and for future reference, I&#39;m going to write some notes on the subject. And from this post on, I decide to write technical articles in English, which is a good way to improve my written English skill.
+Basic steps There are some steps we can follow to develop a usable algorithm." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/algorithm/algorithms-part-i-week-1-union-find/" />
+<meta property="article:published_time" content="2015-03-20T10:52:36+00:00" />
+<meta property="article:modified_time" content="2015-03-20T10:52:36+00:00" />
+<meta itemprop="name" content="Algorithms Part I week 1: union-find">
+<meta itemprop="description" content="Theses days, I took a MOOC course named Algorithms instructed by Robert Sedgewick and Kevin Wayne from Princton University. To solidify my understanding of the course and for future reference, I&#39;m going to write some notes on the subject. And from this post on, I decide to write technical articles in English, which is a good way to improve my written English skill.
+Basic steps There are some steps we can follow to develop a usable algorithm.">
+<meta itemprop="datePublished" content="2015-03-20T10:52:36&#43;00:00" />
+<meta itemprop="dateModified" content="2015-03-20T10:52:36&#43;00:00" />
+<meta itemprop="wordCount" content="1469">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Algorithms Part I week 1: union-find"/>
+<meta name="twitter:description" content="Theses days, I took a MOOC course named Algorithms instructed by Robert Sedgewick and Kevin Wayne from Princton University. To solidify my understanding of the course and for future reference, I&#39;m going to write some notes on the subject. And from this post on, I decide to write technical articles in English, which is a good way to improve my written English skill.
+Basic steps There are some steps we can follow to develop a usable algorithm."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Algorithms Part I week 1: union-find</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-03-20 </span>
+        <div class="post-category">
+            <a href="/categories/algorithms/"> algorithms </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#basic-steps">Basic steps</a></li>
+    <li><a href="#the-problem">The Problem</a></li>
+    <li><a href="#modeling-the-connections">Modeling the connections</a></li>
+    <li><a href="#implementaion-1-quick-find">Implementaion 1 :Quick-find</a></li>
+    <li><a href="#implementation-2-quick-union">Implementation 2 :Quick-union</a></li>
+    <li><a href="#improvement-1weighting">Improvement 1:weighting</a></li>
+    <li><a href="#improvement-2path-compression">Improvement 2:path compression</a></li>
+    <li><a href="#summary">Summary</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>Theses days, I took a MOOC course named <code>Algorithms</code> instructed by Robert Sedgewick and Kevin Wayne from Princton University. To solidify my understanding of the course and for future reference, I'm going to write some notes on the subject. And from this post on, I decide to write technical articles in English, which is a good way to improve my written English skill.</p>
+<h2 id="basic-steps">Basic steps</h2>
+<p>There are some steps we can follow to develop a usable algorithm.</p>
+<ol>
+<li>Model the problem</li>
+<li>Find an algorithm to solve it</li>
+<li>Fast enough? Fits in memory?</li>
+<li>If not, figure out why</li>
+<li>Find a way to address the problem</li>
+<li>Iterate until satisfied</li>
+</ol>
+<h2 id="the-problem">The Problem</h2>
+<p>In this week, the problem we want to solve is called Dynamic Connectivity.</p>
+<p><strong>Definition:</strong> Given a set of N objects.</p>
+<ul>
+<li>Union command: connect two objects</li>
+<li>Find/connected query: is there a path connecting the two objects?</li>
+</ul>
+<p><img src="img/1.png" alt=""></p>
+<h2 id="modeling-the-connections">Modeling the connections</h2>
+<p>As said in basic steps section, to solve a problem, we have to model it first.Hence, when we say <code>p is connected to q</code>, we mean a relation that are:</p>
+<ul>
+<li>Reflexive: p is connected to q</li>
+<li>Symmetric: if p is connected to q, then q is connected to p</li>
+<li>Transitive: if p is connected to q, and q is connected to r, then p is connected to r</li>
+</ul>
+<p>And we define <strong>connected component</strong> as maximal set of objectes that are mutually connected.</p>
+<p>There are two operations to solve the problem based on our model:</p>
+<ul>
+<li>Find query: check if two objects are in the same component</li>
+<li>Union query: replace components containing two objects with their union</li>
+</ul>
+<p><img src="img/2.png" alt=""></p>
+<p>And the API we'll use is defined as following:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UF</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">UF</span><span class="o">(</span><span class="o">)</span><span class="o">{</span><span class="o">}</span>                               <span class="c1">//initialize union-find data structure with N objects(0 to N-1)
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">union</span><span class="o">(</span><span class="kt">int</span> <span class="n">p</span><span class="o">,</span> <span class="kt">int</span> <span class="n">q</span><span class="o">)</span><span class="o">{</span><span class="o">}</span>           <span class="c1">//add connection between p and q
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">connected</span><span class="o">(</span><span class="kt">int</span> <span class="n">p</span><span class="o">,</span> <span class="kt">int</span> <span class="n">q</span><span class="o">)</span><span class="o">{</span><span class="o">}</span>    <span class="c1">//are p and q in the same component
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">find</span><span class="o">(</span><span class="kt">int</span> <span class="n">p</span><span class="o">)</span><span class="o">{</span><span class="o">}</span>                    <span class="c1">//(optional) component identifier for p(0 to N-1)
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">count</span><span class="o">(</span><span class="o">)</span><span class="o">{</span><span class="o">}</span>                        <span class="c1">//(optional) number of components
+</span><span class="c1"></span><span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="implementaion-1-quick-find">Implementaion 1 :Quick-find</h2>
+<p>In this implementation, we use an integer array as underlying data structure. And p and q are connected iff(if and only if) they have the same id.
+<img src="img/3.png" alt=""></p>
+<p>Since the implemention is so simple and to shorten the length of the article, I just paste the code here with some comments.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickFindUF</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">id</span><span class="o">;</span>
+    
+    <span class="kd">public</span> <span class="nf">QuickFindUF</span><span class="o">(</span><span class="kt">int</span> <span class="n">N</span><span class="o">)</span><span class="o">{</span>
+        <span class="n">id</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">N</span><span class="o">]</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>    <span class="c1">// set id of each object to itself
+</span><span class="c1"></span>        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">connected</span><span class="o">(</span><span class="kt">int</span> <span class="n">p</span><span class="o">,</span><span class="kt">int</span> <span class="n">q</span><span class="o">)</span><span class="o">{</span>
+        <span class="k">return</span> <span class="n">id</span><span class="o">[</span><span class="n">p</span><span class="o">]</span> <span class="o">=</span><span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">q</span><span class="o">]</span><span class="o">;</span>  <span class="c1">// to check whether p and q are connected, check whether they have the same id
+</span><span class="c1"></span>    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">union</span><span class="o">(</span><span class="kt">int</span> <span class="n">p</span><span class="o">,</span><span class="kt">int</span> <span class="n">q</span><span class="o">)</span><span class="o">{</span>
+        <span class="kt">int</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">p</span><span class="o">]</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">qid</span> <span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">q</span><span class="o">]</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">id</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span><span class="o">=</span> <span class="n">pid</span><span class="o">)</span><span class="o">{</span>    <span class="c1">// to connect p to q, change all entries with id[p] to id[q]
+</span><span class="c1"></span>                <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">qid</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Quick-find is very simple and easy to implement. However, it is not a good algorithm because it is too slow.</p>
+<p>To initialize the array, we need to access every entry, which is necessary and not bad. But to union two objects, we also have to access every entry, which is a very bad idea. So it take N<!-- raw HTML omitted -->2<!-- raw HTML omitted --> array accesses to process a sequence of  N union commands on N objects.</p>
+<p><img src="img/quick-find-O.png" alt=""></p>
+<p>Here, we NEED know that a quadratic algorithm is NEVER a good algorithm.As time goes, we may have 10x faster CPU, but we will also have 10x larger memory, and we may want to solve a 10x bigger problem. A quadratic algorithm will take 10x as long to solve the problem. So we let's see whether implementaion 2 helps.</p>
+<h2 id="implementation-2-quick-union">Implementation 2 :Quick-union</h2>
+<p>In this implementation, we also use an array as underlying data structure. But id[i] now is parent of i, and root of i is id[id[..id[i]..]](keep going until it doesn't change).</p>
+<p><img src="img/quick-union.png" alt=""></p>
+<p>So to <strong>Find</strong>,  check if p and q have the same root. To <strong>Union</strong>, just set the id of p's root to the id of q's root.</p>
+<p>This is implementation code:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">QuickUnionUF</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">id</span><span class="o">;</span>
+    
+    <span class="kd">public</span> <span class="nf">QuickUnionUF</span><span class="o">(</span><span class="kt">int</span> <span class="n">N</span><span class="o">)</span><span class="o">{</span>
+        <span class="n">id</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">N</span><span class="o">]</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">root</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">)</span><span class="o">{</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span> <span class="o">!</span><span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">)</span><span class="o">{</span>  <span class="n">i</span> <span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">;</span><span class="o">}</span>  <span class="c1">// chase parent pointers until reach root
+</span><span class="c1"></span>        <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">connected</span><span class="o">(</span><span class="kt">int</span> <span class="n">p</span><span class="o">,</span><span class="kt">int</span> <span class="n">q</span><span class="o">)</span><span class="o">{</span>
+        <span class="k">return</span> <span class="n">root</span><span class="o">(</span><span class="n">p</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">q</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">union</span><span class="o">(</span><span class="kt">int</span> <span class="n">p</span><span class="o">,</span><span class="kt">int</span> <span class="n">q</span><span class="o">)</span><span class="o">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">p</span><span class="o">)</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">q</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Is this implementation a good algorithm? Sadly, the answer is no. It's also too slow. To union or find, we have to find roots of p and q firstly, which in worst case need access every entry of the array.</p>
+<p><img src="img/quick-union-O.png" alt=""></p>
+<p>So what can we do now? We need some improvements.</p>
+<h2 id="improvement-1weighting">Improvement 1:weighting</h2>
+<p>Quick-union is slow because after many union operations, the tree can be very tall, which makes find operation take longer time. So things can be better if we can avoid tall trees. This is what Weighted Quick-union do.</p>
+<p>We keep track of size of each tree. And when do a union operation, instead of simply setting the id of p's root to the id of q's root, we link root of smaller tree to root of larger tree.</p>
+<p><img src="img/weighted-QU.png" alt=""></p>
+<p>The following picture shows how effective it is.
+<img src="img/weighted-QU-example.png" alt=""></p>
+<p>Only several lines of code are needed to gain this better result.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WeightedQuickUnionUF</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">id</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">sz</span><span class="o">;</span>
+    
+    <span class="kd">public</span> <span class="nf">WeightedQuickUnionUF</span><span class="o">(</span><span class="kt">int</span> <span class="n">N</span><span class="o">)</span><span class="o">{</span>
+        <span class="n">id</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">N</span><span class="o">]</span><span class="o">;</span>
+        <span class="n">sz</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">N</span><span class="o">]</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="n">sz</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>  <span class="c1">// keep track size of each tree
+</span><span class="c1"></span>        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">root</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">)</span><span class="o">{</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span> <span class="o">!</span><span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">)</span><span class="o">{</span><span class="n">i</span> <span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">;</span><span class="o">}</span>
+        <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">connected</span><span class="o">(</span><span class="kt">int</span> <span class="n">p</span><span class="o">,</span><span class="kt">int</span> <span class="n">q</span><span class="o">)</span><span class="o">{</span>
+        <span class="k">return</span> <span class="n">root</span><span class="o">(</span><span class="n">p</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">q</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">union</span><span class="o">(</span><span class="kt">int</span> <span class="n">p</span><span class="o">,</span><span class="kt">int</span> <span class="n">q</span><span class="o">)</span><span class="o">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">p</span><span class="o">)</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">q</span><span class="o">)</span><span class="o">;</span>
+
+        <span class="c1">// new code here
+</span><span class="c1"></span>        <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">=</span><span class="o">=</span> <span class="n">j</span><span class="o">)</span> <span class="k">return</span> <span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sz</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">sz</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="o">)</span><span class="o">{</span>
+            <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
+            <span class="n">sz</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span><span class="o">=</span> <span class="n">sz</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+            <span class="n">id</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="n">sz</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span><span class="o">=</span> <span class="n">sz</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Is weighted quick-union a good algorithm? Let's do some analysis.</p>
+<p>The find operation takes time proportional to depth of p and q, while union operation takes constant time, given roots. So the problem now is to figure out how tall a tree can be.</p>
+<p>The answer is that depth of any node x is at most lgN. Why?</p>
+<p>The depth of x increases 1 when tree T<!-- raw HTML omitted -->1<!-- raw HTML omitted --> containing x is merged into another tree T<!-- raw HTML omitted -->2<!-- raw HTML omitted -->, which means:</p>
+<ul>
+<li>The size of tree containing x at least doubles since |T<!-- raw HTML omitted -->2<!-- raw HTML omitted -->|&gt;=|T<!-- raw HTML omitted -->1<!-- raw HTML omitted -->|</li>
+<li>Size of tree containing x can double at most lgN times</li>
+</ul>
+<p><img src="img/weighted-QU-O.png" alt=""></p>
+<p>It seems we have got a good algorithm, but can we just stop here and go home happily? No! We can do better!</p>
+<h2 id="improvement-2path-compression">Improvement 2:path compression</h2>
+<p>If we can make trees even more flatter, we can gain better performance. This is what path compression does: after computing the root of p, set the id of each examined node to point to the root.</p>
+<p><img src="img/QU-path.png" alt=""></p>
+<p><img src="img/QU-path2.png" alt=""></p>
+<p>Great! The tree gets flatter, making it take shorter time to find root.</p>
+<p>But when it comes to implementation, there are two methods to do it:</p>
+<ul>
+<li>Two-pass: add second loop to root() to set the id[] of each examined node to the root.</li>
+<li>One-pass: make every other node in path point to its grandparent.</li>
+</ul>
+<p>The former seems exactly what we want to do, but the latter is wiser. Only one line of code is needed to make it possible.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">WeightedQuickUnionUF</span> <span class="o">{</span>
+    
+    <span class="o">.</span><span class="o">.</span><span class="o">.</span><span class="o">.</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">root</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">)</span><span class="o">{</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span> <span class="o">!</span><span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">)</span><span class="o">{</span>
+            <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">]</span><span class="o">;</span>  <span class="c1">//path compression
+</span><span class="c1"></span>            <span class="n">i</span> <span class="o">=</span> <span class="n">id</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Can we do even better? Say, some linear algorithms?</p>
+<p>Unfortunately, according to some experts&rsquo; researches, there is no linear-time algorithm to solve this problem. In theory, Weighted Quick-Union with Path Compression(WQUPC) is not quite linear. But happily, in practice, WQUPC is almost linear.</p>
+<h2 id="summary">Summary</h2>
+<p>Weighted quick union (with path compression) makes it possible to solve problems that could not otherwise be addressed.</p>
+<p><img src="img/comparison.png" alt=""></p>
+<p>Above all, keep this in mind: super computer won't help, but good algorithm does!</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-03-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/algorithm/algorithms-part-i-week-1-analysis-of-algorithms/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Algorithms Part I week 1: Analysis of Algorithms</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/php/understanding-laravel-facade/">
+            <span class="next-text nav-default">理解 laravel 的Facade</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

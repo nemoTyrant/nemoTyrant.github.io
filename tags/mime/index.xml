@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mime on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/tags/mime/</link>
+    <description>Recent content in mime on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 21 Jun 2012 12:29:08 +0000</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/tags/mime/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>文件上传之坑爹的mime类型</title>
+      <link>https://sosonemo.me/posts/php/dumb-mime/</link>
+      <pubDate>Thu, 21 Jun 2012 12:29:08 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/php/dumb-mime/</guid>
+      <description>从我第一眼看到mime类型开始，就觉得这货是一个完全没用的东西，今天的学习经历更让我加深了这一观点。 《php和mysql web开发》书上有一</description>
+    </item>
+    
+  </channel>
+</rss>

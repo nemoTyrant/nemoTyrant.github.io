@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>centos下virtualbox安装，驱动问题 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="我学习php的时候，老师讲课需要用到windows下的一个教学软件，所以学习期间我无法使用linux，于是我就将之前安装的ubuntu删了。" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/linux/centos-in-virtualbox.html/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="centos下virtualbox安装，驱动问题" />
+<meta property="og:description" content="我学习php的时候，老师讲课需要用到windows下的一个教学软件，所以学习期间我无法使用linux，于是我就将之前安装的ubuntu删了。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/linux/centos-in-virtualbox.html/" />
+<meta property="article:published_time" content="2012-09-28T14:56:54+00:00" />
+<meta property="article:modified_time" content="2012-09-28T14:56:54+00:00" />
+<meta itemprop="name" content="centos下virtualbox安装，驱动问题">
+<meta itemprop="description" content="我学习php的时候，老师讲课需要用到windows下的一个教学软件，所以学习期间我无法使用linux，于是我就将之前安装的ubuntu删了。">
+<meta itemprop="datePublished" content="2012-09-28T14:56:54&#43;00:00" />
+<meta itemprop="dateModified" content="2012-09-28T14:56:54&#43;00:00" />
+<meta itemprop="wordCount" content="1231">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="centos下virtualbox安装，驱动问题"/>
+<meta name="twitter:description" content="我学习php的时候，老师讲课需要用到windows下的一个教学软件，所以学习期间我无法使用linux，于是我就将之前安装的ubuntu删了。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">centos下virtualbox安装，驱动问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2012-09-28 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> linux </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>我学习php的时候，老师讲课需要用到windows下的一个教学软件，所以学习期间我无法使用linux，于是我就将之前安装的ubuntu删了。</p>
+<p>我们linux课程以centos为例进行讲解，当然，是装在虚拟机里的。当我看到有同学装了双系统，在linux下装了个虚拟机安装xp来听老师讲课后，我内心的小骚动又被激起了。</p>
+<p>于是我也装起了双系统，这个已经很熟练了，像往常一样安装配置就好了。</p>
+<p>配置完成后，首先要做的就是装virtualbox，在这里我遇到了问题。</p>
+<p>以rpm方式装完vb后，会提示一个内核编译错误：</p>
+<blockquote>
+<p>Trying to register the VirtualBox kernel modules using DKMS[FAILED]
+(Failed, trying without DKMS)<br>
+Recompiling VirtualBox kernel modules[FAILED]</p>
+</blockquote>
+<p>起初我没有注意，看到vb已经安装成功就准备打开使用，结果点开机的时候提示出错。一方面，提示用户必须在vboxusers这个组里才能使用vb，我将我正在使用的普通用户加到了这个组里；另一方面提示内核出错，让运行“/etc/init.d/vboxdrv setup”，我按它说的做了，结果还是出错，提示和上边一样。</p>
+<p>很显然，它提到了DKMS。我不知道这玩意是干嘛的，也不想知道，于是我顺手<code>yum install dkms</code>完事。</p>
+<p>再次运行它提到的那条命令，这次还是出错，提示如下：</p>
+<blockquote>
+<p>Trying to register the VirtualBox kernel modules using DKMS Error!Your kernel headers for kernel 2.6.18-194.el5PAE cannot be found at /lib/moduals/2.6.18-194.el5PAE/build or /lib/modules/2.6.1-194.el5PAE/source[FAILED] (Failed,trying without DKMS) Recompiling VirtualBox kernel modules[FAILED] (look at /var/log/vbox-install.log to find out what went wrong)</p>
+</blockquote>
+<p>（注意：这段话是从网上复制的，内核版本与我现在使用的不同，但提示就是这个样子的）</p>
+<p>之后我重装了一次vb，情况依旧。</p>
+<p>它提示没有内核的头文件，我没辙了，于是开始百度。</p>
+<p>有人提到需要装<code>kernel-devel</code>这个包，于是我yum安装了。但我用的是163的源，里面的这个包是最新的，和我现在的内核版本不同，所以安装完之后再次运行那条命令，还是出错。我不知道官方的源是不是每个版本的包都有，不过我觉得163既然是镜像，它上边的东西应该和官方网站上的是一样的。</p>
+<p>我只好转换思路，开始在centos的安装光盘里找以kernel开头的rpm包。很幸运，我找到分别以<code>kernel-devel</code>和k<code>ernel-headers</code>开头，后跟我内核版本的rpm包。于是我删掉之前安装的<code>kernel-devel</code>包，安装了这俩包。再次运行vb提示的命令后，终于提示成功了。</p>
+<p>总结一下：</p>
+<p>rpm安装vb-&gt;将root添加到vboxusers组中-&gt;缺少DKMS，yum安装-&gt;缺少头文件，从光盘中找到相应包安装-&gt;运行vb提示的那条命令，驱动编译成功-&gt;开始正常运行</p>
+<p>不过，并不是所有人都会遇到我现在遇到的问题。今天下午，我问装双系统的那个同学，他说他装完vb后直接就可以使用，什么问题也没有，他用的是6.3。最让我羡慕的是他6.3也用得很好，没有我之前遇到的鼠标问题，而且大概因为他的电脑有集成显卡的缘故，使用系统自带的显卡驱动就可以显示3d效果，而我想启用3d效果的话得另装显卡驱动。</p>
+<p>linux下有太多诡异的问题，这给我们使用它带来了很大的困难，但也算是它的魅力之一吧。毕竟，当你解决掉一个问题的时候，你会很有成就感。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2012-09-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/linux/linux-mount-command.html/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">linux下的挂载命令使用</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/php/vim-snipmate.html/">
+            <span class="next-text nav-default">神器vim之snipmate插件-快速插入</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

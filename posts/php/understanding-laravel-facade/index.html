@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>理解 laravel 的Facade - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="接触Laravel一段时间，对它的一些操作的原理比较感兴趣，比如Cache::get(&#39;a&#39;,&#39;b&#39;)。 这短短的一条语句背后，Laravel" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/php/understanding-laravel-facade/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="理解 laravel 的Facade" />
+<meta property="og:description" content="接触Laravel一段时间，对它的一些操作的原理比较感兴趣，比如Cache::get(&#39;a&#39;,&#39;b&#39;)。 这短短的一条语句背后，Laravel" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/php/understanding-laravel-facade/" />
+<meta property="article:published_time" content="2015-01-08T11:28:41+00:00" />
+<meta property="article:modified_time" content="2015-01-08T11:28:41+00:00" />
+<meta itemprop="name" content="理解 laravel 的Facade">
+<meta itemprop="description" content="接触Laravel一段时间，对它的一些操作的原理比较感兴趣，比如Cache::get(&#39;a&#39;,&#39;b&#39;)。 这短短的一条语句背后，Laravel">
+<meta itemprop="datePublished" content="2015-01-08T11:28:41&#43;00:00" />
+<meta itemprop="dateModified" content="2015-01-08T11:28:41&#43;00:00" />
+<meta itemprop="wordCount" content="1390">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="理解 laravel 的Facade"/>
+<meta name="twitter:description" content="接触Laravel一段时间，对它的一些操作的原理比较感兴趣，比如Cache::get(&#39;a&#39;,&#39;b&#39;)。 这短短的一条语句背后，Laravel"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">理解 laravel 的Facade</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-01-08 </span>
+        <div class="post-category">
+            <a href="/categories/php%E4%B9%8B%E8%B7%AF/"> php之路 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>接触Laravel一段时间，对它的一些操作的原理比较感兴趣，比如<code>Cache::get('a','b')</code>。</p>
+<p>这短短的一条语句背后，Laravel进行了哪些工作，让它变成现实呢？今天，我特地研究了一下它的工作原理。理解了这些原理之后，我们也可以实现自己的<code>Facade</code>。</p>
+<p>要想操作<code>Cache</code>的<code>get</code>方法，必须先有<code>Cache</code>这个类。那么这个类从哪来呢？打开项目<code>app/config/app.php</code>可以看到有一个<code>aliase</code>数组，这里定义了一些框架自带类的别名。我们可以看到，调用<code>Cache</code>类，其实是调用了<code>Illuminate\Support\Facades\Cache这</code>个类。</p>
+<p>给类定义别名，可以使用class_alias这个函数：
+<code>class_alias('Illuminate\Support\Facades\Cache','Cache',true);</code></p>
+<p>来看看<code>Illuminate\Support\Facades\Cache</code>这个类是如何定义的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">namespace</span> <span class="nx">Illuminate\Support\Facades</span><span class="p">;</span>
+
+<span class="sd">/**
+</span><span class="sd"> * @see \Illuminate\Cache\CacheManager
+</span><span class="sd"> * @see \Illuminate\Cache\Repository
+</span><span class="sd"> */</span>
+<span class="k">class</span> <span class="nc">Cache</span> <span class="k">extends</span> <span class="nx">Facade</span> <span class="p">{</span>
+
+    <span class="sd">/**
+</span><span class="sd">     * Get the registered name of the component.
+</span><span class="sd">     *
+</span><span class="sd">     * @return string
+</span><span class="sd">     */</span>
+    <span class="k">protected</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getFacadeAccessor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;cache&#39;</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>有没有发现这个类里根本没有<code>get</code>这个方法？这到底是怎么回事？这就引出了今天的主题<code>Facde</code>。</p>
+<p>可以看到，<code>Cache</code>类继承了<code>Facade</code>类。<code>Facade</code>其实是一个<code>静态代理(static proxy)</code>，它并不提供具体的操作方法，而是实例化一个真正具有该方法的对象，并调用这个方法。我们不妨打开Facade类的定义文件看看：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="c1">//摘录部分关键代码
+</span><span class="c1"></span><span class="k">namespace</span> <span class="nx">Illuminate\Support\Facades</span><span class="p">;</span>
+<span class="k">abstract</span> <span class="k">class</span> <span class="nc">Facade</span> <span class="p">{</span>
+     <span class="k">protected</span> <span class="k">static</span> <span class="nv">$app</span><span class="p">;</span>
+     <span class="sd">/**
+</span><span class="sd">     * Get the root object behind the facade.
+</span><span class="sd">     *
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getFacadeRoot</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">static</span><span class="o">::</span><span class="na">resolveFacadeInstance</span><span class="p">(</span><span class="k">static</span><span class="o">::</span><span class="na">getFacadeAccessor</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="sd">/**
+</span><span class="sd">     * Get the registered name of the component.
+</span><span class="sd">     *
+</span><span class="sd">     * @return string
+</span><span class="sd">     *
+</span><span class="sd">     * @throws \RuntimeException
+</span><span class="sd">     */</span>
+    <span class="k">protected</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getFacadeAccessor</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">\RuntimeException</span><span class="p">(</span><span class="s2">&#34;Facade does not implement getFacadeAccessor method.&#34;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="sd">/**
+</span><span class="sd">     * Resolve the facade root instance from the container.
+</span><span class="sd">     *
+</span><span class="sd">     * @param  string  $name
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">protected</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">resolveFacadeInstance</span><span class="p">(</span><span class="nv">$name</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">is_object</span><span class="p">(</span><span class="nv">$name</span><span class="p">))</span> <span class="k">return</span> <span class="nv">$name</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="k">static</span><span class="o">::</span><span class="nv">$resolvedInstance</span><span class="p">[</span><span class="nv">$name</span><span class="p">]))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">static</span><span class="o">::</span><span class="nv">$resolvedInstance</span><span class="p">[</span><span class="nv">$name</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="k">static</span><span class="o">::</span><span class="nv">$resolvedInstance</span><span class="p">[</span><span class="nv">$name</span><span class="p">]</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="nv">$app</span><span class="p">[</span><span class="nv">$name</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="sd">/**
+</span><span class="sd">     * Handle dynamic, static calls to the object.
+</span><span class="sd">     *
+</span><span class="sd">     * @param  string  $method
+</span><span class="sd">     * @param  array   $args
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="fm">__callStatic</span><span class="p">(</span><span class="nv">$method</span><span class="p">,</span> <span class="nv">$args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$instance</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="na">getFacadeRoot</span><span class="p">();</span>
+
+        <span class="k">switch</span> <span class="p">(</span><span class="nx">count</span><span class="p">(</span><span class="nv">$args</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+                <span class="k">return</span> <span class="nv">$instance</span><span class="o">-&gt;</span><span class="nv">$method</span><span class="p">();</span>
+
+            <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+                <span class="k">return</span> <span class="nv">$instance</span><span class="o">-&gt;</span><span class="nv">$method</span><span class="p">(</span><span class="nv">$args</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+
+            <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+                <span class="k">return</span> <span class="nv">$instance</span><span class="o">-&gt;</span><span class="nv">$method</span><span class="p">(</span><span class="nv">$args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nv">$args</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+            <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+                <span class="k">return</span> <span class="nv">$instance</span><span class="o">-&gt;</span><span class="nv">$method</span><span class="p">(</span><span class="nv">$args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nv">$args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nv">$args</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+            <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+                <span class="k">return</span> <span class="nv">$instance</span><span class="o">-&gt;</span><span class="nv">$method</span><span class="p">(</span><span class="nv">$args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nv">$args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nv">$args</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nv">$args</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+
+            <span class="k">default</span><span class="o">:</span>
+                <span class="k">return</span> <span class="nx">call_user_func_array</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="nv">$instance</span><span class="p">,</span> <span class="nv">$method</span><span class="p">),</span> <span class="nv">$args</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>既然<code>Cache</code>类没有<code>get</code>这个方法，<code>Facade</code>必然得实现<code>__callStatic</code>方法。<code>__callStatic</code>方法很简单——获取对象、调用对象的相应方法。而<code>Cache</code>类实现的<code>getFacadeAccessor</code>方法只不过是告诉<code>Facade</code>应该去获取哪个对象。</p>
+<p>所以看到这里，我们可以试着写一个自己的Facade</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">class</span> <span class="nc">Facade</span> <span class="p">{</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="fm">__callStatic</span><span class="p">(</span><span class="nv">$method</span><span class="p">,</span><span class="nv">$args</span><span class="p">){</span>
+        <span class="nv">$instance</span><span class="o">=</span><span class="k">static</span><span class="o">::</span><span class="na">getInstance</span><span class="p">(</span><span class="k">static</span><span class="o">::</span><span class="na">getFacadeAccessor</span><span class="p">());</span>
+        <span class="k">return</span> <span class="nv">$instance</span><span class="o">-&gt;</span><span class="nv">$method</span><span class="p">(</span><span class="nv">$args</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getInstance</span><span class="p">(</span><span class="nv">$name</span><span class="p">){</span>
+        <span class="nv">$class</span><span class="o">=</span><span class="nv">$name</span><span class="o">.</span><span class="s1">&#39;Real&#39;</span><span class="p">;</span>    <span class="c1">//这里只是为了演示，随便定了一个真正调用类的名字
+</span><span class="c1"></span>        <span class="k">return</span> <span class="k">new</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">CacheReal</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">test</span><span class="p">(){</span>
+        <span class="k">echo</span> <span class="s1">&#39;hello world&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Cache</span> <span class="k">extends</span> <span class="nx">Facade</span> <span class="p">{</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getFacadeAccessor</span><span class="p">(){</span>
+        <span class="k">return</span> <span class="s1">&#39;Cache&#39;</span><span class="p">;</span> <span class="c1">//返回真正执行操作的类的信息
+</span><span class="c1"></span>    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">__autoload</span><span class="p">(</span><span class="nv">$class</span><span class="p">){</span>
+    <span class="nx">class_alias</span><span class="p">(</span><span class="s1">&#39;Cache&#39;</span><span class="p">,</span><span class="nv">$class</span><span class="p">,</span><span class="k">true</span><span class="p">);</span>   <span class="c1">//为了简单演示，所有请求的类定义为Cache类的别名
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="nx">AAA</span><span class="o">::</span><span class="na">test</span><span class="p">();</span>   <span class="c1">//屏幕打印出Hello world
+</span></code></pre></td></tr></table>
+</div>
+</div><p>看到这里，你应该明白Facade到底是怎么回事了吧？那么使用Facade有什么好处呢？在Laravel里，Facade其实是和IOC联合发挥威力的，我们这里单独讨论Facade。</p>
+<p>以我目前粗浅的理解，能感受到的好处有：</p>
+<ol>
+<li>语句更简短。不需要非得new一个对象出来再执行。</li>
+<li>解除调用对象的强依赖关系。当我们执行<code>Cache::set()</code>的方法时，并不需要关心具体是哪个后端的类真正做了set这个操作。如果将来想把缓存从文件改到redis里，只需要在配置文件里修改一下，业务代码完全不受影响。</li>
+</ol>
+<p>参考内容：</p>
+<ol>
+<li><a href="http://laravel.com/docs/4.2/facades">官方文档</a></li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-01-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/algorithm/algorithms-part-i-week-1-union-find/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Algorithms Part I week 1: union-find</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/php/laravel-route-pitfall/">
+            <span class="next-text nav-default">laravel route 重定向的一个小坑</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="NemoTyrant" /><meta name="description" content="One nemo to rule them all" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/" />
+  <link href="https://sosonemo.me/index.xml" rel="alternate" type="application/rss+xml" title="Nemo&#39;s Neverland" />
+  <link href="https://sosonemo.me/index.xml" rel="feed" type="application/rss+xml" title="Nemo&#39;s Neverland" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Nemo&#39;s Neverland" />
+<meta property="og:description" content="One nemo to rule them all" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://sosonemo.me/" />
+<meta property="og:updated_time" content="2020-11-29T22:56:09+08:00" />
+<meta itemprop="name" content="Nemo&#39;s Neverland">
+<meta itemprop="description" content="One nemo to rule them all"><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Nemo&#39;s Neverland"/>
+<meta name="twitter:description" content="One nemo to rule them all"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/go/context-sourcecode-analysis/">context源码解析</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2020-11-29 </span>
+      <div class="post-category">
+          <a href="/categories/go/"> go </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      为什么会有这个包？ 我们知道goroutine之间是相互独立的，没有父子关系，一个goroutine无法主动关闭另一个goroutine，只能
+    </div>
+    <div class="read-more">
+      <a href="/posts/go/context-sourcecode-analysis/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/go/connection-pool-in-go-redis/">go-redis 连接池的实现源码解析</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2020-08-18 </span>
+      <div class="post-category">
+          <a href="/categories/go/"> go </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      前言 在fpm模式下，php中不存在连接池这种东西，顶多是用pconnect的方法使连接保留在fpm进程内，达到复用连接的目的。但如果是go这
+    </div>
+    <div class="read-more">
+      <a href="/posts/go/connection-pool-in-go-redis/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/php/get_headers-pitfalls/">get_headers的一个小坑</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2020-08-15 </span>
+      <div class="post-category">
+          <a href="/categories/php%E4%B9%8B%E8%B7%AF/"> php之路 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      前言 之前工作中有个需求，判断CDN上某个文件是否存在。很显然，用一个HTTP的HEAD请求就可以搞定。 在本地启动一个nginx服务，服务目录
+    </div>
+    <div class="read-more">
+      <a href="/posts/php/get_headers-pitfalls/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/redis/redis-cluster-introduction/">Redis Cluster 入门实践</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2020-08-14 </span>
+      <div class="post-category">
+          <a href="/categories/redis/"> redis </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      前言 最初，我们使用单点redis就可以愉快地玩耍，直到有一天这个单点挂掉导致整个服务不可用，我们意识到要用主从节点。在日常使用中，至少会使用
+    </div>
+    <div class="read-more">
+      <a href="/posts/redis/redis-cluster-introduction/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/go/handling-one-million-requests-with-golang/">(译文)用go语言处理每分钟1百万次请求</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2020-06-16 </span>
+      <div class="post-category">
+          <a href="/categories/go/"> go </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      (本文编译自这篇文章，略去一些与技术无关的介绍文字) 面临的问题 我们正在构建一个匿名数据统计系统，希望能够处理来自数百万个终端的POST请求。
+    </div>
+    <div class="read-more">
+      <a href="/posts/go/handling-one-million-requests-with-golang/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/electronics/spi-protocol-introduction/">SPI协议简介</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-12-26 </span>
+      <div class="post-category">
+          <a href="/categories/electronics/"> electronics </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      一. 引言 只要你使用过树莓派、arduino或者单片机之类的东西，一定少不了和各种传感器打交道。两个设备之间通信，就会涉及到协议的问题。所谓协
+    </div>
+    <div class="read-more">
+      <a href="/posts/electronics/spi-protocol-introduction/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/essay/from-wordpress-to-hugo/">从wordpress迁移到hugo</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-12-19 </span>
+      <div class="post-category">
+          <a href="/categories/%E5%BF%83%E6%83%85%E7%A9%BA%E9%97%B4/"> 心情空间 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      一. 为什么用hugo 2012年就建立了自己的博客，可是回望过去，并没有写过多少有用的东西。最近又想鼓捣一下树莓派和arduino，顺便写写学
+    </div>
+    <div class="read-more">
+      <a href="/posts/essay/from-wordpress-to-hugo/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/php/php-parser-introduction/">PHP-Parser 学习笔记</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2019-01-13 </span>
+      <div class="post-category">
+          <a href="/categories/php%E4%B9%8B%E8%B7%AF/"> php之路 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      缘起 最近工作上接到一个任务，要把项目代码的控制器中所有没有判断过权限的public方法找出来。我们的控制器里有一个统一的checkAllow
+    </div>
+    <div class="read-more">
+      <a href="/posts/php/php-parser-introduction/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/linux/strongswan-to-shadowsocks/">阿里云搭建strongswan VPN 国内外分流中转到shadowsocks</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2016-04-26 </span>
+      <div class="post-category">
+          <a href="/categories/linux/"> linux </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      前言：前段时间新出现了几个支持IKEv2的VPN，试用了一下，感受速度嗖嗖的，不过流量贵贵的。作为一个有尊严的技术人员，怎能甘心就这样把钱轻
+    </div>
+    <div class="read-more">
+      <a href="/posts/linux/strongswan-to-shadowsocks/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/algorithm/algorithms-part-i-week-1-analysis-of-algorithms/">Algorithms Part I week 1: Analysis of Algorithms</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2015-03-28 </span>
+      <div class="post-category">
+          <a href="/categories/algorithms/"> algorithms </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Why to analyze? To solve a single problem, there may be many different algorithms. Should we just randomly pick up one or use the best one? Of course, we want the best one. But how can we assert that this one is better than that one? Even though we have the best one, is it really the best one in the world? Can there be a better undiscovered algorithm?
+We must analyze algorithms to:
+    </div>
+    <div class="read-more">
+      <a href="/posts/algorithm/algorithms-part-i-week-1-analysis-of-algorithms/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/algorithm/algorithms-part-i-week-1-union-find/">Algorithms Part I week 1: union-find</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2015-03-20 </span>
+      <div class="post-category">
+          <a href="/categories/algorithms/"> algorithms </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Theses days, I took a MOOC course named Algorithms instructed by Robert Sedgewick and Kevin Wayne from Princton University. To solidify my understanding of the course and for future reference, I'm going to write some notes on the subject. And from this post on, I decide to write technical articles in English, which is a good way to improve my written English skill.
+Basic steps There are some steps we can follow to develop a usable algorithm.
+    </div>
+    <div class="read-more">
+      <a href="/posts/algorithm/algorithms-part-i-week-1-union-find/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/php/understanding-laravel-facade/">理解 laravel 的Facade</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2015-01-08 </span>
+      <div class="post-category">
+          <a href="/categories/php%E4%B9%8B%E8%B7%AF/"> php之路 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      接触Laravel一段时间，对它的一些操作的原理比较感兴趣，比如Cache::get('a','b')。 这短短的一条语句背后，Laravel
+    </div>
+    <div class="read-more">
+      <a href="/posts/php/understanding-laravel-facade/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/php/laravel-route-pitfall/">laravel route 重定向的一个小坑</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2014-12-05 </span>
+      <div class="post-category">
+          <a href="/categories/php%E4%B9%8B%E8%B7%AF/"> php之路 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      今天做项目发现一个奇怪的现象，我的路由配置里有如下配置： 1 2 3 4 5 6 7 8 &lt;?php Route::group(array(&#39;prefix&#39;=&gt;&#39;admin&#39;,&#39;before&#39;=&gt;&#39;adminauth&#39;),function(){ // 管理员登录 Route::get(&#39;/&#39;,function(){ return Redirect::to(&#39;admin/login&#39;); }); Route::get(&#39;login&#39;,&#39;UserController@adminLogin&#39;); }; 目的是无论用户输入admin，还是adm
+    </div>
+    <div class="read-more">
+      <a href="/posts/php/laravel-route-pitfall/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/wordpress/pitfalls-to-https/">网站转 https 遇到的几个坑</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2014-10-29 </span>
+      <div class="post-category">
+          <a href="/categories/wordpress%E7%82%B9%E6%BB%B4/"> wordpress点滴 </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      心血来潮想把网站转成https的，原本以为很简单，没想到过程当中还有不少需要注意的地方，特此记录一下。 1. ssl证书申请 这个最简单了，我申请的
+    </div>
+    <div class="read-more">
+      <a href="/posts/wordpress/pitfalls-to-https/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/posts/linux/setup-vpn/">搭建 vpn</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2014-07-24 </span>
+      <div class="post-category">
+          <a href="/categories/linux/"> linux </a>
+          </div>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      今天入手了linode，网站环境搭建好后，开始弄vpn。本文参考了一下这篇文章，并结合之前的经验。 1. 安装PPP，PPTP 1 2 # yum install -y ppp # rpm -ivh
+    </div>
+    <div class="read-more">
+      <a href="/posts/linux/setup-vpn/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    </section>
+  
+  <nav class="pagination">
+    
+    <a class="next" href="/page/2/">
+        <span class="next-text">过去</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+  </nav>
+        </div>
+        
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

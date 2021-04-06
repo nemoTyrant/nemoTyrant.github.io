@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>悲剧的一天－－安装6.3minimal及鼠标问题 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="centos6.3发布了，我装的还是6.2。昨天终于手贱升级了，结果鼠标不好使了，每次点击指针都会跑到左上角。网上搜索无果，只好重装系统。 但" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/linux/centos-minimal-and-mouse-issue.html/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="悲剧的一天－－安装6.3minimal及鼠标问题" />
+<meta property="og:description" content="centos6.3发布了，我装的还是6.2。昨天终于手贱升级了，结果鼠标不好使了，每次点击指针都会跑到左上角。网上搜索无果，只好重装系统。 但" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/linux/centos-minimal-and-mouse-issue.html/" />
+<meta property="article:published_time" content="2012-07-24T16:00:19+00:00" />
+<meta property="article:modified_time" content="2012-07-24T16:00:19+00:00" />
+<meta itemprop="name" content="悲剧的一天－－安装6.3minimal及鼠标问题">
+<meta itemprop="description" content="centos6.3发布了，我装的还是6.2。昨天终于手贱升级了，结果鼠标不好使了，每次点击指针都会跑到左上角。网上搜索无果，只好重装系统。 但">
+<meta itemprop="datePublished" content="2012-07-24T16:00:19&#43;00:00" />
+<meta itemprop="dateModified" content="2012-07-24T16:00:19&#43;00:00" />
+<meta itemprop="wordCount" content="2048">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="悲剧的一天－－安装6.3minimal及鼠标问题"/>
+<meta name="twitter:description" content="centos6.3发布了，我装的还是6.2。昨天终于手贱升级了，结果鼠标不好使了，每次点击指针都会跑到左上角。网上搜索无果，只好重装系统。 但"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">悲剧的一天－－安装6.3minimal及鼠标问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2012-07-24 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> linux </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>centos6.3发布了，我装的还是6.2。昨天终于手贱升级了，结果鼠标不好使了，每次点击指针都会跑到左上角。网上搜索无果，只好重装系统。</p>
+<p>但是我没有放弃升级，昨晚重装完大概配置了一下也没多装软件，可以说是比较纯净的系统，我想这样升级总不会有错吧？于是我今天早上又升级了。我想好了，如果升完一切正常那自然是好，如果还不行，那就重装系统，什么也不配置直接升级，这总应该行了。再不行的话，我就直接装6.3minimal（完整镜像太大了，懒得下），再按需装软件。</p>
+<p>唉，这些想法让我度过了悲剧地一天，不过话说回来，又学到不少东西。</p>
+<p>升完级后鼠标还是那样，于是我按计划重装系统直接更新。但是重装系统的时候我心想，我直接装6.3minimal得了，情况总不会比重装6.2直接升级差，而且就算到时候失败了，也能学一下从零开始装系统。于是我切回win7下，下好6.3，顺便查了点资料，然后就开始了。</p>
+<p>悲剧也就这样开始了。</p>
+<p>首先，minimal是不带桌面的，所以我等linux新人装完系统的第一要务就是装桌面环境，有了图形界面其它的就好说了。于是我找好了装桌面环境的文章。但是yum安装是需要联网的，于是我又找了如何在文本模式下进行adsl拨号连接的文章（鸟哥的私房菜里有）。</p>
+<p>其实我在装minimal的时候就已经不抱希望了，因为在图形安装界面的时候鼠标就已经是那德性了。不过正如前面所说，就算失败了也算个学习过程，所以继续前进。</p>
+<p>在win7下找好资料，我兴冲冲地切到centos下配置拨号连接。但是我悲剧地发现，拨号所需的<code>rp-pppoe</code>和<code>ppp</code>两个包minimal版里都没有。于是我只好悲剧地再切到win7下，我想到我有6.2的完整镜像，就从里面提取出这两文件放到fat32盘里，再切到centos下挂载并rpm安装。又悲剧了，ppp依赖一个叫<code>libpcap</code>的包。完蛋了，我又切回win7下，到libpcap官网下了那个包。但是！！我晕，官网给的是源码包，这意味着我电脑里得有gcc。我看了眼minimal的镜像，没有gcc。</p>
+<p>唉，梳理一下思路：我要装桌面环境－－需要拨号连接－－需要rp-pppoe（依赖ppp）－－ppp依赖libpcap－－需要gcc编译安装。</p>
+<p>我想的是，虽然6.2镜像里软件的版本不一定是最新的，但是该有的都有。于是，我干脆把6.2镜像里的packages包都提取出来。而且我还以为rpm会像yum一样自己解决依赖关系，然而我错了。</p>
+<p>我切到centos下，rpm安装gcc。完蛋，提示我有依赖的包。于是我rpm安装那个包，完蛋，又提示有依赖。我心一横，反正已经这样了，我看它能依赖多少，于是它提示我依赖谁，我就是rpm谁。悲剧！你赢了。我就郁闷了，这么多包互相跟亲人似的一个依赖一个，我哪能弄得过来。我只好停下来想别的办法，我不想切回win7下了，所以便用手机上网找资料。</p>
+<p>虽然我不清楚怎么做，但是我坚信yum既然能通过网络安装软件，就一定能从本地安装，所以我就朝这个方向找资料。不错，确实是这样的，但是网上的文章几乎都是说把镜像挂载，然后修改repo配置文件。可是我的6.2镜像在ntfs盘下，直接挂载不了，而且我都已经把packages提取出来了。</p>
+<p>于是我按网上步骤挂载packages并修改media.repo指向它。但是yum安装出错了，提示打不开镜像。我试了好几次才知道是因为base.repo没有被禁用，yum还是尝试从网上下载。于是我把base.repo禁掉，再yum时不提示镜像出错了，但是提示找不到<code>repodata/repomd.xml</code>。我心头一凉，不用说，这肯定是packages里rpm包的验证文件之类的东西，我哪能想到把它也提取出来。于是我不得不切回win7了。</p>
+<p>既然切回win7了，我干脆把6.2的镜像都复制到fat32盘里，省得一会还有什么事。这次，我终于成功了！<code>yum install gcc</code>，看着屏幕上翻滚的字符我心里止不住的喜悦啊。</p>
+<p>一切迎刃而解，装好gcc，编译安装libpcap，再装rp-pppoe，配置拨号连接，装x window，装gnome，我终于看到图形界面了！但是，死机了－ －！晕，只得重启。</p>
+<p>我多么希望我再看到图形界面的时候，鼠标能正常使用，但是现实就是现实，鼠标还是那德性。我只好再分析一下，我觉得鼠标出问题可能是内核或者鼠标驱动两者的原因。然而，不管我升级降级内核还是升级鼠标驱动，问题照旧。</p>
+<p>我彻底绝望了，网上别说解决方法，连相同的现象都搜不到。没辙了，我只能装回6.2然后小心点只升级自己需要的软件。临重装，我还好心地跑到centos.org上报告了这个bug。鬼知道什么时候能解决啊，他们要是无法在自己电脑上重现这问题，肯定也没法解决。但是我觉得这现象肯定太极个别了，不然装6.3的人那么多，怎么网上这个现象的资料几乎为零。</p>
+<p>唉，悲剧的一天。不过，也算学到不少东西。</p>
+<p>(2012.07.25更新)我重装完6.2后升级了内核，现在一切正常，所以可以证明鼠标问题与内核没有任何关系。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2012-07-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/linux/centos-to-fedora-to-ubuntu/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">从centos经历fedora，转投ubuntu</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/php/lamp/">
+            <span class="next-text nav-default">lamp环境配置</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

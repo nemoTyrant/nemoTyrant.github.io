@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>win7下centos硬盘安装及显卡驱动问题 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="早就下好了centos6.2的镜像文件，昨天用virtualbox装好，但是太卡了，今天便下定决心装双系统了。 centos的硬盘安装主要参考" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/linux/win-centos-dual-systems/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="win7下centos硬盘安装及显卡驱动问题" />
+<meta property="og:description" content="早就下好了centos6.2的镜像文件，昨天用virtualbox装好，但是太卡了，今天便下定决心装双系统了。 centos的硬盘安装主要参考" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/linux/win-centos-dual-systems/" />
+<meta property="article:published_time" content="2012-07-21T10:32:57+00:00" />
+<meta property="article:modified_time" content="2012-07-21T10:32:57+00:00" />
+<meta itemprop="name" content="win7下centos硬盘安装及显卡驱动问题">
+<meta itemprop="description" content="早就下好了centos6.2的镜像文件，昨天用virtualbox装好，但是太卡了，今天便下定决心装双系统了。 centos的硬盘安装主要参考">
+<meta itemprop="datePublished" content="2012-07-21T10:32:57&#43;00:00" />
+<meta itemprop="dateModified" content="2012-07-21T10:32:57&#43;00:00" />
+<meta itemprop="wordCount" content="1152">
+
+
+
+<meta itemprop="keywords" content="centos," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="win7下centos硬盘安装及显卡驱动问题"/>
+<meta name="twitter:description" content="早就下好了centos6.2的镜像文件，昨天用virtualbox装好，但是太卡了，今天便下定决心装双系统了。 centos的硬盘安装主要参考"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">win7下centos硬盘安装及显卡驱动问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2012-07-21 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> linux </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>早就下好了centos6.2的镜像文件，昨天用virtualbox装好，但是太卡了，今天便下定决心装双系统了。</p>
+<p>centos的硬盘安装主要参考了<a href="http://hi.baidu.com/chenganshi/blog/item/cdb14456369238296a63e55d.html">这篇文章</a>(链接已失效)。文章讲的很详细，但是出于学习的目的，我大概总结一下思路：</p>
+<ol>
+<li>为centos划出一定空间</li>
+<li>将镜像文件放到fat32格式的盘中是因为linux不支持ntfs格式。但这带来一个新问题是fat32格式不支持大于4gb的文件，如果将来centos的镜像文件大于4gb，就得另找办法了。</li>
+<li>利用easybcd制作引导时，要先知道镜像所在分区的分区号。网上好多教程要求把从镜像提取出来的文件在c盘和镜像所在盘各放一份，我猜是为了图方便，分区号直接写hd0,0就行。</li>
+<li>安装过程中需要注意的就是引导程序一定要写进mbr里，因为linux可以引导windows，反之不可以。</li>
+</ol>
+<p>（2012.09.28补充：昨天装双系统的时候，想再次参考一下上面链接的文章，结果发现已经失效，所以在这里大概记录一下安装过程，备忘）</p>
+<ol>
+<li>
+<p>分出一个5g大左右的fat32分区，将iso放到里边，并将isolinux和images提取出来</p>
+</li>
+<li>
+<p>利用wingrub工具查看该分区的编号，也可以通过经验判断</p>
+</li>
+<li>
+<p>用easybcd添加一个grub启动项，并在配置文件时输入以下内容：</p>
+<blockquote>
+<p>title CentOS<br>
+kernel (hd0,0)/isolinux/vmlinuz<br>
+initrd (hd0,0)/isolinux/initrd.img</p>
+</blockquote>
+<p>注意：分区编号要输刚才分出来的分区的编号</p>
+</li>
+<li>
+<p>重启安装，搞定。</p>
+</li>
+</ol>
+<p>（补充完毕）</p>
+<p>这里可以引出一个思考：双系统如何删除linux。</p>
+<p>我没搜到现成的讲如何删除centos的文章，但是通过安装过程，我大概有了个思路：必须先到win7下将mbr修复成单系统状态，之后删除linux所在分区即可。</p>
+<p>安装完毕，我居然手贱想升级显卡驱动，为了华丽的3d效果＠_＠!</p>
+<p>我参考了<a href="http://yidao620c.iteye.com/blog/1393831">这篇文章</a>（整个过程都得在root权限下）。然而悲剧的是，当我装完驱动重启后发现屏幕上出现了六个小屏幕，六个！！我晕，你知道我是怎么在这“小巧”的屏幕里搜索解决方案的吗！！</p>
+<p>我还搜到一篇文章，和上篇类似，但是提到glx-utils.x86_64可能会与显卡驱动冲突，于是我悲剧地删除了，但是情况依旧。</p>
+<p>就在我准备放弃、重装系统时，我终于搜到了一篇<a href="http://hi.baidu.com/ivalicesky/item/5124cc12628a57ed9813d616">救命文章</a>(链接已失效)，六个屏幕的问题就这么解决了。但是略微有点不爽的是，问题虽然解决，我并不知道为什么这么做可以解决。知其然，不知其所以然有什么意思。而且文章作者说不要再安装compiz之类的软件，但是如果不是为了视觉效果，我更新驱动有什么用？</p>
+<p>于是我变换关键词继续搜索，总算柳暗花明又一村。我找着了<a href="http://blog.ihipop.info/2012/03/3054.html/comment-page-1">这个</a>，原来只需要在配置文件里添一句话就可以，而且作者还很厚道地给了一个解决快捷键无法调整亮度的方案。</p>
+<p>不过他提到的方法我还没试。我现在准备先把删掉的compiz装回来试试，如果出了问题，就重装一次驱动，按他的方法做即可。反正总不会比重装系统更惨了。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2012-07-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/centos/">centos</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/posts/essay/online-again/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">网站终于能访问了！</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/wordpress/crayon-syntax-highlighter/">
+            <span class="next-text nav-default">Crayon Syntax Highlighter浅尝</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

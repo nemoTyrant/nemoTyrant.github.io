@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>解决opensuse12.2花屏问题 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="在感觉到centos无法作为日常桌面使用的操作系统后，我开始寻找一款适合桌面使用的linux发行版，我找到了opensuse。但是问题又出现" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/linux/opensuse12.2-screen-issue.html/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="解决opensuse12.2花屏问题" />
+<meta property="og:description" content="在感觉到centos无法作为日常桌面使用的操作系统后，我开始寻找一款适合桌面使用的linux发行版，我找到了opensuse。但是问题又出现" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/linux/opensuse12.2-screen-issue.html/" />
+<meta property="article:published_time" content="2012-10-13T01:09:36+00:00" />
+<meta property="article:modified_time" content="2012-10-13T01:09:36+00:00" />
+<meta itemprop="name" content="解决opensuse12.2花屏问题">
+<meta itemprop="description" content="在感觉到centos无法作为日常桌面使用的操作系统后，我开始寻找一款适合桌面使用的linux发行版，我找到了opensuse。但是问题又出现">
+<meta itemprop="datePublished" content="2012-10-13T01:09:36&#43;00:00" />
+<meta itemprop="dateModified" content="2012-10-13T01:09:36&#43;00:00" />
+<meta itemprop="wordCount" content="956">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="解决opensuse12.2花屏问题"/>
+<meta name="twitter:description" content="在感觉到centos无法作为日常桌面使用的操作系统后，我开始寻找一款适合桌面使用的linux发行版，我找到了opensuse。但是问题又出现"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">解决opensuse12.2花屏问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2012-10-13 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> linux </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>在感觉到centos无法作为日常桌面使用的操作系统后，我开始寻找一款适合桌面使用的linux发行版，我找到了opensuse。但是问题又出现了，我以u盘方式安装livecd，装完首次重启系统自动配置完成后一切正常，但是关机后再次重启进入桌面便会花屏。我重装了几次还是如此。</p>
+<p>有问题，上网搜。我找到了一篇文章,原文在<a href="http://laysent.sinaapp.com/?p=255">这里</a>。</p>
+<p>原来问题出在显卡驱动上，但是具体操作过程我和他的情况又不大一样，所以我按我的实际情况说明。</p>
+<p>我先在window下下好对应我显卡的驱动，放在u盘里，我好歹学过挂载u盘的命令，不怕在文字界面下操作。因为文章中还提到，以livecd装的系统自带的软件会少，所以安装驱动时需要先装三个软件。为防万一，我准备了重装系统的u盘。</p>
+<p>按照他的说法，花屏后我可以按<code>ctrl+alt+f1</code>进入文本界面，或<code>ctrl+alt+backspace</code>有可能不再花屏，但是我尝试了两种都无效。</p>
+<p>之前我还担心，如果真能进入文本模式，我也没法下载需要的3个软件啊，因为根本连不上网。现在好了，插入u盘，重装系统。重启系统完成自动配置后，进行如下操作：</p>
+<ol>
+<li>
+<p>连网，打开yast搜索安装gcc 、make、kernel－source三个软件</p>
+</li>
+<li>
+<p><code>vim /etc/modprobe.d/50-blacklist.conf</code>，最后添加一句<code>blacklist nouveau</code>，将自带的nouveau驱动禁用。（其实从之后的操作看这么做并不能禁用nouveau，之前玩centos装显卡驱动时还得重新生成一个系统文件，这篇文章里没有提到）</p>
+</li>
+<li>
+<p>将u盘里的驱动安装程序放入电脑中，重启。（安装显卡驱动需要在文本模式下，所以按照往常的经验，我修改了<code>/etc/inittab</code>中的启动设置，把5改成3，但是悲剧了，重启还是进入了图形界面，原因是grub2的引导方式不同于以前了。不过这次进入桌面后按<code>ctrl+alt+backspace</code>就不花屏了）</p>
+</li>
+<li>
+<p>在grub界面，按e进入编辑模式，下移光标到linux开头的一行，<code>ctrl+e</code>光标到行尾，输入空格和3，再按f10启动即进入文本模式。</p>
+</li>
+<li>
+<p>登录后进入驱动所在位置，安装驱动。正如之前所说，nouveau并没有被禁用，驱动的安装程序提示了这点并会尝试生成一个禁用它的文件，之后再次重启按步骤4进入文本模式便能正常安装驱动。重启进入系统，一切正常。</p>
+</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2012-10-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/linux/opensuse12.2-mirror/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">opensuse12.2下软件源的设定</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/linux/centos-ibus-rime/">
+            <span class="next-text nav-default">centos6.2下ibus-rime输入法的安装手记（尚未成功）</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

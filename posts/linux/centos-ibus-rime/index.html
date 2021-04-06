@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>centos6.2下ibus-rime输入法的安装手记（尚未成功） - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="（这篇文章是边操作边写的，我还不知道最后是否能够成功安装） 早先就听说过rime输入法的大名，之前忘了是在centos下还是ubuntu下使用" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/linux/centos-ibus-rime/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="centos6.2下ibus-rime输入法的安装手记（尚未成功）" />
+<meta property="og:description" content="（这篇文章是边操作边写的，我还不知道最后是否能够成功安装） 早先就听说过rime输入法的大名，之前忘了是在centos下还是ubuntu下使用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/linux/centos-ibus-rime/" />
+<meta property="article:published_time" content="2012-09-29T11:18:37+00:00" />
+<meta property="article:modified_time" content="2012-09-29T11:18:37+00:00" />
+<meta itemprop="name" content="centos6.2下ibus-rime输入法的安装手记（尚未成功）">
+<meta itemprop="description" content="（这篇文章是边操作边写的，我还不知道最后是否能够成功安装） 早先就听说过rime输入法的大名，之前忘了是在centos下还是ubuntu下使用">
+<meta itemprop="datePublished" content="2012-09-29T11:18:37&#43;00:00" />
+<meta itemprop="dateModified" content="2012-09-29T11:18:37&#43;00:00" />
+<meta itemprop="wordCount" content="6602">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="centos6.2下ibus-rime输入法的安装手记（尚未成功）"/>
+<meta name="twitter:description" content="（这篇文章是边操作边写的，我还不知道最后是否能够成功安装） 早先就听说过rime输入法的大名，之前忘了是在centos下还是ubuntu下使用"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">centos6.2下ibus-rime输入法的安装手记（尚未成功）</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2012-09-29 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> linux </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>（这篇文章是边操作边写的，我还不知道最后是否能够成功安装）</p>
+<p>早先就听说过rime输入法的大名，之前忘了是在centos下还是ubuntu下使用过一次，拼音功能很强大，而且能切换简体或繁体输出。但是遗憾的是，我用五笔，它没有打简出繁的功能，要打出繁体字，必须按繁体字的形态来拆字才可以。</p>
+<p>前段时间，我又想起了这个输入法，在windows下装了它，用起来很爽。我估计它设计之初就是为了方便繁体字输出的，所以无论是用拼音还是五笔都可以很方便地输出繁体，遇到不会拆的字也可以用拼音反查。最好的一点是它安装起来很方便，一直下一步就好了。</p>
+<p>然而，当我装完centos后，企图安装它的linux版本时，问题出现了，我根本装不上！</p>
+<p>官方给出的安装说明很简单，告知依赖的库之后只需要四条命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">To build la rime, you need these tools and libraries:
+
+cmake
+boost &gt;= 1.46
+glog (new dependency for librime&gt;=0.9.3)
+gtest (optional, recommended for developers)
+ibus 1.4
+libnotify (new dependency for ibus-rime&gt;=0.9.2)
+kyotocabinet
+opencc
+yaml-cpp
+
+download source packages: librime, brise, ibus-rime
+tar xzf librime-*.tar.gz
+tar xzf brise-*.tar.gz
+tar xzf ibus-rime-*.tar.gz
+cd ibus-rime
+# do this as normal user
+./install.sh
+</code></pre></td></tr></table>
+</div>
+</div><p>我按照官方给出的依赖库列表一一用yum安装，安装的过程中我就感觉到不妙，因为有的库在yum源里没有，或者源里的版本较低，不符合要求。下面按编译需要的顺序一一说明，顺便介绍一下它们是干嘛的：</p>
+<p><strong>cmake：</strong></p>
+<p>这货是一个跨平台的编译工具。好的，我知道这些就可以了，估计我八辈子都不一定用得上它。</p>
+<p>系统默认安装了cmake，但是目前版本的rime要求cmake版本大于2.8，所以系统自带的过旧。我yum update cmake发现源里没有更新包，于是只好删掉自带包，去官方网站上下源码包安装。悲剧的是，安装rime提示出错，具体是什么错我现在忘了。后来我突然想起了rpmforge这个软件仓库，于是果断安装了它，之后删除刚才安装的包，yum install cmake终于找到了较新版本的包。</p>
+<p>然而问题并没有就此结束，我再次试图安装rime时，cmake提示CMAKE_CXX_COMPILER不存在，让指向正确的程序。</p>
+<p>我开始苦苦百度加谷歌，最后大概知道是gcc的问题。可是我已经装过gcc了，后来我在软件仓库里搜到了一个叫gcc-c++的包，功能是增加gcc对c++的支持。我估计是因为缺少这个包的缘故，所以果断安装。但是很悲剧，依然提示出错。</p>
+<p>诡异的事情发生了，因为我要去上课，所以关机走人了，等我再重启尝试安装rime的时候，居然不提示这条错误了。莫非gcc-c++包装完得重启才能生效？我不知道，反正现在没那个错误就好了。现在提示的错误是：Unable to find the requested Boost libraries，让指定一下BOOST_ROOT。得到这条错误在我意料之中，所以继续吧。</p>
+<p><strong>boost：</strong></p>
+<p>这货是一个c++库，据说很厉害，但我估计我八辈子也用不上它。</p>
+<p>系统自带，但是版本为1.41。依赖表里明确提到需要1.46或以上的版本。<code>yum update boost</code>无果，仓库里没有更新包，连rpmforge里也没有。</p>
+<p>到官网看安装说明，看得我云里雾里的，它说boost不需要编译就可以用，因为大多数程序只需要找到它的头文件就可以，部分包是需要编译才能使用的。什么意思我不知道，但是悲剧的是，我现在下不了boost的软件包！官方只提供了一个sourceforge的下载地址，可是下载的时候总是出错！我就郁闷了。</p>
+<p>终于下到boost的包了，真是一波三折。我一直挂代理访问sourceforge，结果那个真实的下载地址不能用代理，而且我只能用学校的网连才行，用移动的wlan也下不了，害我多花5毛钱。</p>
+<p>解压boost到<code>/usr/local</code>下，至于为什么是这里，我不知道，大概是习惯吧，其实解压到哪都可以。然后在rime输入法的ibus-rime和librime目录下的CMakeLists.txt头部加入一行<code>set(BOOST\_ROOT &quot;/usr/local/boost\_1\_51\_0&quot;;)</code>，即按它要求指定一下BOOST_ROOT的位置。再次运行rime的安装脚本，这回的提示是有5个boost库找不着。我对照boost官网的安装说明看了一下，这5个库就是所谓的需要分别编译才能使用的库。</p>
+<p>查看官方安装说明中关于编译那些库的说明，其实就是在刚才boost的解压目录下输两行代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">./bootstrap.sh
+./b2 install
+</code></pre></td></tr></table>
+</div>
+</div><p>我刚才搜索boost的资料时，好像看到有人说他编译boost用了40分钟－ －！从我开始编译到我写下这句话已经过去13分钟了，而且丝毫没有要停下来的意思。难道我也要编译40分钟？鬼知道，只能等着了。</p>
+<p>终于停止编译了，历时18分钟，并且提示有60个目标失败了。不过既然程序安然执行完了，估计问题不大。</p>
+<p>再次尝试安装rime，提示已经找到所需boost库，但是找不到glog库。意料之中，继续。</p>
+<p><strong>glog：</strong></p>
+<p>这货是干嘛的真心不知道，看官方的说明是“实现软件级别的记录（logging）”，依旧云里雾里。</p>
+<p><code>yum install glog</code>无果，软件库里没这玩意，装软件最痛苦的事莫过于此。</p>
+<p>废话不说，进入官网，下最新包，解压，进入看安装说明。发现这货的安装过程是典型的源码安装三板斧－<code>./configure &amp;&amp; make &amp;&amp; make install</code>。</p>
+<p>用上述命令安装，在make install时提示无法创建一个文件，估计是因为我用普通用户安装，权限不够，切换为root后安装完成。</p>
+<p>再次尝试安装rime，提示找不到gtest库和yaml-cpp库。按依赖表说明，gtest是可选包，暂时不理会，先搞定yaml-cpp。</p>
+<p><strong>yaml-cpp：</strong></p>
+<p>据官网说明，这货是一个yaml解析器。那yaml是什么玩意呢？yaml=yaml ain't markup language。真扯，搞开源软件的人都爱故弄玄虚吗？总能见到这种坑爹的名字，比如gnu＝Gnu's Not Unix。懂递归者得天下吗？</p>
+<p><code>yum install yaml-cpp</code>再次悲剧，没这个包。</p>
+<p>从官网下了最新包，解压，进入，看安装说明。yaml-cpp安装需要用到cmake，安装命令说明里有，虽然不是三板斧，亦很简单，在此不作重复。按照命令安装成功。</p>
+<p>再次尝试安装rime，提示缺少zlib和kyotocabinet。zlib是什么玩意啊？不清楚，但是依赖列表里没有提到，先不理会。继续。</p>
+<p><strong>kyotocabinet：</strong></p>
+<p><code>yum install kyotocabinet</code>依旧悲剧。</p>
+<p>看官网的意思，这货叫Kyoto Cabinet，是一个数据库管理库，这个估计我九辈子都用不着了－ －！</p>
+<p>下源码包，解压，进入，看安装说明……晕，居然没有提到安装命令。不过我看到目录下有个configure文件，估计也是三板斧。但是执行make时提示No targets specified and no makefile found。我又仔细看了一下安装说明，里面提到安装过程写在另一个文件里。真够坑的，直接写这里边多好。安装说明里提到这货依赖zlib包，需要1.2.3版本或以上，看来我还得知道zlib是干嘛的。</p>
+<p><code>yum install zlib</code>之后，居然提示我zlib已经装了，而且版本就是1.2.3.我晕，这也太坑了吧，我现在觉得，装软件最痛苦的不是发现软件仓库里没有，而是明明装了它跟你说找不着。</p>
+<p>我又仔细看了一下<code>./configure</code>后的错误信息，提示zlib.h找不着。</p>
+<p>我在图形界面的下的添加／删除程序中搜索zlib，发现了一个叫zlib-devel的包，简介是zlib的头文件和相关库。我发现了一个规律，很多库都分为两个包，一个就叫它的名字，是拿来用的，应该是编译好的程序；另一个是给开发者用的，常是库名后跟&rdquo;;-devel&rdquo;;，应该是开发时需要用的头文件等。</p>
+<p>装完此包之后，再次<code>./configure</code>，提示成功。剩下的两板斧正常进行，只不过编译过程有点慢。</p>
+<p>还好不用卸载zlib重装，依赖它的东西太多了，删了它估计系统也该重装了。</p>
+<p>再次尝试安装rime，提示找不到opencc，很正常，继续。</p>
+<p><strong>opencc：</strong></p>
+<p><code>yum install opencc</code>依然无果。我开始怀疑到底是软件仓库里没有还是我的网有问题。。。</p>
+<p>这个项目致力于中文的简繁转换，rime的相应功能就靠这个库了。</p>
+<p>上官网下源码包，解压，进入，看安装说明。这个库的安装依赖cmake，而且还得给几个参数。具体命令说明里有，不再重复。</p>
+<p>再次尝试安装rime，编译成功了。我晕，竟然编译成功了，太出乎我意料了。真心觉得不应该成功才对。还有两个依赖库没提到呢。</p>
+<p>我仔细一看，才发现不算成功，编译只完成了一部分。rime安装说明里提示安装时用普通用户，但是过程中它跟我要密码，之后又提示我该普通用户不在sudoers文件里，安装过程停止了。</p>
+<p>百度之后，将当前使用的普通用户写到<code>/etc/sudoers</code>文件里，格式和文件里唯一的提到root的一句一样就行。</p>
+<p>再次安装，提示<code>libboost_filesystem.so.1.51.0: cannot open shared object file: No such file or directory</code>看样子它没有找到boost库的位置，解决的思路很简单，系统必然有一个文件记录了默认的库安装的位置，将boost库的位置写进去就好了。</p>
+<p>再次百度，找到了几种方法，但是就现在来讲最好的一种是：</p>
+<blockquote>
+<p>以root身份把库路径加入/etc/ld.so.conf或在/etc/ld.so.conf.d中创建特定的.conf文件<br>
+然后运行 ldconfig更新/etc/ld.so.cache。<br>
+例如：在/etc/ld.so.conf.d下创建文件mysql.conf写入/usr /local/mysql/lib</p>
+</blockquote>
+<p>我新建了一个conf文件，把boost库所在位置，即/usr/local/lib，写入。再次尝试安装rime，这次正常了，提示没有libnotify。这才是应该发生的事。继续。</p>
+<p><strong>libnotify：</strong></p>
+<p>这个库用来向通知进程发送桌面通知，大概是这么个意思，我猜是用来获取鼠标键盘信息之类的。</p>
+<p><code>yum install libnotify</code>提示已经装过了。有了刚才的经验，再遇到这样的问题就不怕了,这个包可能也存在相应的开发包。yum install libnotify-devel，果然，yum成功找到了这个包并安装好。只是这个库的依赖关系真不少啊，下了几十个包，共20mb。</p>
+<p>再次尝试安装rime，我知道肯定成功不了，但是这次的提示太奇葩了，它说找不到ibus1.0的包。晕了，依赖表里写着需要ibus1.4，系统自带的是1.3.4，现在它居然要找1.0的包！先不管它了，依赖列表里除了ibus1.4之外的所有库现在已经搞定了，不管它要1.0还是1.4，我先按照依赖表的说明装1.4试试。走起。</p>
+<p><strong>ibus：</strong></p>
+<p>这个东西不用介绍了吧，是一个输入法平台，我正在使用的就是它。</p>
+<p><code>yum update ibus</code>无果，没有更新包，只能源码安装了。安之前我肯定得先删了自带的，在这期间，我没法打字了，祈祷成功吧。离成功一步之遥了。</p>
+<p>ibus源码之前就下好了，解压，进入，看安装说明，典型的三板斧。好，我要删自带的ibus了，暂告别中文。</p>
+<p>when <code>./configure</code>,it said that intltool is too old.so i installed it by <code>yum install intltool</code>.However,when <code>./configure</code> again,it required <code>glib-2.0 &gt;= 2.26.0</code>.While so many packages depend on glib2,i can't remove it by just <code>yum remove glib2</code>.</p>
+<p>i wanted to install the latest glib,but it requires some libraries that there are only old versions of them in both centos official repository and rpmforge.so i downloaded glib2.26 and installed it in /opt/glib2.</p>
+<p>./configure again in ibus-1.4.2 directory,it ended up requesting glib&gt;-2.6 one more time.by</p>
+<p><code>export PKG_CONFIG_PATH=/opt/gtk/lib/pkgconfig:$PKG_CONFIG_PATH</code></p>
+<p>we made it possible for <code>./configure</code> to find the newer version of glib,but this is a temporary way.</p>
+<p><code>./configure</code> again,it requested <code>gtk+3.0</code> which is not in neither centos repository nor rpmforge.</p>
+<p>newer version depends on newer libraries,to make things easier,i just downloaded gtk+3.0.12.what disgusting is that even 3.0.12 requires glib2.28 or later and some other libraries.</p>
+<p>i installed glib2.28 and tried to install gtk+ again which failed once again because of some package requirements.</p>
+<p>i'm so tired now and i'm going to go on solving the oncoming problems tomorrow.</p>
+<p>我晕，安装的过程比我想象的要艰难，所以我又装回系统自带的ibus渡过艰难时期。</p>
+<p>安装ibus1.4.2需要gtk+3.0，而这货又依赖</p>
+<blockquote>
+<p>GLib 2.28.0, Pango 1.24.0,<br>
+GdkPixbuf 2.22.0, ATK 1.30<br>
+and cairo 1.10.0</p>
+</blockquote>
+<p>其中glib已装，pango自带，剩下四个都得装。根据报错先后顺序，一一安装这些库。我下载源码包的时候都按它的最低要求下，以免出现更多的依赖关系。为了管理方便，我将它们都安装到/opt下相应目录里，然后按之前提到的方法设置PKG_CONFIG_PATH。这几个包都比较好装，即使它们有依赖的包也可以yum轻松搞定，就不多说了。</p>
+<p>装完这些依赖库后装gtk+3，同样装到了<code>/opt</code>目录下，设置<code>PKG\_CONFIG\_PATH</code>。</p>
+<p>再次尝试安装ibus，提示缺少<code>gconf-2.0</code>，软件仓库里有，安装相应的开发包，即<code>gconf2-devel</code>，即可。</p>
+<p>再次安装，提示缺少<code>dbus-python</code>，同上安装相应开发包。</p>
+<p>再次安装，提示缺少<code>iso-codes</code>，同上安装相应开发包。</p>
+<p>我一直以为安装ibus也是三板斧，结果斧完发现，系统的输入法管理里没有ibus的选项，有一个ibus设定，但是点了没反应。</p>
+<p>我又去ibus官网看了看安装说明，发现不是典型的三板斧。按照安装说明进行，提示缺少gnome-common和libtool，前者yum安装搞定，后者根据报错时提示的网站下到源码然后三板斧安装。</p>
+<p>之后编译前检查通过，但是到了make的时候，最奇葩的事情发生了－－电脑死机了！！编译竟然把电脑编死了，我还是第一次见。重启之后再编译，又一次死机。</p>
+<p>我只好切到文本模式下安装，每次重启都得设一下<code>PKG\_CONFIG\_PATH</code>。但是依然无法编译成功，每次都卡在一个叫ibusshare.lo的地方。不过没有死机，只是系统开始提示out of memory，然后不停地杀进程，最后shell也被杀了，我得重新登录。</p>
+<p>我原先下的ibus是1.4.2的，我看rime依赖表里写的是1.4，所以又下了个1.4.0，结果还是一样，卡在ibusshare.lo这里编译不过去。</p>
+<p>我又仔细看了看<code>./autogen.sh</code>的执行结果，最后有这么一句话<code>Enable surrounding-text   no (disabled, use &quot;enable-surrounding-text to enable)</code>。我不知道surrounding-text是什么功能，但是我又执行了一次<code>./autogen.sh &quot;enable-surrounding-text&quot;</code>，再次make的时候居然奇迹般地编译完成了。</p>
+<p>于是我在1.4.2的目录执行同样的话，但还是卡在了<code>ibusshare.lo</code>处。既然1.4.0能编译成功，那我就装1.4.0好了。悲剧又发生，切到1.4.0目录下之后，我手贱，又make了一次，结果这次惨了，又卡住了。</p>
+<p>我删除两个目录重新解压，试了好几次都不行。过了一会，我重新解压1.4.0，进入，没有<code>./autogen.sh</code>而是用了<code>./configure</code>，再<code>make</code>的时间又奇迹般地成功了，这次千万不要手贱了－ －！重新解压1.4.2，进入，也<code>./configure &amp;&amp; make</code>，竟然也成功编译了。真见鬼了。</p>
+<p>我要崩溃了，就在我将要成功安装好rime之时，最可怕的敌人出现了。</p>
+<p>我按照ibus的官方安装说明安装好ibus，但是运行ibus-setup来设置输入法时，提示我no module named ibus。于是我就到网卡找啊找啊，找到我都想哭了，也没找到解决办法。不论是百度还是谷歌，好像所有的人都没有遇到我这个问题一样。</p>
+<p>我在ibus的官网上发了条求助，想在百度知道里发条求助，结果在火狐、id、chrome里点了提问都发不出去消息，真够倒霉的。</p>
+<p>我从开始装rime到现在过了三天了，先总结一下这三天的想法吧。</p>
+<p>从centos的名字就可以看出来，这个系统不是面向桌面用户的，而我又偏偏想将它作为桌面系统使用。linux软件安装最可怕的就是各种依赖关系，如果官方的软件仓库里有还好说，没有的话只能一个一个手工编译安装，这其中又可能产生另外的依赖关系，这三天我已经体会到了这种痛苦的滋味。</p>
+<p>不过另一方面，在安装的过程中我也学到了不少东西，最起码现在能熟练设置PKG_CONFIG_PATH了：）。rime没装上，原本的系统倒是出了点问题，比如右下角的垃圾箱不见了，点桌面的垃圾箱和电脑都提示识别不了。这些不免又让我想起当初装bluefish时的痛苦经历。</p>
+<p>我是真心想把linux用在生活中，而不仅仅将它视作服务器专用的操作系统，但还是那个问题，装个输入法用了三天都没装上，将来肯定要再装别的软件，怎么办？而且桌面垃圾箱不能用了我压根不知道怎么解决，以后再有稀奇古怪的问题怎么办？系统崩溃了再装一次就好了，但是里面的数据呢？</p>
+<p>我真心喜欢centos，它给我一种厚重老成的感觉，或者说是感情。但是理智点讲，这个系统最好还是拿去跑服务器，要桌面使用最好还是找那些本身就是面向桌面的发行版。</p>
+<p>问题又来了，该选择哪个桌面版本？ubuntu和fedora都体验过了。ubuntu好歹用了几天，fedora装完直接就删了，算不上体验过。我现在还想不到有哪个版本还值得一试。</p>
+<p>先这样吧，ibus-setup的问题解决之前，rime是不可能正常使用的，这篇文章目前也只能到此为止了。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2012-09-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/linux/opensuse12.2-screen-issue.html/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">解决opensuse12.2花屏问题</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/linux/linux-mount-command.html/">
+            <span class="next-text nav-default">linux下的挂载命令使用</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

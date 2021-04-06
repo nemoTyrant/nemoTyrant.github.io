@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>redis on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/categories/redis/</link>
+    <description>Recent content in redis on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 14 Aug 2020 22:32:29 +0800</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/categories/redis/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Redis Cluster 入门实践</title>
+      <link>https://sosonemo.me/posts/redis/redis-cluster-introduction/</link>
+      <pubDate>Fri, 14 Aug 2020 22:32:29 +0800</pubDate>
+      
+      <guid>https://sosonemo.me/posts/redis/redis-cluster-introduction/</guid>
+      <description>前言 最初，我们使用单点redis就可以愉快地玩耍，直到有一天这个单点挂掉导致整个服务不可用，我们意识到要用主从节点。在日常使用中，至少会使用</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>go之路 on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/categories/go%E4%B9%8B%E8%B7%AF/</link>
+    <description>Recent content in go之路 on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Jun 2020 22:02:11 +0800</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/categories/go%E4%B9%8B%E8%B7%AF/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>(译文)用go语言处理每分钟1百万次请求</title>
+      <link>https://sosonemo.me/posts/go/handling-one-million-requests-with-golang/</link>
+      <pubDate>Tue, 16 Jun 2020 22:02:11 +0800</pubDate>
+      
+      <guid>https://sosonemo.me/posts/go/handling-one-million-requests-with-golang/</guid>
+      <description>(本文编译自这篇文章，略去一些与技术无关的介绍文字) 面临的问题 我们正在构建一个匿名数据统计系统，希望能够处理来自数百万个终端的POST请求。</description>
+    </item>
+    
+  </channel>
+</rss>

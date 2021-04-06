@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>centos on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/tags/centos/</link>
+    <description>Recent content in centos on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 21 Jul 2012 10:32:57 +0000</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/tags/centos/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>win7下centos硬盘安装及显卡驱动问题</title>
+      <link>https://sosonemo.me/posts/linux/win-centos-dual-systems/</link>
+      <pubDate>Sat, 21 Jul 2012 10:32:57 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/linux/win-centos-dual-systems/</guid>
+      <description>早就下好了centos6.2的镜像文件，昨天用virtualbox装好，但是太卡了，今天便下定决心装双系统了。 centos的硬盘安装主要参考</description>
+    </item>
+    
+  </channel>
+</rss>

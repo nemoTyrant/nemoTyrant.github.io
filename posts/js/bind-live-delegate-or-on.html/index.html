@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>bind?live?delegate?还是on？–jquery事件绑定方法研究 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="最近写项目页面用了不少jquery的东西，过程当中对jquery的事件绑定方法有些疑惑，经过学习各种资料，现在终于明白不少。恰巧有同学和我有" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/js/bind-live-delegate-or-on.html/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="bind?live?delegate?还是on？–jquery事件绑定方法研究" />
+<meta property="og:description" content="最近写项目页面用了不少jquery的东西，过程当中对jquery的事件绑定方法有些疑惑，经过学习各种资料，现在终于明白不少。恰巧有同学和我有" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/js/bind-live-delegate-or-on.html/" />
+<meta property="article:published_time" content="2013-01-09T13:47:03+00:00" />
+<meta property="article:modified_time" content="2013-01-09T13:47:03+00:00" />
+<meta itemprop="name" content="bind?live?delegate?还是on？–jquery事件绑定方法研究">
+<meta itemprop="description" content="最近写项目页面用了不少jquery的东西，过程当中对jquery的事件绑定方法有些疑惑，经过学习各种资料，现在终于明白不少。恰巧有同学和我有">
+<meta itemprop="datePublished" content="2013-01-09T13:47:03&#43;00:00" />
+<meta itemprop="dateModified" content="2013-01-09T13:47:03&#43;00:00" />
+<meta itemprop="wordCount" content="1886">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="bind?live?delegate?还是on？–jquery事件绑定方法研究"/>
+<meta name="twitter:description" content="最近写项目页面用了不少jquery的东西，过程当中对jquery的事件绑定方法有些疑惑，经过学习各种资料，现在终于明白不少。恰巧有同学和我有"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">bind?live?delegate?还是on？–jquery事件绑定方法研究</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-01-09 </span>
+        <div class="post-category">
+            <a href="/categories/javascript/"> javascript </a>
+            </div>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>最近写项目页面用了不少jquery的东西，过程当中对jquery的事件绑定方法有些疑惑，经过学习各种资料，现在终于明白不少。恰巧有同学和我有一样的疑惑，我正好梳理一下思路，写下本文。如果你也对jquery中眼花缭乱的事件绑定方法不太明白的话，你来对地方了。</p>
+<p>继续阅读前，我认为你需要先知道以下几点基础知识：</p>
+<ol>
+<li>dom对象是树形结构的</li>
+<li>dom中的事件会从触发事件的目标节点开始逐级向上冒泡</li>
+</ol>
+<p>每当我们想给某个元素绑定事件的时候，第一个想到的方法是bind，我们就先来说说bind。</p>
+<p>bind的作用是给具体的某个元素绑定事件，比如<code>$('button').bind('click',function(){})</code></p>
+<p>给所有的button元素添加了点击事件处理方法。这似乎已经可以完成大部分的事件绑定任务了，然而有一个问题它无法解决–如果某一元素是新添加的怎么办？bind将事件处理函数绑定在了具体的元素上，而新添加的元素身上是没有被绑定处理函数的。也就是说，如果执行完上面的代码后再动态添加一个button元素，新添加的这个button元素是没有被绑定事件处理函数的。</p>
+<p>于是，<code>live</code>出现了。对于刚开始接触jquery的人来说，live是一个很神奇的事件绑定方法，无论某一元素已经存在还是将来会被添加到页面中，live都能将事件绑定到它身上。</p>
+<p>真的很神奇吗？其实它的原理很简单，那就是<code>事件委派</code>。</p>
+<p>什么是事件委派？举个简单的例子。</p>
+<p>假如有一个表格，我们要动态增删里面的行元素，同时想给每一个行元素绑定一个点击事件。给具体的<code>tr</code>元素绑定事件是不现实的，因为它们总是不断变化的。于是我们可以换个思路，为什么一定要给tr元素绑定事件呢？</p>
+<p>我们可以把事件绑定到<code>table</code>元素上，发生在table的子元素身上的点击事件都会冒泡到table元素上，在这里可以做一个比较，如果点击事件的目标是tr元素，执行绑定的函数就好了。这就是事件委派，委派某个元素处理子元素触发的事件。</p>
+<p><code>$('table tr').live('click',function(){})</code></p>
+<p>这样，就可以给tr元素绑定点击事件，无论它是已经存在的，还是将来被添加的。</p>
+<p>那么，执行完上面的代码，事件确实被绑定在table元素上了吗？不！</p>
+<p>现实中，我们要动态添加的元素指不定在dom树的哪一层。为了让所有新添加的元素都能触发预先绑定的事件处理函数，jquery将事件处理函数委派在了dom树的根元素，也就是document元素，身上。这样一来，无论新添加的元素位于dom树的哪个层级，它触发的事件总会冒泡到根元素上。在这里，可以做一个判断，如果事件触发目标是想要绑定事件处理函数的那个元素，执行该函数就好了。</p>
+<p>这看起来很美好，似乎我们完全可以放弃bind，在任何情况下都可以使用live了。不过，等等，如果真是这样的话，后边的delegate就没有用武之地了。</p>
+<p>live方法的好处不言而喻，然而它也有弊端。假设我们还是要给tr元素绑定点击事件。如果页面中有一千个元素，只有10个是tr元素，会是什么情况？那990个不相干的元素触发的事件也会冒泡到根元素上，在那里做一次比较，无形当中就会带来性能的消耗。这可真是宁可错杀一千，也不放过一个啊。</p>
+<p>显然，live并没有看上去的那么美好，于是delegate闪亮全场了。</p>
+<p>我们要给tr元素绑定事件，离它最近的父元素就是table了。既然如此，我们为什么还要不辞辛苦地把事件绑定在document元素上，而不是绑在table身上呢？delegate就是干这个活的。</p>
+<p><code>$('table').delegate('tr','click',function(){})</code></p>
+<p>上面的代码将点击事件委派在table元素上，其下的tr元素身上的点击事件会触发处理函数。</p>
+<p>到目前为此，我们认识了三个和事件绑定有关的方法。他们的使用方法和使用时机你都记住了吗？好吧，我是费了点功夫才记住并区分它们的。</p>
+<p>绑定事件居然有三个方法，太可怕了，要是只有一个就好了。其实，jquery的作者也是这么想的。从1.7版本开始，jquery添加了一个新的事件绑定方法<code>on</code>来代替之前提到的所有方法。这真是一个令人欣喜的消息。</p>
+<p>on的使用方法很简单，如果你没有指定后代元素，那么就是简单的事件绑定，类似于bind。比如</p>
+<p><code>$('tr').on('click',function(){})</code></p>
+<p>会把点击事件绑定在tr身上，如果执行完代码后新添加了一个tr元素，那它身上自然是没有事件处理函数的。</p>
+<p>那怎么做事件委派呢？是这个样子的</p>
+<p><code>$('table').on('click','tr',function(){})</code></p>
+<p>事件委派到了table元素身上，它的tr子元素身上的点击事件会触发事件处理函数。</p>
+<p>好了，从今天起，忘掉bind、live和delegate吧，on才是你居家旅行，必备的神器！据说，只是据说，在新版本中，就算你调用bind、live或delegate，它内部都会调用on。既然如此，我们为什么不自己使用on呢？</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2013-01-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/php/php-socket-articles/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">php socket 编程文章推荐</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/php/centos6.2-lamp.html/">
+            <span class="next-text nav-default">阿里云centos6.2lamp源码安装手记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

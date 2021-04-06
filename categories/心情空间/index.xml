@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>心情空间 on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/categories/%E5%BF%83%E6%83%85%E7%A9%BA%E9%97%B4/</link>
+    <description>Recent content in 心情空间 on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 19 Dec 2019 22:08:22 +0800</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/categories/%E5%BF%83%E6%83%85%E7%A9%BA%E9%97%B4/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>从wordpress迁移到hugo</title>
+      <link>https://sosonemo.me/posts/essay/from-wordpress-to-hugo/</link>
+      <pubDate>Thu, 19 Dec 2019 22:08:22 +0800</pubDate>
+      
+      <guid>https://sosonemo.me/posts/essay/from-wordpress-to-hugo/</guid>
+      <description>一. 为什么用hugo 2012年就建立了自己的博客，可是回望过去，并没有写过多少有用的东西。最近又想鼓捣一下树莓派和arduino，顺便写写学</description>
+    </item>
+    
+    <item>
+      <title>网站终于能访问了！</title>
+      <link>https://sosonemo.me/posts/essay/online-again/</link>
+      <pubDate>Tue, 24 Jul 2012 01:22:10 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/essay/online-again/</guid>
+      <description>前天godaddy的解析出了点问题，我就将域名解析放到了dnspod下面。结果等啊等啊，两天过去了，还是访问不了。 我晕啊，刚才打开ndspo</description>
+    </item>
+    
+    <item>
+      <title>发现新大陆—goagent！</title>
+      <link>https://sosonemo.me/posts/essay/found-goagent/</link>
+      <pubDate>Thu, 14 Jun 2012 14:51:32 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/essay/found-goagent/</guid>
+      <description>其实对于很多来说，这已经不是新鲜事了，即使是我买空间时搜索关于ssh翻墙的信息的时候也有所耳闻，只不过当时我没有太关注。今天在网上逛的时间，</description>
+    </item>
+    
+    <item>
+      <title>苍天啊，大地啊，代理不能用啊</title>
+      <link>https://sosonemo.me/posts/essay/proxy-fails/</link>
+      <pubDate>Thu, 31 May 2012 01:20:06 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/essay/proxy-fails/</guid>
+      <description>百度又百度，谷歌再谷歌，尝试又尝试，发现hawkhost的ssh不能用来代理啊，而且官方论坛上有人提问，客服也明确说了： SSH does not allow http forwarding anymore? Correct. this has</description>
+    </item>
+    
+    <item>
+      <title>博客搬新家了</title>
+      <link>https://sosonemo.me/posts/essay/new-host/</link>
+      <pubDate>Wed, 30 May 2012 12:49:24 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/essay/new-host/</guid>
+      <description>之前什么都不懂，在淘宝上贪便宜买了个空间，贵倒是不贵，但就是速度有点慢。这两天疯狂百度，找合适的主机空间，最终发现了hawkhost的主机。</description>
+    </item>
+    
+    <item>
+      <title>最初的几张画</title>
+      <link>https://sosonemo.me/posts/essay/first-paintings/</link>
+      <pubDate>Tue, 17 Jan 2012 08:31:47 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/essay/first-paintings/</guid>
+      <description>我心中一直有作导演拍电影的想法，然而上了大学之后，我才突然回过神来，我似乎离电影越来越远了，于是我只好另辟蹊径——做动画。虽说现在动画都是用</description>
+    </item>
+    
+    <item>
+      <title>写下开博第一篇！</title>
+      <link>https://sosonemo.me/posts/essay/first-post/</link>
+      <pubDate>Tue, 17 Jan 2012 06:41:48 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/essay/first-post/</guid>
+      <description>终于，有了自己的独立博客 终于，在这个独立博客里写下了第一篇文章 以前一直想着拥有一个自己的独立博客，没有广告，没有喧嚣，只是用来吐露自己心声的</description>
+    </item>
+    
+  </channel>
+</rss>

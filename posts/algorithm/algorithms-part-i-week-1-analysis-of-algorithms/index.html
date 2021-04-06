@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Algorithms Part I week 1: Analysis of Algorithms - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="Why to analyze? To solve a single problem, there may be many different algorithms. Should we just randomly pick up one or use the best one? Of course, we want the best one. But how can we assert that this one is better than that one? Even though we have the best one, is it really the best one in the world? Can there be a better undiscovered algorithm?
+We must analyze algorithms to:" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/algorithm/algorithms-part-i-week-1-analysis-of-algorithms/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Algorithms Part I week 1: Analysis of Algorithms" />
+<meta property="og:description" content="Why to analyze? To solve a single problem, there may be many different algorithms. Should we just randomly pick up one or use the best one? Of course, we want the best one. But how can we assert that this one is better than that one? Even though we have the best one, is it really the best one in the world? Can there be a better undiscovered algorithm?
+We must analyze algorithms to:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/algorithm/algorithms-part-i-week-1-analysis-of-algorithms/" />
+<meta property="article:published_time" content="2015-03-28T09:11:07+00:00" />
+<meta property="article:modified_time" content="2015-03-28T09:11:07+00:00" />
+<meta itemprop="name" content="Algorithms Part I week 1: Analysis of Algorithms">
+<meta itemprop="description" content="Why to analyze? To solve a single problem, there may be many different algorithms. Should we just randomly pick up one or use the best one? Of course, we want the best one. But how can we assert that this one is better than that one? Even though we have the best one, is it really the best one in the world? Can there be a better undiscovered algorithm?
+We must analyze algorithms to:">
+<meta itemprop="datePublished" content="2015-03-28T09:11:07&#43;00:00" />
+<meta itemprop="dateModified" content="2015-03-28T09:11:07&#43;00:00" />
+<meta itemprop="wordCount" content="1034">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Algorithms Part I week 1: Analysis of Algorithms"/>
+<meta name="twitter:description" content="Why to analyze? To solve a single problem, there may be many different algorithms. Should we just randomly pick up one or use the best one? Of course, we want the best one. But how can we assert that this one is better than that one? Even though we have the best one, is it really the best one in the world? Can there be a better undiscovered algorithm?
+We must analyze algorithms to:"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Algorithms Part I week 1: Analysis of Algorithms</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-03-28 </span>
+        <div class="post-category">
+            <a href="/categories/algorithms/"> algorithms </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#why-to-analyze">Why to analyze?</a></li>
+    <li><a href="#what-to-analyze">What to analyze?</a></li>
+    <li><a href="#how-to-analyze">How to analyze?</a>
+      <ul>
+        <li><a href="#empirical-observation">Empirical Observation</a></li>
+        <li><a href="#mathematical-model-for-running-time">Mathematical model for running time</a></li>
+        <li><a href="#common-order-of-growth-classifications">Common order-of-growth classifications</a></li>
+        <li><a href="#theory-of-algorithms">Theory of algorithms</a></li>
+        <li><a href="#memory">Memory</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="why-to-analyze">Why to analyze?</h2>
+<p>To solve a single problem, there may be many different algorithms. Should we just randomly pick up one or use the best one? Of course, we want the best one. But how can we assert that this one is better than that one? Even though we have the best one, is it really the best one in the world? Can there be a better undiscovered algorithm?</p>
+<p>We must analyze algorithms to:</p>
+<ul>
+<li>predict performance</li>
+<li>compare algorithms</li>
+<li>provide guarantees</li>
+<li>understand theoretical basis</li>
+</ul>
+<h2 id="what-to-analyze">What to analyze?</h2>
+<p>This question is rather easy to answer. Since we use computer to run algorithms, we want to know:</p>
+<ul>
+<li>how long does one algorithm take</li>
+<li>how much memory does it need</li>
+</ul>
+<h2 id="how-to-analyze">How to analyze?</h2>
+<p>This is the major question we want to answer today. To analyze algorithms, we must have a scientific method, a framwork to predict performance and compares algorithms:</p>
+<ul>
+<li><strong>Observe</strong> some feature of the natural world</li>
+<li><strong>Hypothesize</strong> a model that is consistent with the observations</li>
+<li><strong>Predict</strong> events using the hypothesis</li>
+<li><strong>Verify</strong> the predictions by making futher observations</li>
+<li><strong>Validate</strong> by repeating until the hypothesis and observations agree</li>
+</ul>
+<p>And there are two important priciples:</p>
+<ul>
+<li>Experiments  must be <strong>reproducible</strong></li>
+<li>Hypothesis must be <strong>falsifiable</strong></li>
+</ul>
+<h3 id="empirical-observation">Empirical Observation</h3>
+<p>Let's take an example to analyze following the method above.</p>
+<p><strong>3-sum</strong>. Given N distinct integers, how many triples sum to exact zero?</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">% more 8ints.txt
+8
+30 -40 -20 -10 40 0 10 5
+% java ThreeSum 8ints.txt
+4
+</code></pre></td></tr></table>
+</div>
+</div><p>The most straightfoward algorithm is brute-force.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreeSum</span><span class="o">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">count</span><span class="o">(</span><span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">a</span><span class="o">)</span><span class="o">{</span>
+      <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+      <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
+         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">j</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="n">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">k</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>    <span class="c1">// check each triple
+</span><span class="c1"></span>               <span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+                  <span class="n">count</span><span class="o">+</span><span class="o">+</span><span class="o">;</span>
+      <span class="k">return</span> <span class="n">count</span><span class="o">;</span>
+   <span class="o">}</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span><span class="o">{</span>
+      <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">a</span> <span class="o">=</span> <span class="n">In</span><span class="o">.</span><span class="na">readInts</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">)</span><span class="o">;</span>
+      <span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">count</span><span class="o">(</span><span class="n">a</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Run the program for various input sizes and measure running time. We get this:</p>
+<p><img src="img/3-sum-timing.png" alt=""></p>
+<p><img src="img/3-sum-plog.png" alt=""></p>
+<p>We can draw a log-log plot.</p>
+<p><img src="img/3-sum-loglog.png" alt=""></p>
+<p>Finally, we get a formula: T(N) = aN<!-- raw HTML omitted -->b<!-- raw HTML omitted -->. Here, we can have a <strong>hypothesis</strong>: The running time is about 1.006 × 10<!-- raw HTML omitted -->–10<!-- raw HTML omitted --> × N<!-- raw HTML omitted -->2.999<!-- raw HTML omitted --> seconds.</p>
+<p>Since we have a hypothesis, we can make a <strong>prediction</strong>: the running time for N=16000 is 408.1. The actual running time is 410.8, which <strong>verifies</strong> our hypothesis. We can also check the table above to <strong>validate</strong> our hypothesis.</p>
+<p>However, do we have to pick up a stop watch every time we want to analyze an algorithm? This is tedious, and there should be a cleverer way to do the job. Yes! There is!</p>
+<h3 id="mathematical-model-for-running-time">Mathematical model for running time</h3>
+<p><strong>Total running time</strong>: sum of cost x frequency for all operations.</p>
+<ul>
+<li>Need to analyze program to determine set of operations</li>
+<li>Cost depends on machine, compiler.</li>
+<li>Frequency depends on algorithm, input data.</li>
+</ul>
+<p>Here is a table of cost of basic operations:</p>
+<p><img src="img/basic-op1.png" alt=""></p>
+<p><img src="img/basic-op2.png" alt=""></p>
+<p>So given the following code(2-sum):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
+   <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">j</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+          <span class="n">count</span><span class="o">+</span><span class="o">+</span><span class="o">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>we have:
+<img src="img/2-sum-op.png" alt=""></p>
+<p>Do we have to count these numbers up to get a exact number of running time? The answer is no. Instead of measuring exact time an algorithm takes, we count how many times basic operations(like array access) are done. And instead of using a formula like (1/6)N<!-- raw HTML omitted -->3<!-- raw HTML omitted --> + 100N<!-- raw HTML omitted -->4/3<!-- raw HTML omitted --> +56, we can use a <strong>tilde notation</strong> like ~(1/6)N<!-- raw HTML omitted -->3<!-- raw HTML omitted --> by discarding lower-order terms, because as N goes larger and larger, lower-order terms make less sense to the result.</p>
+<p>So the tilde notation of running time of code above is ~N<!-- raw HTML omitted -->2<!-- raw HTML omitted -->.</p>
+<h3 id="common-order-of-growth-classifications">Common order-of-growth classifications</h3>
+<p>A good news is that a small set of functions(1, logN, N, NlogN, N<!-- raw HTML omitted -->2<!-- raw HTML omitted -->, N<!-- raw HTML omitted -->3<!-- raw HTML omitted -->,and 2<!-- raw HTML omitted -->N<!-- raw HTML omitted -->) is sufficient to describe order-of-growth of typical algorithms. And here is a plot of them:</p>
+<p><img src="img/oog-plot.png" alt=""></p>
+<p>And happily, every order has some corresponding code framework:</p>
+<p><img src="img/code-framework.png" alt=""></p>
+<p>Still remember the 3-sum problem? We have 3 for loops in the brute-force version, whose order of growth is N<!-- raw HTML omitted -->3<!-- raw HTML omitted -->.</p>
+<p>As we can see in the log-log plot, cubic algorithms are hardly good algorithms. In fact,  there is cleverer algorithm for 3-sum problem:</p>
+<ul>
+<li>step1: <strong>sort</strong> the N numbers</li>
+<li>step: for each pair of numbers a[i] and a[j], <strong>binary search</strong> for -(a[i]+a[j])</li>
+</ul>
+<p>And the order of growth is N<!-- raw HTML omitted -->2<!-- raw HTML omitted -->logN(insertion sort and binary search will be covered in future articles):</p>
+<ul>
+<li>step1: N2 for insertion sort</li>
+<li>step2: N2logN with binary search</li>
+</ul>
+<p>For N=8000, brute-force version of algorithm takes 51.1 seconds, whereas sort-and-binary-search version takes only 0.96 seconds. This is the magic of algorithm, which charms me into learning more about it.</p>
+<p>Better order of growth means faster in practice!</p>
+<h3 id="theory-of-algorithms">Theory of algorithms</h3>
+<p>In theory, there are three types of analyses:</p>
+<p><strong>Best cased</strong>. Lower bound on cost.
+Determined by <code>easiest</code> input
+Provides a goal for all inputs</p>
+<p><strong>Worst cased</strong>. Upper bound on cost.
+Determined by <code>most difficult</code> input
+Provides a guarantee for all inputs</p>
+<p><strong>Average cased</strong>. Expected cose for random input
+Need a model for <code>random</code> input
+Provides a way to predict performance</p>
+<p>ur goals are to establish <code>difficulty</code> of a problem and develop <code>optimal</code> algorithms. When we say <code>optimal</code>, we mean the algorithm has performance guarantee for any input and no other algorithms can provide better performance guarantee.</p>
+<p>There are some notations commonly used in analysis of algorithm:</p>
+<p><img src="img/notations.png" alt=""></p>
+<p>Let's take an easy example. To solve 1-sum problem, we have to examine every entry in the array, so the upper bound is O(N), lower bound is Ω(N), and this is the optimal algorithm with running time of Θ(N).</p>
+<h3 id="memory">Memory</h3>
+<p>Besides running time, another thing we need to keep in mind is how much memory an algorithm needs. Since we use java in this course, we only discuss memory usage in java.</p>
+<p>The followng images show how much memory needed for primitive types and objects.</p>
+<p><img src="img/memory-primitive.png" alt=""></p>
+<p><img src="img/memory-object.png" alt=""></p>
+<p>With the development of technology, we have larger and larger memory in computers. So this maybe not the most important part to determine whether an algorithm is good or not. But it's always better if an algorithm can use less memory without changing its order of growth.</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-03-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/linux/strongswan-to-shadowsocks/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">阿里云搭建strongswan VPN 国内外分流中转到shadowsocks</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/algorithm/algorithms-part-i-week-1-union-find/">
+            <span class="next-text nav-default">Algorithms Part I week 1: union-find</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rime on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/tags/rime/</link>
+    <description>Recent content in rime on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 13 Oct 2012 02:14:53 +0000</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/tags/rime/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>opensuse12.2下rime输入法的安装</title>
+      <link>https://sosonemo.me/posts/linux/opensuse12_2-rime/</link>
+      <pubDate>Sat, 13 Oct 2012 02:14:53 +0000</pubDate>
+      
+      <guid>https://sosonemo.me/posts/linux/opensuse12_2-rime/</guid>
+      <description>搞定系统问题后，我首先想做的就是安装rime输入法，这个在centos下让我头大的玩意。 rime依赖如下库： cmake boost &amp;gt;= 1.46 glog (new dependency for librime&amp;gt;=0.9.3) gtest (optional, recommended for developers) ibus 1.4</description>
+    </item>
+    
+  </channel>
+</rss>

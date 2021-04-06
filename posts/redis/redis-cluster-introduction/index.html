@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Redis Cluster 入门实践 - Nemo&#39;s Neverland</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="sosonemo" /><meta name="description" content="前言 最初，我们使用单点redis就可以愉快地玩耍，直到有一天这个单点挂掉导致整个服务不可用，我们意识到要用主从节点。在日常使用中，至少会使用" /><meta name="keywords" content="php, go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.61.0 with theme even" />
+
+
+<link rel="canonical" href="https://sosonemo.me/posts/redis/redis-cluster-introduction/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Redis Cluster 入门实践" />
+<meta property="og:description" content="前言 最初，我们使用单点redis就可以愉快地玩耍，直到有一天这个单点挂掉导致整个服务不可用，我们意识到要用主从节点。在日常使用中，至少会使用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sosonemo.me/posts/redis/redis-cluster-introduction/" />
+<meta property="article:published_time" content="2020-08-14T22:32:29+08:00" />
+<meta property="article:modified_time" content="2020-08-14T22:32:29+08:00" />
+<meta itemprop="name" content="Redis Cluster 入门实践">
+<meta itemprop="description" content="前言 最初，我们使用单点redis就可以愉快地玩耍，直到有一天这个单点挂掉导致整个服务不可用，我们意识到要用主从节点。在日常使用中，至少会使用">
+<meta itemprop="datePublished" content="2020-08-14T22:32:29&#43;08:00" />
+<meta itemprop="dateModified" content="2020-08-14T22:32:29&#43;08:00" />
+<meta itemprop="wordCount" content="6594">
+
+
+
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Redis Cluster 入门实践"/>
+<meta name="twitter:description" content="前言 最初，我们使用单点redis就可以愉快地玩耍，直到有一天这个单点挂掉导致整个服务不可用，我们意识到要用主从节点。在日常使用中，至少会使用"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Nemo&#39;s Neverland</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/posts/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Nemo&#39;s Neverland</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/posts/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Redis Cluster 入门实践</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-08-14 </span>
+        <div class="post-category">
+            <a href="/categories/redis/"> redis </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">前言</a></li>
+    <li><a href="#heading-1">初探</a></li>
+    <li><a href="#heading-2">如何保证高可用？</a></li>
+    <li><a href="#heading-3">那么一致性呢？</a></li>
+    <li><a href="#heading-4">实践</a></li>
+    <li><a href="#heading-5">重新分片</a></li>
+    <li><a href="#heading-6">测试可用性</a></li>
+    <li><a href="#heading-7">添加新节点</a></li>
+    <li><a href="#heading-8">删除节点</a></li>
+    <li><a href="#heading-9">副本迁移</a></li>
+    <li><a href="#heading-10">数据迁移如何进行？</a></li>
+    <li><a href="#heading-11">总结</a></li>
+    <li><a href="#heading-12">参考资料</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="heading">前言</h2>
+<p>最初，我们使用单点redis就可以愉快地玩耍，直到有一天这个单点挂掉导致整个服务不可用，我们意识到要用主从节点。在日常使用中，至少会使用一主一从的部署方式。一方面可以通过读写分离提升整体的请求处理量;另一方面如果主节点挂掉，也可以把从节点提升为主节点继续提供服务，从而提高系统可用性。</p>
+<p>当数据越来越多，或者数据不多但是请求量很大的时候，我们就必须把数据分散在多个节点上，以此来缓解数据存储和请求的压力。可是数据一旦分散就又带来一个问题，如何确定某个key在哪个节点上呢？</p>
+<p>在redis官方的集群方案出现之前，我们通常用哈希值取余的方式来分片。这种方式简单粗暴，但有个问题，如果需要扩容的话，大量数据对应的节点会发生变化，着实令人脑壳疼。于是又有了一致性哈希的方案，这种方案相比取余法，节点数量的增减对数据的影响范围减少了很多。不过说实话，我在工作中还没有用过这种方式。</p>
+<p>那么redis官方的集群是怎么分片的呢？</p>
+<h2 id="heading-1">初探</h2>
+<p>既然是集群，就会涉及到两部分的通信。一是对外提供服务，二是集群节点之间交换信息。redis的方案是在客户端通信端口基础上加10000作为集群通信端口。比如6379是对外服务端口，则16379是集群内部通信端口。可想而知，如果配置防火墙的话，所有节点的6379都应该可以从外部访问，而16379至少应该保证各节点之间可以正常访问。</p>
+<p>至于数据分片规则，redis既没有简单粗暴地用取余法，也没有使用听起来高大上的一致性哈希，而是使用了一种叫<code>哈希槽(hashing slot)</code>的方法。其实也很简单，它把所有的key空间分成16384个槽，对key做一个<code>CRC16(key) mod 16384</code>就可以求出key在哪个槽中，再把不同的槽分配在不同的节点上。所以key和槽是绑定在一起的，至于槽分配在哪个节点上，就有很大的自由度了。</p>
+<p>比如最开始有ABC三个节点，现在我要加一个D节点，只需要从ABC上挪一些槽给D即可。同理，如果要下线一个节点，也只需要把它上边的槽挪给别的节点，再从集群里删除本节点即可。那么问题来了，集群中新加入节点之后，数据是会自动重新分片呢还是需要手动操作？迁移期间又是如何保证外部可以访问呢？另外，像<code>mget</code>这种多key操作的命令如果涉及到的key不在同一个节点上又会发生什么呢？让我们带着疑问继续研究吧。</p>
+<h2 id="heading-2">如何保证高可用？</h2>
+<p>前文提到，redis通过槽位把数据分散在各个节点上，但是仔细一想就会发现，对于单个key来说，数据仍然面临单点问题。解决的方法其实也很简单，我们给每个节点都加一个从节点不就好了。主节点挂掉后从节点顶上继续服务就可以了。</p>
+<h2 id="heading-3">那么一致性呢？</h2>
+<p>遗憾的是，redis集群并<code>不能保证强一致性</code>，这是由redis主从同步机制决定。redis的主从同步是异步的，写操作在主节点执行完后并不会等待数据同步到从节点就会返回结果给客户端。那么在数据同步到从节点之前，如果主节点挂掉了，这份数据也就丢掉。</p>
+<p>这其实也是性能和一致性之间的权衡，如果每个操作都等待从节点同步完成再返回的话，写入性能将极大地降低。</p>
+<p>除了主从同步的时间差可能导致数据丢失外，网络出现分区也有可能导致数据丢失。假如A、 B、 C、 A1、 B1、 C1三主三从的集群出现网络分区，其中A、C、 A1、 B1、C1互相之间可以联通，而B与其他节点不能互通。如果此时客户端与B可以连通，初期看来一切正常，B节点可以正常写入和读取，但是当超过一定时间，B节点发现自己无法与其它节点进行通信的话，就会认为自己出了问题，之后就拒绝所有的写操作。另一方面，因为B1与其他节点正常通信，大家都认为B节点挂掉了，B1就会变成新的主节点。那么这段时间内，客户端写到B的所有数据就都丢失了。</p>
+<h2 id="heading-4">实践</h2>
+<p>眼过千遍，不如手过一遍。我们直接上手操作一遍集群的搭建，就会对原理有更深的了解。关于集群，有几个最重要的配置，需要先了解一下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">cluster-enabled &lt;yes/no&gt;: 开启集群模式 
+cluster-config-file &lt;filename&gt;: 每个集群节点都有一个配置文件。这个配置文件是自动生成的，不需要也不应该手动修改。说白了就是让你看看而已 
+cluster-node-timeout &lt;milliseconds&gt;: 节点间通信超时时间。某个节点超过这个时间无法与多数主节点取得联系的话，就会进入失败状态，拒绝对外提供服务。而从节点如果超过这个时间联系不到主节点，就会投票产生新的主节点
+</code></pre></td></tr></table>
+</div>
+</div><p>新建一个目录<code>redis-cluster</code>作为实验目录，再分别建立<code>7000</code>到<code>7005</code>六个目录，里边各放一个<code>redis.conf</code>的配置文件(注意端口要和目录对应)。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">port 7000
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 5000
+appendonly yes
+</code></pre></td></tr></table>
+</div>
+</div><p>依次进入各目录，用<code>redis-server redis.conf</code>命令把六个节点都启动起来。在启动界面，我们可以看到一句话<code>No cluster configuration found, I'm 870bd5c214d856b092af50dd13f00745010a4712</code>，这一串字符很重要，它是当前节点的唯一id，从节点第一次运行开始，伴随它的一生。同时，当前目录下也会生成一个<code>nodes.conf</code>的文件。打开看一眼，里边有如下内容</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">870bd5c214d856b092af50dd13f00745010a4712 :0@0 myself,master - 0 0 0 connected
+vars currentEpoch 0 lastVoteEpoch 0
+</code></pre></td></tr></table>
+</div>
+</div><p>我们现在只是把6个节点按集群模式运行起来了，但目前还是各自为战。要真正组成集群，还需要一个命令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">redis-cli --cluster create 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 --cluster-replicas 1
+</code></pre></td></tr></table>
+</div>
+</div><p>其中<code>cluster-replicas</code>表示每个主节点有一个从节点，一共6个节点，所以肯定是3主3从。
+输入这个命令后，有个确认的流程，确认完成，系统显示<code>[OK] All 16384 slots covered.</code>时我们的集群就建立完成了。</p>
+<p>随便用<code>redis-cli</code>命令随便连接一个节点，用<code>cluster info</code>可以获取当前集群的运行状态(下边只列出关键的字段)。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">127.0.0.1:7000&gt; CLUSTER INFO
+cluster_state:ok
+cluster_known_nodes:6
+cluster_size:3
+</code></pre></td></tr></table>
+</div>
+</div><p>通过<code>cluster slots</code>命令可以查看当前槽的分布情况。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">127.0.0.1:7000&gt; CLUSTER SLOTS
+1) 1) (integer) 5461
+   2) (integer) 10922
+   3) 1) &#34;127.0.0.1&#34;
+      2) (integer) 7001
+      3) &#34;cae6b42c4edc3047f88195b8d32c363a0867c89b&#34;
+   4) 1) &#34;127.0.0.1&#34;
+      2) (integer) 7004
+      3) &#34;b3df6e9efc82ca8069d9169b40d8571b88e986f5&#34;
+2) 1) (integer) 0
+   2) (integer) 5460
+   3) 1) &#34;127.0.0.1&#34;
+      2) (integer) 7000
+      3) &#34;870bd5c214d856b092af50dd13f00745010a4712&#34;
+   4) 1) &#34;127.0.0.1&#34;
+      2) (integer) 7003
+      3) &#34;8b5cab4e93a994982218c8c782108ded748168e7&#34;
+3) 1) (integer) 10923
+   2) (integer) 16383
+   3) 1) &#34;127.0.0.1&#34;
+      2) (integer) 7002
+      3) &#34;8ac699fb1cda5365242e0aef8f248e59e37bf92b&#34;
+   4) 1) &#34;127.0.0.1&#34;
+      2) (integer) 7005
+      3) &#34;0b7dd175001f37e71aeec4be6a62efea5472d964&#34;
+</code></pre></td></tr></table>
+</div>
+</div><p>那么问题来了，如果我在某个节点写入一个槽位不属于当前节点的key会发生什么？读取一个槽位不在此节点的key又会发生什么呢？尝试一下吧。</p>
+<p>用<code>cluster keyslot xxx</code>命令可以计算出某个key所在的槽位，比如<code>hello</code>对应的槽位是<code>866</code>。那我就用故意用<code>redis-cli</code>连接7002端口，执行<code>set hello world</code>。得到的结果是<code>(error) MOVED 866 127.0.0.1:7000</code>。同理，用<code>get hello</code>也会得到一样的结果，其实只要你不是连接的7000这个节点，就算是在从节点执行set命令，返回的也是一样的。就是告诉你，你要写的key不归我管，找7000节点玩去。</p>
+<p>之前我们有个疑问，对于多key的命令redis集群是怎么支持的，正好可以尝试一下。<code>mget hello aa</code>，得到的结果是<code>(error) CROSSSLOT Keys in request don't hash to the same slot</code>。好嘛，看来不光是不支持分散在不同分片上的查询，就连都在一个节点但不在同一槽位里的key都不支持。</p>
+<p>那真要想用<code>mget</code>之类的命令咋办？官方的解决方案是使用<code>hash tag</code>的方式，就是把key写成<code>hello{foo}world</code>的形式，这样redis只会用花括号里的字符串进行哈希运算，所有结构相似的数据自然都会分到一个槽里。不过我个人很质疑这种操作的实用性，我们用集群不就是为了把数据分散开嘛，现在又通过这种方式把数据都放在一个槽里，那最终不还是落到同一个节点上了嘛，事与愿违啊。</p>
+<h2 id="heading-5">重新分片</h2>
+<p>如果你想重新分配一下槽位，可以使用<code>redis-cli --cluster reshard 127.0.0.1:7000</code>命令，这里连哪个节点不重要，反正这个命令会自动获取所有节点的信息。</p>
+<p>之后问你要移动多少个槽位，以及接收节点和来源节点的节点id。确认迁移方案后，按下回车，一顿自动化迁移之后。再使用<code>cluster slots</code>命令查看，就可以发现槽位分布发生了变化。</p>
+<p>当然如果不想像上边一样手动操作，可以直接一条命令搞定。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">redis-cli --cluster reshard &lt;host&gt;:&lt;port&gt; --cluster-from &lt;node-id&gt; --cluster-to &lt;node-id&gt; --cluster-slots &lt;number of slots&gt; --cluster-yes
+</code></pre></td></tr></table>
+</div>
+</div><p>如果感兴趣的话，可以在迁移的同时运行一个程序，不停地向集群写入key，你会发现迁移并不影响写入。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">rdb</span> <span class="o">:=</span> <span class="nx">redis</span><span class="p">.</span><span class="nf">NewClusterClient</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">redis</span><span class="p">.</span><span class="nx">ClusterOptions</span><span class="p">{</span>
+		<span class="nx">Addrs</span><span class="p">:</span>          <span class="p">[</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;127.0.0.1:7000&#34;</span><span class="p">,</span> <span class="s">&#34;127.0.0.1:7001&#34;</span><span class="p">,</span> <span class="s">&#34;127.0.0.1:7002&#34;</span><span class="p">,</span> <span class="s">&#34;127.0.0.1:7003&#34;</span><span class="p">,</span> <span class="s">&#34;127.0.0.1:7004&#34;</span><span class="p">,</span> <span class="s">&#34;127.0.0.1:7005&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="nx">RouteByLatency</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+		<span class="nx">RouteRandomly</span><span class="p">:</span>  <span class="kc">false</span><span class="p">,</span>
+	<span class="p">}</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">s</span><span class="p">,</span> <span class="nx">e</span> <span class="o">:=</span> <span class="nx">rdb</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nf">Background</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="s">&#34;test&#34;</span><span class="o">+</span><span class="nx">strconv</span><span class="p">.</span><span class="nf">Itoa</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="p">,</span> <span class="s">&#34;this is value&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="p">.</span><span class="nf">Result</span><span class="p">(</span><span class="p">)</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>那redis集群是如果保证迁移过程中的读写服务呢？带着疑问继续研究吧。</p>
+<h2 id="heading-6">测试可用性</h2>
+<p>如果某个master挂掉会怎么样？找个幸运儿试一把，<code>redis-cli -p 7002 debug segfault</code>让7002挂掉。观察7005输出的日志。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">58857:S 12 Aug 2020 23:32:50.755 # Connection with master lost.
+58857:S 12 Aug 2020 23:32:50.755 * Caching the disconnected master state.
+58857:S 12 Aug 2020 23:32:51.152 * Connecting to MASTER 127.0.0.1:7002
+58857:S 12 Aug 2020 23:32:51.152 * MASTER &lt;-&gt; REPLICA sync started
+58857:S 12 Aug 2020 23:32:51.152 # Error condition on socket for SYNC: Operation now in progress
+...
+58857:S 12 Aug 2020 23:32:56.708 * Marking node 8ac699fb1cda5365242e0aef8f248e59e37bf92b as failing (quorum reached).
+58857:S 12 Aug 2020 23:32:56.708 # Cluster state changed: fail
+58857:S 12 Aug 2020 23:32:56.809 # Start of election delayed for 716 milliseconds (rank #0, offset 13862).
+58857:S 12 Aug 2020 23:32:57.624 # Starting a failover election for epoch 8.
+58857:S 12 Aug 2020 23:32:57.627 # Failover election won: I&#39;m the new master.
+58857:S 12 Aug 2020 23:32:57.627 # configEpoch set to 8 after successful failover
+58857:M 12 Aug 2020 23:32:57.627 * Discarding previously cached master state.
+58857:M 12 Aug 2020 23:32:57.627 # Setting secondary replication ID to 725cdb568f48a5afd1b198b47c625c5813d0f99c, valid up to offset: 13863. New replication ID is d2cec1227c9e3289afa6aaeb5866ed1b329f7cd8
+58857:M 12 Aug 2020 23:32:57.627 # Cluster state changed: ok
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，从节点尝试多次连接主节点，发现无法连接，于是发起了选举，将自己选为了新的主节点。</p>
+<p>用<code>cluster nodes</code>命令也可以看到当前的节点状态。7002端口被标记为<code>fail</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">127.0.0.1:7000&gt; CLUSTER NODES
+...
+127.0.0.1:7002@17002 master,fail - 1597246371561 1597246369000 3 disconnected
+...
+</code></pre></td></tr></table>
+</div>
+</div><p>那如果再把这个节点启动起来呢？直接进到7002的目录里再次启动redis，观察日志就可以发现，风水轮流转啊，它变成了7005的从节点。用<code>cluster nodes</code>或<code>cluster slots</code>都能看到相应的变化。</p>
+<h2 id="heading-7">添加新节点</h2>
+<p>我们按照之前的配置照葫芦画瓢再新建一个7006的目录启动节点，通过<code>redis-cli --cluster add-node 127.0.0.1:7006 127.0.0.1:7000</code>命令即可把该节点加入到集群当中，后边这个集群的节点可以指定任意一个，反正只要取一个节点取得联系，新节点的信息就会广播给所有节点。</p>
+<p>等等，这个节点还没有从节点呢。我们再创建一个7007目录，启动起来。通过<code>redis-cli --cluster add-node 127.0.0.1:7007 127.0.0.1:7000 --cluster-slave</code>命令把这个节点以从节点的身份加入到集群中。再用<code>cluster nodes</code>查看就可以看到7007自动成为了7006的从节点了。</p>
+<p>这里你会不会有疑问，7007怎么知道自己应该去当7006的从节点，而不是找别的主节点呢？</p>
+<p>首先，我们当然可以再上述命令后再加一个选项<code>--cluster-master-id 0d4ddbcc398691f3e6e649a8cf474033ec459948</code>直接指定作为哪个节点的从节点。如果没有特别指定的话，就会找到从节点数量最少的主节点，做它的从节点。在这个例子里当然就是7006喽，这个可怜鬼一个小弟都没有。</p>
+<p>另外，新加入的这对主从上边还没有数据，需要通过上文提到的<code>reshard</code>命令从别的节点上分配一些槽点过来，这里就不赘述了。</p>
+<p>还记得之前提到的一个疑问吗？集群中新加入节点之后，数据是会自动重新分片呢还是需要手动操作。答案很明显了，需要手动操作。即使你把这个操作用脚本实现了自动化，本质上也是通过某个命令触发了数据的迁移而已。这样也挺好，实现简单，而且更可控。</p>
+<h2 id="heading-8">删除节点</h2>
+<p>删除节点，只需要执行<code>redis-cli --cluster del-node 127.0.0.1:7000 &lt;node-id&gt;</code>命令即可。用此命令可以轻松删除掉7007这个从节点。</p>
+<p>那么主节点也可以这么轻松吗？开动脑筋想一下就可以知道，如果主节点里保管了一部分槽位，显示不能直接把它下掉，不然集群的数据就不完整了。放心大胆地实测一下，果然redis会报错<code>[ERR] Node 127.0.0.1:7006 is not empty! Reshard data away and try again</code>。</p>
+<p>那么redis集群增删节点的逻辑就很明显了。新加入的节点是空的，需要迁移一部分数据过来。而要删除一个主节点，就要先把数据迁移走。我们先通过<code>reshard</code>命令把7006里的数据迁移走，再执行上边的删除节点操作，就可以成功把它删掉。</p>
+<h2 id="heading-9">副本迁移</h2>
+<p>前文我们提到，为了保证集群可用性，我们采用一主配一从的架构，如果某个主节点挂掉了，对应的从节点就会提升为主节点继续服务。那么问题来了，如果这个新的主节点也挂掉了怎么办？难道要为所有的主节点配两个或更多的从节点？很显然有点浪费啊。</p>
+<p>redis集群给出的答案是<code>副本迁移(replicas migration)</code>。我们不需要给所有主节点都配多个从节点，只要在集群里多加入少量几个从节点即可。刚开始，会出现A有A1和A2两个从节点，而B只有B1一个从节点的情况。当B挂掉，B1变成主节点时，A1和A2中的一个节点就会跟A说再见，转而变成B1的从节点，以此来保证所有主节点至少有一个从节点。</p>
+<p>我们再次把7007节点启动起来，并以从节点身份加入到集群中，可以看到，现在7000节点有了7003和7007两个小弟。然后通过<code>redis-cli -p 7001 debug segfault</code>强行把7001节点挂掉。通过<code>cluster slots</code>可以观察到，7001原本的小弟7004现在当了大哥，而原本是7000小弟的7003现在变成了7004的小弟。</p>
+<p>当然，副本迁移也不会无私地进行，如果从节点判断自己转投他处后现在的大哥没有小弟了，它是断然不会离开的。这个具体的数量可以通过配置文件的<code>cluster-migration-barrier</code>来配置。</p>
+<h2 id="heading-10">数据迁移如何进行？</h2>
+<p>还记得之前提到的一个疑问吗？槽位迁移期间集群如何保证外部访问呢？</p>
+<p>前文提到过，无论读写哪个key，客户端可以连接集群中任何一个节点进行操作。如果这个key正好在当前节点上，皆大欢喜。如果不在的话，节点会返回<code>MOVED</code>错误告诉你应该去找哪个节点。</p>
+<p>我们仔细想一下就可以知道，所谓槽位的迁移，本质上是所属于这个槽位的若干key的迁移，完全可以按相同的思想进行处理，只不过需要考虑得再全面一点。</p>
+<p>实际上，如果要把槽位8从A节点迁移到B节点的话，A节点会把该槽位标记成<code>MIGRATING</code>状态，表示正在迁出，而B节点会把该槽位标记成<code>IMPORTING</code>状态，表示正在迁入。</p>
+<p>在迁移过程中，无论你要处理的key是否已经迁移到B节点，只要你访问的不是A节点，都会返回一个<code>MOVED A</code>指令，让你去A节点找这个key。当你去请求A节点时，有两种可能，一是这个key还没有迁移走，直接响应即可，如果A发现这个key不在自己身上，这时并不会返回<code>MOVED</code>指令，而是会返回<code>ASKING B</code>指令，表示key已经不在我这了，去找B试试看。当然，也可能这个key压根就不存在，B那里也没有。</p>
+<p>细想一下，就可以明白。在迁移没有完成之前，当前槽位的所属权还是A的，所以涉及到该槽位里的key都应该先去A那里过问一下，没有的话再找B。</p>
+<p>具体到某个key的迁移，其实就是使用了<code>migrate</code>命令。这个命令可以保证移动的原子性。从客户端的角度来看，某个key在任意时间只会出现在A或B一个节点上。</p>
+<p>不过这种原子性也不是免费的，为了保证迁移的原子性，两个节点在迁移过程中都会进入阻塞状态不对外提供服务，试想如果是迁移一个大key，会有大量请求无法及时处理。我自测含有100万个元素的zset迁移时会有几百毫秒的明显停顿，而且这是在同一台电脑上的节点间迁移，如果加上网络传输，时间肯定更长。</p>
+<h2 id="heading-11">总结</h2>
+<p>redis一向追求简单高效，所以集群的设计也是把性能放在了首位，牺牲了一定的可用性和一致性。从我个人的角度讲，认为有以下几点需要注意：</p>
+<ol>
+<li>无论是自定义分片还是用redis集群，只要是key分散在不同节点上，那么涉及到多key操作的命令、事务、lua脚本等就通通不能用了。而redis集群更加严格，key在同一个节点，但不在同一个槽位，也不能使用多key命令。</li>
+<li>控制key分配在同一槽位的唯一方法就是使用<code>hash tag</code>。我个人觉得实用性欠佳，如果把大量key放到一个槽位，那和使用单点redis还有什么区别？</li>
+<li>无论操作哪个key，客户端可以向任意节点发送请求，集群并不会代理当前请求，而是会通过<code>moved</code>或<code>asking</code>指令将客户端重定向到正确的节点。</li>
+<li>随机请求很大概率不会正好落在正确的节点上，如果每次都重定向，相当于一条命令要执行两次。所以最好的办法是客户端通过<code>cluster slots</code>命令记录槽位对应信息，即使不是时刻保持最新，也能保证大部分请求直达正确的节点。</li>
+<li>虽然redis集群提供了方便的工具迁移数据，但是也要考虑到迁移数据，特别是有大key的情况时对性能的影响。所以初期还是要尽可能规划好要使用的节点数量</li>
+<li>利用<code>副本迁移</code>机制可以为集群带来更高的可用性，可以适当冗余几个从节点防止同一份数据的主从节点前后脚挂掉的尴尬局面。</li>
+</ol>
+<h2 id="heading-12">参考资料</h2>
+<ol>
+<li><a href="https://redis.io/topics/cluster-tutorial">Redis cluster tutorial</a></li>
+<li><a href="https://redis.io/topics/cluster-spec">Redis Cluster Specification</a></li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">sosonemo</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-08-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/posts/php/get_headers-pitfalls/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">get_headers的一个小坑</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/posts/go/handling-one-million-requests-with-golang/">
+            <span class="next-text nav-default">(译文)用go语言处理每分钟1百万次请求</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'nemos-neverland';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="https://github.com/nemoTyrant" class="iconfont icon-github" title="github"></a>
+  <a href="https://sosonemo.me/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2012 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">NemoTyrant</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-37170342-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

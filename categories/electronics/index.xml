@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>electronics on Nemo&#39;s Neverland</title>
+    <link>https://sosonemo.me/categories/electronics/</link>
+    <description>Recent content in electronics on Nemo&#39;s Neverland</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 26 Dec 2019 21:41:04 +0800</lastBuildDate>
+    
+	<atom:link href="https://sosonemo.me/categories/electronics/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SPI协议简介</title>
+      <link>https://sosonemo.me/posts/electronics/spi-protocol-introduction/</link>
+      <pubDate>Thu, 26 Dec 2019 21:41:04 +0800</pubDate>
+      
+      <guid>https://sosonemo.me/posts/electronics/spi-protocol-introduction/</guid>
+      <description>一. 引言 只要你使用过树莓派、arduino或者单片机之类的东西，一定少不了和各种传感器打交道。两个设备之间通信，就会涉及到协议的问题。所谓协</description>
+    </item>
+    
+  </channel>
+</rss>
