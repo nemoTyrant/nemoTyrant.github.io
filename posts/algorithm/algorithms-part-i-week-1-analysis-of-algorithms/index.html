@@ -24,7 +24,7 @@ We must analyze algorithms to:" /><meta name="keywords" content="php, go" />
 
 
 
-<meta name="generator" content="Hugo 0.61.0 with theme even" />
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
 <link rel="canonical" href="https://sosonemo.me/posts/algorithm/algorithms-part-i-week-1-analysis-of-algorithms/" />
@@ -43,18 +43,15 @@ We must analyze algorithms to:" /><meta name="keywords" content="php, go" />
 <meta property="og:description" content="Why to analyze? To solve a single problem, there may be many different algorithms. Should we just randomly pick up one or use the best one? Of course, we want the best one. But how can we assert that this one is better than that one? Even though we have the best one, is it really the best one in the world? Can there be a better undiscovered algorithm?
 We must analyze algorithms to:" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://sosonemo.me/posts/algorithm/algorithms-part-i-week-1-analysis-of-algorithms/" />
+<meta property="og:url" content="https://sosonemo.me/posts/algorithm/algorithms-part-i-week-1-analysis-of-algorithms/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2015-03-28T09:11:07+00:00" />
 <meta property="article:modified_time" content="2015-03-28T09:11:07+00:00" />
+
 <meta itemprop="name" content="Algorithms Part I week 1: Analysis of Algorithms">
 <meta itemprop="description" content="Why to analyze? To solve a single problem, there may be many different algorithms. Should we just randomly pick up one or use the best one? Of course, we want the best one. But how can we assert that this one is better than that one? Even though we have the best one, is it really the best one in the world? Can there be a better undiscovered algorithm?
-We must analyze algorithms to:">
-<meta itemprop="datePublished" content="2015-03-28T09:11:07&#43;00:00" />
-<meta itemprop="dateModified" content="2015-03-28T09:11:07&#43;00:00" />
+We must analyze algorithms to:"><meta itemprop="datePublished" content="2015-03-28T09:11:07+00:00" />
+<meta itemprop="dateModified" content="2015-03-28T09:11:07+00:00" />
 <meta itemprop="wordCount" content="1034">
-
-
-
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Algorithms Part I week 1: Analysis of Algorithms"/>
 <meta name="twitter:description" content="Why to analyze? To solve a single problem, there may be many different algorithms. Should we just randomly pick up one or use the best one? Of course, we want the best one. But how can we assert that this one is better than that one? Even though we have the best one, is it really the best one in the world? Can there be a better undiscovered algorithm?
@@ -183,28 +180,28 @@ We must analyze algorithms to:"/>
 <li>Hypothesis must be <strong>falsifiable</strong></li>
 </ul>
 <h3 id="empirical-observation">Empirical Observation</h3>
-<p>Let's take an example to analyze following the method above.</p>
+<p>Let&rsquo;s take an example to analyze following the method above.</p>
 <p><strong>3-sum</strong>. Given N distinct integers, how many triples sum to exact zero?</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">% more 8ints.txt
-8
-30 -40 -20 -10 40 0 10 5
-% java ThreeSum 8ints.txt
-4
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">% more 8ints.txt
+</span></span><span class="line"><span class="cl">8
+</span></span><span class="line"><span class="cl">30 -40 -20 -10 40 0 10 5
+</span></span><span class="line"><span class="cl">% java ThreeSum 8ints.txt
+</span></span><span class="line"><span class="cl">4
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>The most straightfoward algorithm is brute-force.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -222,23 +219,23 @@ We must analyze algorithms to:"/>
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreeSum</span><span class="o">{</span>
-   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">count</span><span class="o">(</span><span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">a</span><span class="o">)</span><span class="o">{</span>
-      <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
-      <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
-      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
-         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">j</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
-            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="n">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">k</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>    <span class="c1">// check each triple
-</span><span class="c1"></span>               <span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span>
-                  <span class="n">count</span><span class="o">+</span><span class="o">+</span><span class="o">;</span>
-      <span class="k">return</span> <span class="n">count</span><span class="o">;</span>
-   <span class="o">}</span>
-   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span><span class="o">{</span>
-      <span class="kt">int</span><span class="o">[</span><span class="o">]</span> <span class="n">a</span> <span class="o">=</span> <span class="n">In</span><span class="o">.</span><span class="na">readInts</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="o">)</span><span class="o">;</span>
-      <span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">count</span><span class="o">(</span><span class="n">a</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-   <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreeSum</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">count</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">      <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">      <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+</span></span><span class="line"><span class="cl">         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="n">1</span><span class="o">;</span> <span class="n">k</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span>    <span class="c1">// check each triple
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>               <span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">                  <span class="n">count</span><span class="o">++;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">count</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl">   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">      <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="n">In</span><span class="o">.</span><span class="na">readInts</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="n">0</span><span class="o">]);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">count</span><span class="o">(</span><span class="n">a</span><span class="o">));</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Run the program for various input sizes and measure running time. We get this:</p>
 <p><img src="img/3-sum-timing.png" alt=""></p>
@@ -261,19 +258,19 @@ We must analyze algorithms to:"/>
 <p>So given the following code(2-sum):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
-<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
-   <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">j</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
-      <span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span><span class="o">=</span> <span class="n">0</span><span class="o">)</span>
-          <span class="n">count</span><span class="o">+</span><span class="o">+</span><span class="o">;</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+</span></span><span class="line"><span class="cl">   <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="n">1</span><span class="o">;</span> <span class="n">j</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">N</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">          <span class="n">count</span><span class="o">++;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>we have:
 <img src="img/2-sum-op.png" alt=""></p>
@@ -311,13 +308,13 @@ Provides a way to predict performance</p>
 <p>ur goals are to establish <code>difficulty</code> of a problem and develop <code>optimal</code> algorithms. When we say <code>optimal</code>, we mean the algorithm has performance guarantee for any input and no other algorithms can provide better performance guarantee.</p>
 <p>There are some notations commonly used in analysis of algorithm:</p>
 <p><img src="img/notations.png" alt=""></p>
-<p>Let's take an easy example. To solve 1-sum problem, we have to examine every entry in the array, so the upper bound is O(N), lower bound is Ω(N), and this is the optimal algorithm with running time of Θ(N).</p>
+<p>Let&rsquo;s take an easy example. To solve 1-sum problem, we have to examine every entry in the array, so the upper bound is O(N), lower bound is Ω(N), and this is the optimal algorithm with running time of Θ(N).</p>
 <h3 id="memory">Memory</h3>
 <p>Besides running time, another thing we need to keep in mind is how much memory an algorithm needs. Since we use java in this course, we only discuss memory usage in java.</p>
 <p>The followng images show how much memory needed for primitive types and objects.</p>
 <p><img src="img/memory-primitive.png" alt=""></p>
 <p><img src="img/memory-object.png" alt=""></p>
-<p>With the development of technology, we have larger and larger memory in computers. So this maybe not the most important part to determine whether an algorithm is good or not. But it's always better if an algorithm can use less memory without changing its order of growth.</p>
+<p>With the development of technology, we have larger and larger memory in computers. So this maybe not the most important part to determine whether an algorithm is good or not. But it&rsquo;s always better if an algorithm can use less memory without changing its order of growth.</p>
 
     </div>
 
@@ -396,7 +393,7 @@ Provides a way to predict performance</p>
   <span class="copyright-year">
     &copy; 
     2012 - 
-    2021
+    2022
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

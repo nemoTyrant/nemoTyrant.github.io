@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.61.0 with theme even" />
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
 <link rel="canonical" href="https://sosonemo.me/posts/linux/strongswan-to-shadowsocks/" />
@@ -41,17 +41,14 @@
 <meta property="og:title" content="阿里云搭建strongswan VPN 国内外分流中转到shadowsocks" />
 <meta property="og:description" content="前言：前段时间新出现了几个支持IKEv2的VPN，试用了一下，感受速度嗖嗖的，不过流量贵贵的。作为一个有尊严的技术人员，怎能甘心就这样把钱轻" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://sosonemo.me/posts/linux/strongswan-to-shadowsocks/" />
+<meta property="og:url" content="https://sosonemo.me/posts/linux/strongswan-to-shadowsocks/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2016-04-26T06:12:50+00:00" />
 <meta property="article:modified_time" content="2016-04-26T06:12:50+00:00" />
+
 <meta itemprop="name" content="阿里云搭建strongswan VPN 国内外分流中转到shadowsocks">
-<meta itemprop="description" content="前言：前段时间新出现了几个支持IKEv2的VPN，试用了一下，感受速度嗖嗖的，不过流量贵贵的。作为一个有尊严的技术人员，怎能甘心就这样把钱轻">
-<meta itemprop="datePublished" content="2016-04-26T06:12:50&#43;00:00" />
-<meta itemprop="dateModified" content="2016-04-26T06:12:50&#43;00:00" />
-<meta itemprop="wordCount" content="3017">
-
-
-
+<meta itemprop="description" content="前言：前段时间新出现了几个支持IKEv2的VPN，试用了一下，感受速度嗖嗖的，不过流量贵贵的。作为一个有尊严的技术人员，怎能甘心就这样把钱轻"><meta itemprop="datePublished" content="2016-04-26T06:12:50+00:00" />
+<meta itemprop="dateModified" content="2016-04-26T06:12:50+00:00" />
+<meta itemprop="wordCount" content="3018">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="阿里云搭建strongswan VPN 国内外分流中转到shadowsocks"/>
 <meta name="twitter:description" content="前言：前段时间新出现了几个支持IKEv2的VPN，试用了一下，感受速度嗖嗖的，不过流量贵贵的。作为一个有尊严的技术人员，怎能甘心就这样把钱轻"/>
@@ -133,13 +130,13 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#heading">零、基础知识</a></li>
-    <li><a href="#ss">一、海外服务器搭建ss</a></li>
-    <li><a href="#vpsstrongswan">二、国内VPS搭建strongswan</a></li>
-    <li><a href="#heading-1">三、客户端设置</a></li>
-    <li><a href="#heading-2">四、配置防火墙</a></li>
-    <li><a href="#heading-3">五、配置中转</a></li>
-    <li><a href="#dnsmasq">六、配置dnsmasq</a></li>
+    <li><a href="#零基础知识">零、基础知识</a></li>
+    <li><a href="#一海外服务器搭建ss">一、海外服务器搭建ss</a></li>
+    <li><a href="#二国内vps搭建strongswan">二、国内VPS搭建strongswan</a></li>
+    <li><a href="#三客户端设置">三、客户端设置</a></li>
+    <li><a href="#四配置防火墙">四、配置防火墙</a></li>
+    <li><a href="#五配置中转">五、配置中转</a></li>
+    <li><a href="#六配置dnsmasq">六、配置dnsmasq</a></li>
   </ul>
 </nav>
   </div>
@@ -148,18 +145,18 @@
       <p>前言：前段时间新出现了几个支持IKEv2的VPN，试用了一下，感受速度嗖嗖的，不过流量贵贵的。作为一个有尊严的技术人员，怎能甘心就这样把钱轻易送给别人呢。经过一番观察，发现该vpn直连的其实是国内的阿里云。那么原理就很明确了，客户端连阿里云，然后阿里云进行国内外分流。因为阿里云机房的网络肯定杠杠的，所以不管访问国内和国外都很快。明确原理之后，我做了好一番尝试，失败了好几次之后，终于于前天调试好了。</p>
 <p>架构：客户端 &lt;-&gt; 阿里云 &lt;-&gt; 海外VPS</p>
 <p>本文的重点是分流转发部分（也是我搜索许久，发现资料很少的部分），所以其它内容只是简略介绍。</p>
-<h2 id="heading">零、基础知识</h2>
+<h2 id="零基础知识">零、基础知识</h2>
 <p>要跨越长城，其实得分两步：一是获取封锁网站的正确DNS解析，二是使用代理访问被封锁的IP。</p>
 <p>就本文来说，获取正确DNS解析是通过<code>dnsmasq</code>和<code>ss</code>搭配来完成的。默认上游DNS是<code>114.114.114.114</code>，被封锁网站走<code>ss-tunnel</code>转发到<code>8.8.8.8</code>解析。</p>
 <p>更多基础知识，请阅读<a href="https://github.com/lifetyper/FreeRouter_V2">FreeRouter</a>，作者从网络基础到长城运行原理及如何跨越都讲到了。</p>
-<h2 id="ss">一、海外服务器搭建ss</h2>
+<h2 id="一海外服务器搭建ss">一、海外服务器搭建ss</h2>
 <p>这一步网上教程一大片，就不重复了。我用的是<a href="https://github.com/shadowsocks/shadowsocks-libev">shadowsocks-libev</a>。如果这一步都无法独立完成，那后边的就不需要看了。</p>
-<h2 id="vpsstrongswan">二、国内VPS搭建strongswan</h2>
+<h2 id="二国内vps搭建strongswan">二、国内VPS搭建strongswan</h2>
 <p>centos 直接<code>yum install strongswan</code>就好。其它系统请自行搜索相应安装方式。</p>
 <p>配置strongswan。我懒得弄证书了，所以认证方式为预共享密钥(因为我只需要iphone和mac上用，所以只配了这俩，其他客户端请自行搜索)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -195,62 +192,62 @@
 </span><span class="lnt">34
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">vi /etc/strongswan/ipsec.conf (建议先配置一下默认配置)
-
-config setup
-    uniqueids=no              #允许多个客户端使用同一个证书,多设备同时在线
-    strictcrlpolicy=no
-
-#所有项目共用的配置项
-conn %default
-    keyexchange=ike              #ikev1 或 ikev2 都用这个
-    left=%any                    #服务器端标识,%any表示任意
-    leftsubnet=0.0.0.0/0         #服务器端虚拟ip, 0.0.0.0/0表示通配.
-    right=%any                   #客户端标识,%any表示任意
-    ikelifetime=60m
-    keylife=20m
-    rightsourceip=172.0.0.0/24    #因为阿里云默认有两个网卡，内网网卡用了10网段。所以我这里设置的是172.0.0.0/24
-
-#供 os x 使用, 使用 PSK 预设密钥
-conn IPSec-IKEv1-PSK
-    keyexchange=ikev1
-    fragmentation=yes
-    leftauth=psk
-    rightauth=psk
-    rightauth2=xauth
-    auto=add
-
-# ios IKEv2-PSK
-conn iOS_IKEv2-PSK
-    auto=add
-    dadaction=clear
-    keyexchange=ikev2
-    ike=aes256-sha1-modp1024
-    leftauth=psk
-    leftid=v.sosonemo.me
-    rightauth=eap-mschapv2
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">vi /etc/strongswan/ipsec.conf (建议先配置一下默认配置)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">config setup
+</span></span><span class="line"><span class="cl">    uniqueids=no              #允许多个客户端使用同一个证书,多设备同时在线
+</span></span><span class="line"><span class="cl">    strictcrlpolicy=no
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#所有项目共用的配置项
+</span></span><span class="line"><span class="cl">conn %default
+</span></span><span class="line"><span class="cl">    keyexchange=ike              #ikev1 或 ikev2 都用这个
+</span></span><span class="line"><span class="cl">    left=%any                    #服务器端标识,%any表示任意
+</span></span><span class="line"><span class="cl">    leftsubnet=0.0.0.0/0         #服务器端虚拟ip, 0.0.0.0/0表示通配.
+</span></span><span class="line"><span class="cl">    right=%any                   #客户端标识,%any表示任意
+</span></span><span class="line"><span class="cl">    ikelifetime=60m
+</span></span><span class="line"><span class="cl">    keylife=20m
+</span></span><span class="line"><span class="cl">    rightsourceip=172.0.0.0/24    #因为阿里云默认有两个网卡，内网网卡用了10网段。所以我这里设置的是172.0.0.0/24
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#供 os x 使用, 使用 PSK 预设密钥
+</span></span><span class="line"><span class="cl">conn IPSec-IKEv1-PSK
+</span></span><span class="line"><span class="cl">    keyexchange=ikev1
+</span></span><span class="line"><span class="cl">    fragmentation=yes
+</span></span><span class="line"><span class="cl">    leftauth=psk
+</span></span><span class="line"><span class="cl">    rightauth=psk
+</span></span><span class="line"><span class="cl">    rightauth2=xauth
+</span></span><span class="line"><span class="cl">    auto=add
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># ios IKEv2-PSK
+</span></span><span class="line"><span class="cl">conn iOS_IKEv2-PSK
+</span></span><span class="line"><span class="cl">    auto=add
+</span></span><span class="line"><span class="cl">    dadaction=clear
+</span></span><span class="line"><span class="cl">    keyexchange=ikev2
+</span></span><span class="line"><span class="cl">    ike=aes256-sha1-modp1024
+</span></span><span class="line"><span class="cl">    leftauth=psk
+</span></span><span class="line"><span class="cl">    leftid=v.sosonemo.me
+</span></span><span class="line"><span class="cl">    rightauth=eap-mschapv2
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>以上配置文件仅限于对我来说可用，具体各条目啥含义我也不是完全明白。</p>
 <p>配置密码文件：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">vi /etc/strongswan/ipsec.secrets
-
-: PSK &#34;xxx&#34;   #预共享密钥
-user : EAP &#34;xxx&#34;  # 用户与密码
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">vi /etc/strongswan/ipsec.secrets
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">: PSK &#34;xxx&#34;   #预共享密钥
+</span></span><span class="line"><span class="cl">user : EAP &#34;xxx&#34;  # 用户与密码
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>配置strongswan：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -263,24 +260,24 @@ user : EAP &#34;xxx&#34;  # 用户与密码
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">vi /etc/strongswan/strongswan.conf
-
-charon {
-        load_modular = yes
-        plugins {
-                include strongswan.d/charon/*.conf
-        }
-        duplicheck.enable = no #是为了你能同时连接多个设备，所以要把冗余检查关闭
-        compress = yes
-        dns1 = xxx.xxx.xxx.xxx  #后文用dnsmasq，这里要设置成阿里云的公网ip。不知道为啥不能设置成127.0.0.1 如果有知道请告知
-}
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">vi /etc/strongswan/strongswan.conf
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">charon {
+</span></span><span class="line"><span class="cl">        load_modular = yes
+</span></span><span class="line"><span class="cl">        plugins {
+</span></span><span class="line"><span class="cl">                include strongswan.d/charon/*.conf
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        duplicheck.enable = no #是为了你能同时连接多个设备，所以要把冗余检查关闭
+</span></span><span class="line"><span class="cl">        compress = yes
+</span></span><span class="line"><span class="cl">        dns1 = xxx.xxx.xxx.xxx  #后文用dnsmasq，这里要设置成阿里云的公网ip。不知道为啥不能设置成127.0.0.1 如果有知道请告知
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="heading-1">三、客户端设置</h2>
+</div><h2 id="三客户端设置">三、客户端设置</h2>
 <p>iOS9现在虽然可以选择新建IKEv2的VPN了，但是无法使用预共享密钥，所以这里需要使用mobileconfig文件。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">  1
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
 </span><span class="lnt">  3
 </span><span class="lnt">  4
@@ -388,135 +385,135 @@ charon {
 </span><span class="lnt">106
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
-&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
-&lt;plist version=&#34;1.0&#34;&gt;
-&lt;dict&gt;
-    &lt;key&gt;PayloadContent&lt;/key&gt;
-    &lt;array&gt;
-        &lt;dict&gt;
-            &lt;key&gt;IKEv2&lt;/key&gt;
-            &lt;dict&gt;
-                &lt;key&gt;AuthName&lt;/key&gt;
-                &lt;string&gt;{username}&lt;/string&gt;
-                &lt;key&gt;AuthPassword&lt;/key&gt;
-                &lt;string&gt;{password}&lt;/string&gt;
-                &lt;key&gt;AuthenticationMethod&lt;/key&gt;
-                &lt;string&gt;SharedSecret&lt;/string&gt;
-                &lt;key&gt;ChildSecurityAssociationParameters&lt;/key&gt;
-                &lt;dict&gt;
-                    &lt;key&gt;DiffieHellmanGroup&lt;/key&gt;
-                    &lt;integer&gt;2&lt;/integer&gt;
-                    &lt;key&gt;EncryptionAlgorithm&lt;/key&gt;
-                    &lt;string&gt;AES&lt;/string&gt;
-                    &lt;key&gt;IntegrityAlgorithm&lt;/key&gt;
-                    &lt;string&gt;SHA1-96&lt;/string&gt;
-                    &lt;key&gt;LifeTimeInMinutes&lt;/key&gt;
-                    &lt;integer&gt;1440&lt;/integer&gt;
-                &lt;/dict&gt;
-                &lt;key&gt;DeadPeerDetectionRate&lt;/key&gt;
-                &lt;string&gt;Medium&lt;/string&gt;
-                &lt;key&gt;DisableMOBIKE&lt;/key&gt;
-                &lt;integer&gt;0&lt;/integer&gt;
-                &lt;key&gt;DisableRedirect&lt;/key&gt;
-                &lt;integer&gt;0&lt;/integer&gt;
-                &lt;key&gt;EnableCertificateRevocationCheck&lt;/key&gt;
-                &lt;integer&gt;0&lt;/integer&gt;
-                &lt;key&gt;EnablePFS&lt;/key&gt;
-                &lt;integer&gt;0&lt;/integer&gt;
-                &lt;key&gt;ExtendedAuthEnabled&lt;/key&gt;
-                &lt;true/&gt;
-                &lt;key&gt;IKESecurityAssociationParameters&lt;/key&gt;
-                &lt;dict&gt;
-                    &lt;key&gt;DiffieHellmanGroup&lt;/key&gt;
-                    &lt;integer&gt;2&lt;/integer&gt;
-                    &lt;key&gt;EncryptionAlgorithm&lt;/key&gt;
-                    &lt;string&gt;AES&lt;/string&gt;
-                    &lt;key&gt;IntegrityAlgorithm&lt;/key&gt;
-                    &lt;string&gt;SHA1-96&lt;/string&gt;
-                    &lt;key&gt;LifeTimeInMinutes&lt;/key&gt;
-                    &lt;integer&gt;1440&lt;/integer&gt;
-                &lt;/dict&gt;
-                &lt;key&gt;LocalIdentifier&lt;/key&gt;
-                &lt;string&gt;{rightid}&lt;/string&gt;
-                &lt;key&gt;RemoteAddress&lt;/key&gt;
-                &lt;string&gt;{your_server_address}&lt;/string&gt;
-                &lt;key&gt;RemoteIdentifier&lt;/key&gt;
-                &lt;string&gt;{leftid}&lt;/string&gt;
-                &lt;key&gt;SharedSecret&lt;/key&gt;
-                &lt;string&gt;{your_psk}&lt;/string&gt;
-                &lt;key&gt;UseConfigurationAttributeInternalIPSubnet&lt;/key&gt;
-                &lt;integer&gt;0&lt;/integer&gt;
-            &lt;/dict&gt;
-            &lt;key&gt;IPv4&lt;/key&gt;
-            &lt;dict&gt;
-                &lt;key&gt;OverridePrimary&lt;/key&gt;
-                &lt;integer&gt;1&lt;/integer&gt;
-            &lt;/dict&gt;
-            &lt;key&gt;PayloadDescription&lt;/key&gt;
-            &lt;string&gt;Configures VPN settings&lt;/string&gt;
-            &lt;key&gt;PayloadDisplayName&lt;/key&gt;
-            &lt;string&gt;VPN&lt;/string&gt;
-            &lt;key&gt;PayloadIdentifier&lt;/key&gt;
-            &lt;string&gt;com.apple.vpn.managed.FBFBDEF8-5B16-4863-91C1-7E2A68F848A3&lt;/string&gt;
-            &lt;key&gt;PayloadType&lt;/key&gt;
-            &lt;string&gt;com.apple.vpn.managed&lt;/string&gt;
-            &lt;key&gt;PayloadUUID&lt;/key&gt;
-            &lt;string&gt;425A1628-E99B-4547-966E-5B967CF1F5EA&lt;/string&gt;
-            &lt;key&gt;PayloadVersion&lt;/key&gt;
-            &lt;real&gt;1&lt;/real&gt;
-            &lt;key&gt;Proxies&lt;/key&gt;
-            &lt;dict&gt;
-                &lt;key&gt;HTTPEnable&lt;/key&gt;
-                &lt;integer&gt;0&lt;/integer&gt;
-                &lt;key&gt;HTTPSEnable&lt;/key&gt;
-                &lt;integer&gt;0&lt;/integer&gt;
-            &lt;/dict&gt;
-            &lt;key&gt;UserDefinedName&lt;/key&gt;
-            &lt;string&gt;JP&lt;/string&gt;
-            &lt;key&gt;VPNType&lt;/key&gt;
-            &lt;string&gt;IKEv2&lt;/string&gt;
-            &lt;key&gt;VendorConfig&lt;/key&gt;
-            &lt;dict/&gt;
-        &lt;/dict&gt;
-    &lt;/array&gt;
-    &lt;key&gt;PayloadDisplayName&lt;/key&gt;
-    &lt;string&gt;IKEv2&lt;/string&gt;
-    &lt;key&gt;PayloadIdentifier&lt;/key&gt;
-    &lt;string&gt;C7918ABA-8DE8-40ED-A3AE-994CD40ACE22&lt;/string&gt;
-    &lt;key&gt;PayloadRemovalDisallowed&lt;/key&gt;
-    &lt;false/&gt;
-    &lt;key&gt;PayloadType&lt;/key&gt;
-    &lt;string&gt;Configuration&lt;/string&gt;
-    &lt;key&gt;PayloadUUID&lt;/key&gt;
-    &lt;string&gt;9697F3C2-FF20-4981-A0C4-AA36BA78EEEA&lt;/string&gt;
-    &lt;key&gt;PayloadVersion&lt;/key&gt;
-    &lt;integer&gt;1&lt;/integer&gt;
-&lt;/dict&gt;
-&lt;/plist&gt;
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+</span></span><span class="line"><span class="cl">&lt;!DOCTYPE plist PUBLIC &#34;-//Apple//DTD PLIST 1.0//EN&#34; &#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&#34;&gt;
+</span></span><span class="line"><span class="cl">&lt;plist version=&#34;1.0&#34;&gt;
+</span></span><span class="line"><span class="cl">&lt;dict&gt;
+</span></span><span class="line"><span class="cl">    &lt;key&gt;PayloadContent&lt;/key&gt;
+</span></span><span class="line"><span class="cl">    &lt;array&gt;
+</span></span><span class="line"><span class="cl">        &lt;dict&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;IKEv2&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;dict&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;AuthName&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;string&gt;{username}&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;AuthPassword&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;string&gt;{password}&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;AuthenticationMethod&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;string&gt;SharedSecret&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;ChildSecurityAssociationParameters&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;dict&gt;
+</span></span><span class="line"><span class="cl">                    &lt;key&gt;DiffieHellmanGroup&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                    &lt;integer&gt;2&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">                    &lt;key&gt;EncryptionAlgorithm&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                    &lt;string&gt;AES&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                    &lt;key&gt;IntegrityAlgorithm&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                    &lt;string&gt;SHA1-96&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                    &lt;key&gt;LifeTimeInMinutes&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                    &lt;integer&gt;1440&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">                &lt;/dict&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;DeadPeerDetectionRate&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;string&gt;Medium&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;DisableMOBIKE&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;integer&gt;0&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;DisableRedirect&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;integer&gt;0&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;EnableCertificateRevocationCheck&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;integer&gt;0&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;EnablePFS&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;integer&gt;0&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;ExtendedAuthEnabled&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;true/&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;IKESecurityAssociationParameters&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;dict&gt;
+</span></span><span class="line"><span class="cl">                    &lt;key&gt;DiffieHellmanGroup&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                    &lt;integer&gt;2&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">                    &lt;key&gt;EncryptionAlgorithm&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                    &lt;string&gt;AES&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                    &lt;key&gt;IntegrityAlgorithm&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                    &lt;string&gt;SHA1-96&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                    &lt;key&gt;LifeTimeInMinutes&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                    &lt;integer&gt;1440&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">                &lt;/dict&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;LocalIdentifier&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;string&gt;{rightid}&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;RemoteAddress&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;string&gt;{your_server_address}&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;RemoteIdentifier&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;string&gt;{leftid}&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;SharedSecret&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;string&gt;{your_psk}&lt;/string&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;UseConfigurationAttributeInternalIPSubnet&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;integer&gt;0&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">            &lt;/dict&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;IPv4&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;dict&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;OverridePrimary&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;integer&gt;1&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">            &lt;/dict&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;PayloadDescription&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;string&gt;Configures VPN settings&lt;/string&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;PayloadDisplayName&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;string&gt;VPN&lt;/string&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;PayloadIdentifier&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;string&gt;com.apple.vpn.managed.FBFBDEF8-5B16-4863-91C1-7E2A68F848A3&lt;/string&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;PayloadType&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;string&gt;com.apple.vpn.managed&lt;/string&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;PayloadUUID&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;string&gt;425A1628-E99B-4547-966E-5B967CF1F5EA&lt;/string&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;PayloadVersion&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;real&gt;1&lt;/real&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;Proxies&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;dict&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;HTTPEnable&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;integer&gt;0&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">                &lt;key&gt;HTTPSEnable&lt;/key&gt;
+</span></span><span class="line"><span class="cl">                &lt;integer&gt;0&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">            &lt;/dict&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;UserDefinedName&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;string&gt;JP&lt;/string&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;VPNType&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;string&gt;IKEv2&lt;/string&gt;
+</span></span><span class="line"><span class="cl">            &lt;key&gt;VendorConfig&lt;/key&gt;
+</span></span><span class="line"><span class="cl">            &lt;dict/&gt;
+</span></span><span class="line"><span class="cl">        &lt;/dict&gt;
+</span></span><span class="line"><span class="cl">    &lt;/array&gt;
+</span></span><span class="line"><span class="cl">    &lt;key&gt;PayloadDisplayName&lt;/key&gt;
+</span></span><span class="line"><span class="cl">    &lt;string&gt;IKEv2&lt;/string&gt;
+</span></span><span class="line"><span class="cl">    &lt;key&gt;PayloadIdentifier&lt;/key&gt;
+</span></span><span class="line"><span class="cl">    &lt;string&gt;C7918ABA-8DE8-40ED-A3AE-994CD40ACE22&lt;/string&gt;
+</span></span><span class="line"><span class="cl">    &lt;key&gt;PayloadRemovalDisallowed&lt;/key&gt;
+</span></span><span class="line"><span class="cl">    &lt;false/&gt;
+</span></span><span class="line"><span class="cl">    &lt;key&gt;PayloadType&lt;/key&gt;
+</span></span><span class="line"><span class="cl">    &lt;string&gt;Configuration&lt;/string&gt;
+</span></span><span class="line"><span class="cl">    &lt;key&gt;PayloadUUID&lt;/key&gt;
+</span></span><span class="line"><span class="cl">    &lt;string&gt;9697F3C2-FF20-4981-A0C4-AA36BA78EEEA&lt;/string&gt;
+</span></span><span class="line"><span class="cl">    &lt;key&gt;PayloadVersion&lt;/key&gt;
+</span></span><span class="line"><span class="cl">    &lt;integer&gt;1&lt;/integer&gt;
+</span></span><span class="line"><span class="cl">&lt;/dict&gt;
+</span></span><span class="line"><span class="cl">&lt;/plist&gt;
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>把需要填写的参数填入，保存为.mobileconfig文件，放到任何能用safari访问到的地方用safari打开安装就好。</p>
 <p>Mac新建VPN选择Cisco IPsec方式就行。</p>
-<h2 id="heading-2">四、配置防火墙</h2>
+<h2 id="四配置防火墙">四、配置防火墙</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">iptables -A INPUT -p udp --dport 500 -j ACCEPT
-iptables -A INPUT -p udp --dport 4500 -j ACCEPT         #这是strongswan用到的两个端口
-echo 1 &gt; /proc/sys/net/ipv4/ip_forward                  #打开网卡转发功能。要把客户端的请求转发到公网网卡
-iptables -t nat -A POSTROUTING -s 172.0.0.0/24 -o eth0 -j MASQUERADE     #转发客户端请求。注意网段和ipsec.conf里要一致。网卡使用外网网卡，阿里云的话是eth1
-iptables -A FORWARD -s 172.0.0.0/24 -j ACCEPT            #允许转发
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">iptables -A INPUT -p udp --dport 500 -j ACCEPT
+</span></span><span class="line"><span class="cl">iptables -A INPUT -p udp --dport 4500 -j ACCEPT         #这是strongswan用到的两个端口
+</span></span><span class="line"><span class="cl">echo 1 &gt; /proc/sys/net/ipv4/ip_forward                  #打开网卡转发功能。要把客户端的请求转发到公网网卡
+</span></span><span class="line"><span class="cl">iptables -t nat -A POSTROUTING -s 172.0.0.0/24 -o eth0 -j MASQUERADE     #转发客户端请求。注意网段和ipsec.conf里要一致。网卡使用外网网卡，阿里云的话是eth1
+</span></span><span class="line"><span class="cl">iptables -A FORWARD -s 172.0.0.0/24 -j ACCEPT            #允许转发
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>到此时，可以用客户端连到服务器试试能否正常连接。</p>
-<h2 id="heading-3">五、配置中转</h2>
+<h2 id="五配置中转">五、配置中转</h2>
 <p>中转有两种方案：一种是国内ip直连，国外走代理。另一种是默认直连，黑名单走代理。这里选择前一种，因为对我个人来说，有些国外网站代理比直连要快。</p>
 <p>服务器打开ss： <code>nohup ss-server -u -A -c /etc/shadowsocks-libev/config.json &amp;</code></p>
 <p>国内VPS：</p>
@@ -526,7 +523,7 @@ iptables -A FORWARD -s 172.0.0.0/24 -j ACCEPT            #允许转发
 <p>防火墙配置参数<a href="https://gist.github.com/qwIvan/a2b315982c2172e7cbd8">此脚本</a>：（原理是下载国内ip段，生成ipset列表，访问国内ip时直连，其它ip转到ss-redir的端口）</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -561,42 +558,42 @@ iptables -A FORWARD -s 172.0.0.0/24 -j ACCEPT            #允许转发
 </span><span class="lnt">33
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/sh
-</span><span class="cp"></span>
-<span class="c1">#自动翻墙脚本，配合shadowsocks-libev的ss-redir使用。需要ipset（sudo apt-get install ipset）</span>
-
-<span class="nv">server_IP</span><span class="o">=</span>123.45.67.89
-
-<span class="o">[</span> -r chnroute.txt <span class="o">]</span> <span class="o">||</span> curl <span class="s1">&#39;http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest&#39;</span> <span class="p">|</span> grep ipv4 <span class="p">|</span> grep CN <span class="p">|</span> awk -F<span class="se">\|</span> <span class="s1">&#39;{ printf(&#34;%s/%d\n&#34;, $4, 32-log($5)/log(2)) }&#39;</span> &gt; chnroute.txt
-
-sudo iptables -t nat -N SHADOWSOCKS
-
-sudo iptables -t nat -A SHADOWSOCKS -d <span class="nv">$server_IP</span> -j RETURN
-
-<span class="c1"># 内网网段</span>
-sudo iptables -t nat -A SHADOWSOCKS -d 0.0.0.0/8 -j RETURN
-sudo iptables -t nat -A SHADOWSOCKS -d 10.0.0.0/8 -j RETURN
-sudo iptables -t nat -A SHADOWSOCKS -d 127.0.0.0/8 -j RETURN
-sudo iptables -t nat -A SHADOWSOCKS -d 169.254.0.0/16 -j RETURN
-sudo iptables -t nat -A SHADOWSOCKS -d 172.16.0.0/12 -j RETURN
-sudo iptables -t nat -A SHADOWSOCKS -d 192.168.0.0/16 -j RETURN
-sudo iptables -t nat -A SHADOWSOCKS -d 224.0.0.0/4 -j RETURN
-sudo iptables -t nat -A SHADOWSOCKS -d 240.0.0.0/4 -j RETURN
-
-<span class="c1"># 创建ipset列表</span>
-sudo ipset create chnroute hash:net
-cat chnroute.txt <span class="p">|</span> sudo xargs -I ip ipset add chnroute ip
-
-sudo iptables -t nat -A SHADOWSOCKS -m <span class="nb">set</span> --match-set chnroute dst -j RETURN  <span class="c1"># 国内ip表直连</span>
-sudo iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-ports <span class="m">1080</span>  <span class="c1">#其他连接走ss转发</span>
-
-sudo iptables -t nat -A OUTPUT -p tcp -j SHADOWSOCKS <span class="c1">#所以请求经过SHADOWSOCKS规则处理 # 这条命令对于我来说没用，我使用的是下边的命令 #有知道为啥无效的朋友请告知</span>
-
-iptables -t nat -A PREROUTING -s 172.0.0.0/24 -p tcp -j SHADOWSOCKS <span class="c1"># 172xx为vpn客户端的网段</span>
-iptables -t nat -A PREROUTING -s 172.0.0.0/24 -p udp -j SHADOWSOCKS
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/sh
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">#自动翻墙脚本，配合shadowsocks-libev的ss-redir使用。需要ipset（sudo apt-get install ipset）</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">server_IP</span><span class="o">=</span>123.45.67.89
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span> -r chnroute.txt <span class="o">]</span> <span class="o">||</span> curl <span class="s1">&#39;http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest&#39;</span> <span class="p">|</span> grep ipv4 <span class="p">|</span> grep CN <span class="p">|</span> awk -F<span class="se">\|</span> <span class="s1">&#39;{ printf(&#34;%s/%d\n&#34;, $4, 32-log($5)/log(2)) }&#39;</span> &gt; chnroute.txt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -N SHADOWSOCKS
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -d <span class="nv">$server_IP</span> -j RETURN
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 内网网段</span>
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -d 0.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -d 10.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -d 127.0.0.0/8 -j RETURN
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -d 169.254.0.0/16 -j RETURN
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -d 172.16.0.0/12 -j RETURN
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -d 192.168.0.0/16 -j RETURN
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -d 224.0.0.0/4 -j RETURN
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -d 240.0.0.0/4 -j RETURN
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 创建ipset列表</span>
+</span></span><span class="line"><span class="cl">sudo ipset create chnroute hash:net
+</span></span><span class="line"><span class="cl">cat chnroute.txt <span class="p">|</span> sudo xargs -I ip ipset add chnroute ip
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -m <span class="nb">set</span> --match-set chnroute dst -j RETURN  <span class="c1"># 国内ip表直连</span>
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-ports <span class="m">1080</span>  <span class="c1">#其他连接走ss转发</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo iptables -t nat -A OUTPUT -p tcp -j SHADOWSOCKS <span class="c1">#所以请求经过SHADOWSOCKS规则处理 # 这条命令对于我来说没用，我使用的是下边的命令 #有知道为啥无效的朋友请告知</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">iptables -t nat -A PREROUTING -s 172.0.0.0/24 -p tcp -j SHADOWSOCKS <span class="c1"># 172xx为vpn客户端的网段</span>
+</span></span><span class="line"><span class="cl">iptables -t nat -A PREROUTING -s 172.0.0.0/24 -p udp -j SHADOWSOCKS
+</span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="dnsmasq">六、配置dnsmasq</h2>
+</div><h2 id="六配置dnsmasq">六、配置dnsmasq</h2>
 <p>centos可以yum直接安装，其它系统请自行搜索</p>
 <p>配置dnsmasq：</p>
 <p>把 <code>/etc/dnsmasq.conf</code>最后一行<code>conf-dir=/etc/dnsmasq.d</code>取消注释</p>
@@ -605,7 +602,7 @@ iptables -t nat -A PREROUTING -s 172.0.0.0/24 -p udp -j SHADOWSOCKS
 <p><code>gfwlist.conf</code>初次可以用下边的脚本生成。脚本来自<a href="https://gist.github.com/lanceliao/85cd3fcf1303dba2498c">这里</a>。注意端口和IP要设置成你需要的。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -674,74 +671,74 @@ iptables -t nat -A PREROUTING -s 172.0.0.0/24 -p udp -j SHADOWSOCKS
 </span><span class="lnt">67
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">urllib2</span> 
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">base64</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
- 
-<span class="n">mydnsip</span> <span class="o">=</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">127.0.0.1</span><span class="s1">&#39;</span>
-<span class="n">mydnsport</span> <span class="o">=</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">5353</span><span class="s1">&#39;</span>
-
-<span class="c1"># the url of gfwlist</span>
-<span class="n">baseurl</span> <span class="o">=</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">https://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt</span><span class="s1">&#39;</span>
-<span class="c1"># match comments/title/whitelist/ip address</span>
-<span class="n">comment_pattern</span> <span class="o">=</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">^</span><span class="s1">\</span><span class="s1">!|</span><span class="s1">\</span><span class="s1">[|^@@|^</span><span class="s1">\</span><span class="s1">d+</span><span class="s1">\</span><span class="s1">.</span><span class="s1">\</span><span class="s1">d+</span><span class="s1">\</span><span class="s1">.</span><span class="s1">\</span><span class="s1">d+</span><span class="s1">\</span><span class="s1">.</span><span class="s1">\</span><span class="s1">d+</span><span class="s1">&#39;</span>
-<span class="n">domain_pattern</span> <span class="o">=</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">([</span><span class="s1">\</span><span class="s1">w</span><span class="s1">\</span><span class="s1">-</span><span class="s1">\</span><span class="s1">_]+</span><span class="s1">\</span><span class="s1">.[</span><span class="s1">\</span><span class="s1">w</span><span class="s1">\</span><span class="s1">.</span><span class="s1">\</span><span class="s1">-</span><span class="s1">\</span><span class="s1">_]+)[</span><span class="s1">\</span><span class="s1">/</span><span class="s1">\</span><span class="s1">*]*</span><span class="s1">&#39;</span> 
-<span class="n">tmpfile</span> <span class="o">=</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">/tmp/gfwlisttmp</span><span class="s1">&#39;</span>
-<span class="c1"># do not write to router internal flash directly</span>
-<span class="n">outfile</span> <span class="o">=</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">/tmp/gfwlist.conf</span><span class="s1">&#39;</span>
-<span class="n">rulesfile</span> <span class="o">=</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">/etc/dnsmasq.d/gfwlist.conf</span><span class="s1">&#39;</span>
- 
-<span class="n">fs</span> <span class="o">=</span>  <span class="nb">file</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">w</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">fs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1"># gfw list ipset rules for dnsmasq</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">fs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1"># updated on </span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="sa"></span><span class="s2">&#34;</span><span class="s2">%</span><span class="s2">Y-</span><span class="s2">%</span><span class="s2">m-</span><span class="si">%d</span><span class="s2"> </span><span class="s2">%</span><span class="s2">H:</span><span class="s2">%</span><span class="s2">M:</span><span class="s2">%</span><span class="s2">S</span><span class="s2">&#34;</span><span class="p">)</span> <span class="o">+</span> <span class="sa"></span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">fs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
- 
-<span class="k">print</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">fetching list...</span><span class="s1">&#39;</span>
-<span class="n">content</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">baseurl</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">base64</span><span class="s1">&#39;</span><span class="p">)</span>
-
-<span class="c1"># write the decoded content to file then read line by line</span>
-<span class="n">tfs</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">w</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">tfs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-<span class="n">tfs</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="p">)</span>
-<span class="n">tfs</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">r</span><span class="s1">&#39;</span><span class="p">)</span>
-
-<span class="k">print</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">page content fetched, analysis...</span><span class="s1">&#39;</span>
-
-<span class="c1"># remember all blocked domains, in case of duplicate records</span>
-<span class="n">domainlist</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span>
-
-<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">tfs</span><span class="o">.</span><span class="n">readlines</span><span class="p">(</span><span class="p">)</span><span class="p">:</span>    
-    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">comment_pattern</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span><span class="p">:</span>
-        <span class="k">print</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">this is a comment line: </span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">line</span>
-        <span class="c1">#fs.write(&#39;#&#39; + line)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">domain</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">domain_pattern</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">domain</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">found</span> <span class="o">=</span> <span class="n">domainlist</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">)</span>
-                <span class="k">print</span> <span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1"> exists.</span><span class="s1">&#39;</span>
-            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="k">print</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">saving </span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">domainlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">)</span>
-                <span class="n">fs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">server=/.</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">#</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">,</span><span class="n">mydnsip</span><span class="p">,</span><span class="n">mydnsport</span><span class="p">)</span><span class="p">)</span>
-                <span class="c1">#fs.write(&#39;ipset=/.%s/gfwlist\n&#39;%domain[0])         #因为我采用的时国外ip走代理的方式，所以不需要这行。</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">no valid domain in this line: </span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">line</span>
-                    
-<span class="n">tfs</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="p">)</span> 
-<span class="n">fs</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-
-<span class="k">print</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">moving generated file to dnsmasg directory</span><span class="s1">&#39;</span>
-<span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">rulesfile</span><span class="p">)</span>
-
-<span class="k">print</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">restart dnsmasq...</span><span class="s1">&#39;</span>
-<span class="k">print</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">/etc/init.d/dnsmasq restart</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="p">)</span>
-
-<span class="k">print</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">done!</span><span class="s1">&#39;</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">urllib2</span> 
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">datetime</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">base64</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">shutil</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="n">mydnsip</span> <span class="o">=</span> <span class="s1">&#39;127.0.0.1&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">mydnsport</span> <span class="o">=</span> <span class="s1">&#39;5353&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># the url of gfwlist</span>
+</span></span><span class="line"><span class="cl"><span class="n">baseurl</span> <span class="o">=</span> <span class="s1">&#39;https://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># match comments/title/whitelist/ip address</span>
+</span></span><span class="line"><span class="cl"><span class="n">comment_pattern</span> <span class="o">=</span> <span class="s1">&#39;^\!|\[|^@@|^\d+\.\d+\.\d+\.\d+&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">domain_pattern</span> <span class="o">=</span> <span class="s1">&#39;([\w\-\_]+\.[\w\.\-\_]+)[\/\*]*&#39;</span> 
+</span></span><span class="line"><span class="cl"><span class="n">tmpfile</span> <span class="o">=</span> <span class="s1">&#39;/tmp/gfwlisttmp&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># do not write to router internal flash directly</span>
+</span></span><span class="line"><span class="cl"><span class="n">outfile</span> <span class="o">=</span> <span class="s1">&#39;/tmp/gfwlist.conf&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">rulesfile</span> <span class="o">=</span> <span class="s1">&#39;/etc/dnsmasq.d/gfwlist.conf&#39;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="n">fs</span> <span class="o">=</span>  <span class="n">file</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">fs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# gfw list ipset rules for dnsmasq</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">fs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# updated on &#39;</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&#34;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&#34;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">fs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s1">&#39;fetching list...&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">baseurl</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># write the decoded content to file then read line by line</span>
+</span></span><span class="line"><span class="cl"><span class="n">tfs</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">tfs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">tfs</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">tfs</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s1">&#39;page content fetched, analysis...&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># remember all blocked domains, in case of duplicate records</span>
+</span></span><span class="line"><span class="cl"><span class="n">domainlist</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">tfs</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>    
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">comment_pattern</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span> <span class="s1">&#39;this is a comment line: &#39;</span> <span class="o">+</span> <span class="n">line</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#fs.write(&#39;#&#39; + line)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">domain</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">domain_pattern</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">domain</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">found</span> <span class="o">=</span> <span class="n">domainlist</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span> <span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; exists.&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span> <span class="s1">&#39;saving &#39;</span> <span class="o">+</span> <span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                <span class="n">domainlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">                <span class="n">fs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;server=/.</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">#</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">mydnsip</span><span class="p">,</span><span class="n">mydnsport</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">#fs.write(&#39;ipset=/.%s/gfwlist\n&#39;%domain[0])         #因为我采用的时国外ip走代理的方式，所以不需要这行。</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="s1">&#39;no valid domain in this line: &#39;</span> <span class="o">+</span> <span class="n">line</span>
+</span></span><span class="line"><span class="cl">                    
+</span></span><span class="line"><span class="cl"><span class="n">tfs</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> 
+</span></span><span class="line"><span class="cl"><span class="n">fs</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s1">&#39;moving generated file to dnsmasg directory&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">rulesfile</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s1">&#39;restart dnsmasq...&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="s1">&#39;/etc/init.d/dnsmasq restart&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s1">&#39;done!&#39;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>gfwlist的网址访问不到的话，可以在海外VPS上生成gfwlist.conf后复制回国内VPS。</p>
 <p><code>service dnsmasq start</code>命令开启dnsmasq服务。注意配置strongswan的DNS为本机的公网IP。</p>
@@ -826,7 +823,7 @@ iptables -t nat -A PREROUTING -s 172.0.0.0/24 -p udp -j SHADOWSOCKS
   <span class="copyright-year">
     &copy; 
     2012 - 
-    2021
+    2022
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

@@ -6,11 +6,7 @@
     <description>Recent content in opensuse on Nemo&#39;s Neverland</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 13 Oct 2012 02:14:53 +0000</lastBuildDate>
-    
-	<atom:link href="https://sosonemo.me/tags/opensuse/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 13 Oct 2012 02:14:53 +0000</lastBuildDate><atom:link href="https://sosonemo.me/tags/opensuse/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>opensuse12.2下rime输入法的安装</title>
       <link>https://sosonemo.me/posts/linux/opensuse12_2-rime/</link>

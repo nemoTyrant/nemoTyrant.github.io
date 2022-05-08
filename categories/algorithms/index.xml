@@ -6,11 +6,7 @@
     <description>Recent content in algorithms on Nemo&#39;s Neverland</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 28 Mar 2015 09:11:07 +0000</lastBuildDate>
-    
-	<atom:link href="https://sosonemo.me/categories/algorithms/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 28 Mar 2015 09:11:07 +0000</lastBuildDate><atom:link href="https://sosonemo.me/categories/algorithms/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Algorithms Part I week 1: Analysis of Algorithms</title>
       <link>https://sosonemo.me/posts/algorithm/algorithms-part-i-week-1-analysis-of-algorithms/</link>
@@ -27,7 +23,7 @@ We must analyze algorithms to:</description>
       <pubDate>Fri, 20 Mar 2015 10:52:36 +0000</pubDate>
       
       <guid>https://sosonemo.me/posts/algorithm/algorithms-part-i-week-1-union-find/</guid>
-      <description>Theses days, I took a MOOC course named Algorithms instructed by Robert Sedgewick and Kevin Wayne from Princton University. To solidify my understanding of the course and for future reference, I&#39;m going to write some notes on the subject. And from this post on, I decide to write technical articles in English, which is a good way to improve my written English skill.
+      <description>Theses days, I took a MOOC course named Algorithms instructed by Robert Sedgewick and Kevin Wayne from Princton University. To solidify my understanding of the course and for future reference, I&amp;rsquo;m going to write some notes on the subject. And from this post on, I decide to write technical articles in English, which is a good way to improve my written English skill.
 Basic steps There are some steps we can follow to develop a usable algorithm.</description>
     </item>
     

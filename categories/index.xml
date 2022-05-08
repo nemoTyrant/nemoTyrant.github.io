@@ -6,11 +6,7 @@
     <description>Recent content in Categories on Nemo&#39;s Neverland</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Nov 2020 22:56:09 +0800</lastBuildDate>
-    
-	<atom:link href="https://sosonemo.me/categories/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 29 Nov 2020 22:56:09 +0800</lastBuildDate><atom:link href="https://sosonemo.me/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>go</title>
       <link>https://sosonemo.me/categories/go/</link>

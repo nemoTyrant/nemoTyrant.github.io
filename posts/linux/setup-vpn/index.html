@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.61.0 with theme even" />
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
 <link rel="canonical" href="https://sosonemo.me/posts/linux/setup-vpn/" />
@@ -41,17 +41,14 @@
 <meta property="og:title" content="搭建 vpn" />
 <meta property="og:description" content="今天入手了linode，网站环境搭建好后，开始弄vpn。本文参考了一下这篇文章，并结合之前的经验。 1. 安装PPP，PPTP 1 2 # yum install -y ppp # rpm -ivh" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://sosonemo.me/posts/linux/setup-vpn/" />
+<meta property="og:url" content="https://sosonemo.me/posts/linux/setup-vpn/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2014-07-24T10:13:22+00:00" />
 <meta property="article:modified_time" content="2014-07-24T10:13:22+00:00" />
+
 <meta itemprop="name" content="搭建 vpn">
-<meta itemprop="description" content="今天入手了linode，网站环境搭建好后，开始弄vpn。本文参考了一下这篇文章，并结合之前的经验。 1. 安装PPP，PPTP 1 2 # yum install -y ppp # rpm -ivh">
-<meta itemprop="datePublished" content="2014-07-24T10:13:22&#43;00:00" />
-<meta itemprop="dateModified" content="2014-07-24T10:13:22&#43;00:00" />
-<meta itemprop="wordCount" content="438">
-
-
-
+<meta itemprop="description" content="今天入手了linode，网站环境搭建好后，开始弄vpn。本文参考了一下这篇文章，并结合之前的经验。 1. 安装PPP，PPTP 1 2 # yum install -y ppp # rpm -ivh"><meta itemprop="datePublished" content="2014-07-24T10:13:22+00:00" />
+<meta itemprop="dateModified" content="2014-07-24T10:13:22+00:00" />
+<meta itemprop="wordCount" content="437">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="搭建 vpn"/>
 <meta name="twitter:description" content="今天入手了linode，网站环境搭建好后，开始弄vpn。本文参考了一下这篇文章，并结合之前的经验。 1. 安装PPP，PPTP 1 2 # yum install -y ppp # rpm -ivh"/>
@@ -131,100 +128,98 @@
     
     <div class="post-content">
       <p>今天入手了linode，网站环境搭建好后，开始弄vpn。本文参考了一下<a href="http://docs.ucloud.cn/software/vpn/PPTP4CentOS.html">这篇文章</a>，并结合之前的经验。</p>
-<h3 id="1-ppppptp">1. 安装PPP，PPTP</h3>
+<h3 id="1-安装ppppptp">1. 安装PPP，PPTP</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># yum install -y ppp
-# rpm -ivh http://static.ucloud.cn/pptpd-1.3.4-2.el6.x86_64.rpm
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># yum install -y ppp
+</span></span><span class="line"><span class="cl"># rpm -ivh http://static.ucloud.cn/pptpd-1.3.4-2.el6.x86_64.rpm
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>注：32位请安装i686版本，将上面链接中的“x86_64”改为“i686”即可，请根据自己的OS安装相应的版本。</p>
-<h3 id="2pptpconf">2.编辑pptp.conf</h3>
+<h3 id="2编辑pptpconf">2.编辑pptp.conf</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># vim /etc/pptpd.conf
-localip 10.8.0.1
-remoteip 10.8.0.10-100
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># vim /etc/pptpd.conf
+</span></span><span class="line"><span class="cl">localip 10.8.0.1
+</span></span><span class="line"><span class="cl">remoteip 10.8.0.10-100
+</span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="3-optionspptpd">3. 编辑options.pptpd</h3>
+</div><h3 id="3-编辑optionspptpd">3. 编辑options.pptpd</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># vim /etc/ppp/options.pptpd
-ms-dns 8.8.8.8
-ms-dns 8.8.4.4
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># vim /etc/ppp/options.pptpd
+</span></span><span class="line"><span class="cl">ms-dns 8.8.8.8
+</span></span><span class="line"><span class="cl">ms-dns 8.8.4.4
+</span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="4-chap-secrets">4. 编辑chap-secrets</h3>
+</div><h3 id="4-编辑chap-secrets">4. 编辑chap-secrets</h3>
 <p>account为pptp登录帐号，password为登录密码，其他默认</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># vim /etc/ppp/chap-secrets
+</span></span><span class="line"><span class="cl"># client        server      secret            IP addresses
+</span></span><span class="line"><span class="cl">  account       pptpd       password          *
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="5-编辑sysctlconf开启网络转发功能">5. 编辑sysctl.conf，开启网络转发功能</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># vim /etc/sysctl.conf
+</span></span><span class="line"><span class="cl">net.ipv4.ip_forward = 1
+</span></span><span class="line"><span class="cl"># sysctl -p
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="6-配置nat这里和参考的文章不一样">6. 配置NAT（这里和参考的文章不一样)</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># vim /etc/ppp/chap-secrets
-# client        server      secret            IP addresses
-  account       pptpd       password          *
-
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># iptables -A INPUT -p tcp --dport 1723 -j ACCEPT    // 打开pptpd端口
+</span></span><span class="line"><span class="cl"># iptables -A FORWARD -p tcp --syn -s 10.8.0.0/24 -j TCPMSS --set-mss 1356
+</span></span><span class="line"><span class="cl"># iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -j SNAT --to-source xxx.xxx.xxx.xxx  vps的ip
+</span></span><span class="line"><span class="cl"># iptables-save&lt;/pre&gt;
+</span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="5-sysctlconf">5. 编辑sysctl.conf，开启网络转发功能</h3>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># vim /etc/sysctl.conf
-net.ipv4.ip_forward = 1
-# sysctl -p
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="6-nat">6. 配置NAT（这里和参考的文章不一样)</h3>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># iptables -A INPUT -p tcp --dport 1723 -j ACCEPT    // 打开pptpd端口
-# iptables -A FORWARD -p tcp --syn -s 10.8.0.0/24 -j TCPMSS --set-mss 1356
-# iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -j SNAT --to-source xxx.xxx.xxx.xxx  vps的ip
-# iptables-save&lt;/pre&gt;
-</code></pre></td></tr></table>
-</div>
-</div><h3 id="7-pptp">7. 启动PPTP服务</h3>
+</div><h3 id="7-启动pptp服务">7. 启动PPTP服务</h3>
 <p><code>service pptpd start</code></p>
-<h3 id="8-">8. 设置为开机启动</h3>
+<h3 id="8-设置为开机启动">8. 设置为开机启动</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback"># chkconfig pptpd on
-# chkconfig iptables on
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># chkconfig pptpd on
+</span></span><span class="line"><span class="cl"># chkconfig iptables on
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>防火墙的配置是重点，后两条具体啥意思其实我也不完全明白，但是必须有！</p>
 <p>到此vpn搭建成功，开始愉快地上网吧！</p>
@@ -306,7 +301,7 @@ net.ipv4.ip_forward = 1
   <span class="copyright-year">
     &copy; 
     2012 - 
-    2021
+    2022
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

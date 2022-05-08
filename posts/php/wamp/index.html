@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.61.0 with theme even" />
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
 <link rel="canonical" href="https://sosonemo.me/posts/php/wamp/" />
@@ -41,17 +41,14 @@
 <meta property="og:title" content="搭建WAMP平台" />
 <meta property="og:description" content="1.下载最新的apache2.2.22，安装 2.下载最新php5.4.3文件，解压到c:/php5 3.重命名并修改php.ini，exten" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://sosonemo.me/posts/php/wamp/" />
+<meta property="og:url" content="https://sosonemo.me/posts/php/wamp/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2012-05-21T14:48:36+00:00" />
 <meta property="article:modified_time" content="2012-05-21T14:48:36+00:00" />
+
 <meta itemprop="name" content="搭建WAMP平台">
-<meta itemprop="description" content="1.下载最新的apache2.2.22，安装 2.下载最新php5.4.3文件，解压到c:/php5 3.重命名并修改php.ini，exten">
-<meta itemprop="datePublished" content="2012-05-21T14:48:36&#43;00:00" />
-<meta itemprop="dateModified" content="2012-05-21T14:48:36&#43;00:00" />
-<meta itemprop="wordCount" content="259">
-
-
-
+<meta itemprop="description" content="1.下载最新的apache2.2.22，安装 2.下载最新php5.4.3文件，解压到c:/php5 3.重命名并修改php.ini，exten"><meta itemprop="datePublished" content="2012-05-21T14:48:36+00:00" />
+<meta itemprop="dateModified" content="2012-05-21T14:48:36+00:00" />
+<meta itemprop="wordCount" content="260">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="搭建WAMP平台"/>
 <meta name="twitter:description" content="1.下载最新的apache2.2.22，安装 2.下载最新php5.4.3文件，解压到c:/php5 3.重命名并修改php.ini，exten"/>
@@ -132,36 +129,36 @@
     <div class="post-content">
       <p>1.下载最新的apache2.2.22，安装</p>
 <p>2.下载最新php5.4.3文件，解压到<code>c:/php5</code></p>
-<p>3.重命名并修改php.ini，extension_dir=&quot;c:/php5/ext/&rdquo;</p>
+<p>3.重命名并修改php.ini，extension_dir=&ldquo;c:/php5/ext/&rdquo;</p>
 <p>开启</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">extension=php_gd2.dll
-extension=php_mbstring.dll
-extension=php_mysql.dll
-extension=php_mysqli.dll
-extension=php_mcrypt.dll（在我下的文件里没有找着这个,估计是版本不同）
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">extension=php_gd2.dll
+</span></span><span class="line"><span class="cl">extension=php_mbstring.dll
+</span></span><span class="line"><span class="cl">extension=php_mysql.dll
+</span></span><span class="line"><span class="cl">extension=php_mysqli.dll
+</span></span><span class="line"><span class="cl">extension=php_mcrypt.dll（在我下的文件里没有找着这个,估计是版本不同）
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>4.在apache的配置文件中相应位置添加</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">LoadModule php5\_module &#34;c:/php5/php5apache2\_2.dll&#34;;
-AddType application/x-httpd-php .php
-AddType application/x-httpd-source .phps
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">LoadModule php5\_module &#34;c:/php5/php5apache2\_2.dll&#34;;
+</span></span><span class="line"><span class="cl">AddType application/x-httpd-php .php
+</span></span><span class="line"><span class="cl">AddType application/x-httpd-source .phps
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>5.apache配置最后添加 <code>PHPIniDir &quot;c:/php5&quot;</code>;</p>
 <p>书上还有其它步骤，但是我到这里已经可以了，估计是版本问题。或许我将来会遇到某些问题，到时候再说。</p>
@@ -243,7 +240,7 @@ AddType application/x-httpd-source .phps
   <span class="copyright-year">
     &copy; 
     2012 - 
-    2021
+    2022
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.61.0 with theme even" />
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
 <link rel="canonical" href="https://sosonemo.me/posts/php/vim-snipmate.html/" />
@@ -41,17 +41,14 @@
 <meta property="og:title" content="神器vim之snipmate插件-快速插入" />
 <meta property="og:description" content="早以前就听说过vim的大名，说它是编程人员的神器，但是试用过几次之后，实在没发现它有什么神奇的地方，就删了。 开始学php之后，老师要求大家使" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://sosonemo.me/posts/php/vim-snipmate.html/" />
+<meta property="og:url" content="https://sosonemo.me/posts/php/vim-snipmate.html/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2012-09-15T10:10:28+00:00" />
 <meta property="article:modified_time" content="2012-09-15T10:10:28+00:00" />
+
 <meta itemprop="name" content="神器vim之snipmate插件-快速插入">
-<meta itemprop="description" content="早以前就听说过vim的大名，说它是编程人员的神器，但是试用过几次之后，实在没发现它有什么神奇的地方，就删了。 开始学php之后，老师要求大家使">
-<meta itemprop="datePublished" content="2012-09-15T10:10:28&#43;00:00" />
-<meta itemprop="dateModified" content="2012-09-15T10:10:28&#43;00:00" />
+<meta itemprop="description" content="早以前就听说过vim的大名，说它是编程人员的神器，但是试用过几次之后，实在没发现它有什么神奇的地方，就删了。 开始学php之后，老师要求大家使"><meta itemprop="datePublished" content="2012-09-15T10:10:28+00:00" />
+<meta itemprop="dateModified" content="2012-09-15T10:10:28+00:00" />
 <meta itemprop="wordCount" content="635">
-
-
-
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="神器vim之snipmate插件-快速插入"/>
 <meta name="twitter:description" content="早以前就听说过vim的大名，说它是编程人员的神器，但是试用过几次之后，实在没发现它有什么神奇的地方，就删了。 开始学php之后，老师要求大家使"/>
@@ -140,19 +137,19 @@
 <p>例如</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">snippet  if
-if({$1})
-{
-    {$2}
-}
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">snippet  if
+</span></span><span class="line"><span class="cl">if({$1})
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    {$2}
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>搞清楚语法结构之后，我将插件默认的规则进行了修改，添加了对诸如全局变量的支持，使之更加快捷。我还将html的规则复制到了php规则里，这样，即使是在php文件里也可以实现对html代码的快插。</p>
 <p>在我顿悟之后，代码铺写速度提升不少，我也更加体会到vim不愧‘神器’之名。</p>
@@ -234,7 +231,7 @@ if({$1})
   <span class="copyright-year">
     &copy; 
     2012 - 
-    2021
+    2022
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

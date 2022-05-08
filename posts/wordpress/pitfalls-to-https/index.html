@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.61.0 with theme even" />
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
 <link rel="canonical" href="https://sosonemo.me/posts/wordpress/pitfalls-to-https/" />
@@ -41,17 +41,14 @@
 <meta property="og:title" content="网站转 https 遇到的几个坑" />
 <meta property="og:description" content="心血来潮想把网站转成https的，原本以为很简单，没想到过程当中还有不少需要注意的地方，特此记录一下。 1. ssl证书申请 这个最简单了，我申请的" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://sosonemo.me/posts/wordpress/pitfalls-to-https/" />
+<meta property="og:url" content="https://sosonemo.me/posts/wordpress/pitfalls-to-https/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2014-10-29T09:43:01+00:00" />
 <meta property="article:modified_time" content="2014-10-29T09:43:01+00:00" />
+
 <meta itemprop="name" content="网站转 https 遇到的几个坑">
-<meta itemprop="description" content="心血来潮想把网站转成https的，原本以为很简单，没想到过程当中还有不少需要注意的地方，特此记录一下。 1. ssl证书申请 这个最简单了，我申请的">
-<meta itemprop="datePublished" content="2014-10-29T09:43:01&#43;00:00" />
-<meta itemprop="dateModified" content="2014-10-29T09:43:01&#43;00:00" />
+<meta itemprop="description" content="心血来潮想把网站转成https的，原本以为很简单，没想到过程当中还有不少需要注意的地方，特此记录一下。 1. ssl证书申请 这个最简单了，我申请的"><meta itemprop="datePublished" content="2014-10-29T09:43:01+00:00" />
+<meta itemprop="dateModified" content="2014-10-29T09:43:01+00:00" />
 <meta itemprop="wordCount" content="925">
-
-
-
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="网站转 https 遇到的几个坑"/>
 <meta name="twitter:description" content="心血来潮想把网站转成https的，原本以为很简单，没想到过程当中还有不少需要注意的地方，特此记录一下。 1. ssl证书申请 这个最简单了，我申请的"/>
@@ -131,12 +128,12 @@
     
     <div class="post-content">
       <p>心血来潮想把网站转成https的，原本以为很简单，没想到过程当中还有不少需要注意的地方，特此记录一下。</p>
-<h3 id="1-ssl">1. ssl证书申请</h3>
+<h3 id="1-ssl证书申请">1. ssl证书申请</h3>
 <p>这个最简单了，我申请的是<a href="https://buy.wosign.com/FreeSSL.html">wosign的免费证书</a>，一直下一步就好了，唯一需要注意的就是域名要写对。</p>
-<h3 id="2-nginx">2. nginx配置</h3>
+<h3 id="2-nginx配置">2. nginx配置</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -156,39 +153,39 @@
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-fallback" data-lang="fallback">server {
-    listen       443;
-    server_name  sosonemo.me;
-
-    ssl                  on;
-    keepalive_timeout    70;
-    ssl_certificate      /path/to/crt;
-    ssl_certificate_key  /path/to/key;
-
-    ssl_session_timeout  5m;
-
-    ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
-    ssl_ciphers RC4:HIGH:!aNULL:!MD5;
-    ssl_prefer_server_ciphers   on;
-
-    .....
-    .....
-}
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">server {
+</span></span><span class="line"><span class="cl">    listen       443;
+</span></span><span class="line"><span class="cl">    server_name  sosonemo.me;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    ssl                  on;
+</span></span><span class="line"><span class="cl">    keepalive_timeout    70;
+</span></span><span class="line"><span class="cl">    ssl_certificate      /path/to/crt;
+</span></span><span class="line"><span class="cl">    ssl_certificate_key  /path/to/key;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    ssl_session_timeout  5m;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
+</span></span><span class="line"><span class="cl">    ssl_ciphers RC4:HIGH:!aNULL:!MD5;
+</span></span><span class="line"><span class="cl">    ssl_prefer_server_ciphers   on;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    .....
+</span></span><span class="line"><span class="cl">    .....
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>ssl部分的配置是从<a href="http://nginx.com/resources/admin-guide/nginx-ssl-termination/">nginx的文档</a>里找的，协议那里原本有SSLv3，但是听说有漏洞，所以我删了。</p>
-<h3 id="3-wordpress">3. 坑之wordpress站点地址</h3>
+<h3 id="3-坑之wordpress站点地址">3. 坑之wordpress站点地址</h3>
 <p>我原来博客的域名是带www的，申请证书的时候没填，在域名解析那里把www解析删掉之后以为万事大吉了，结果打开网站一直自动往www的二级域名跳。后来才知道wordpress设置里有一个站点的选项需要改一下。网站打不开了，果断直接改数据库。。</p>
-<h3 id="4-googleapis">4. 坑之googleapis</h3>
+<h3 id="4-坑之googleapis">4. 坑之googleapis</h3>
 <p>wordpress用了谷歌的开源字体，google被墙以后，wordpress打开巨慢。解决办法是改<code>wp-includes/script-loader.php</code>文件，把里边含有<code>fonts.googleapis.com</code>的那行注释掉就行。不过这也是个权宜之计，wp升级之后这个文件会被改回去- -！</p>
 <p>另外，如果使用的主题也调用了开源字体或都googleapis的东西，也需要改一下。</p>
-<h3 id="5-">5. 坑之多说评论</h3>
+<h3 id="5-坑之多说评论">5. 坑之多说评论</h3>
 <p>转https之后，前后台的多说评论都不正常了，浏览器提示阻止打开不安全的链接。</p>
 <p>查看多说插件的代码后发现代码里都是写死的调用http的页面，经测试，相应的https页面也可以正常访问，所以只需要把代码里的<code>http</code>改成<code>https</code>就好了。</p>
 <p>我在<code>duoshuo.php</code>里加了一个函数，返回应该使用的scheme</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -197,14 +194,14 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-<span class="k">function</span> <span class="nf">scheme</span><span class="p">(){</span>
-	<span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTPS&#39;</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTPS&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;on&#39;</span><span class="p">){</span>
-		<span class="k">return</span> <span class="s1">&#39;https://&#39;</span><span class="p">;</span>
-	<span class="p">}</span>
-	<span class="k">return</span> <span class="s1">&#39;http://&#39;</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="k">function</span> <span class="nf">scheme</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTPS&#39;</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTPS&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;on&#39;</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="s1">&#39;https://&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="s1">&#39;http://&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>后台的显示需要改5个文件：<code>manage.php</code>，<code>profile.php</code>，<code>themes.php</code>，<code>statistics.php</code>，<code>preferences.php</code></p>
 <p>前台显示需要改1个文件：<code>wordpress.php</code></p>
@@ -287,7 +284,7 @@
   <span class="copyright-year">
     &copy; 
     2012 - 
-    2021
+    2022
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

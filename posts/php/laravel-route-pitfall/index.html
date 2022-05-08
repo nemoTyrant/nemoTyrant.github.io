@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.61.0 with theme even" />
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
 <link rel="canonical" href="https://sosonemo.me/posts/php/laravel-route-pitfall/" />
@@ -41,17 +41,14 @@
 <meta property="og:title" content="laravel route 重定向的一个小坑" />
 <meta property="og:description" content="今天做项目发现一个奇怪的现象，我的路由配置里有如下配置： 1 2 3 4 5 6 7 8 &lt;?php Route::group(array(&#39;prefix&#39;=&gt;&#39;admin&#39;,&#39;before&#39;=&gt;&#39;adminauth&#39;),function(){ // 管理员登录 Route::get(&#39;/&#39;,function(){ return Redirect::to(&#39;admin/login&#39;); }); Route::get(&#39;login&#39;,&#39;UserController@adminLogin&#39;); }; 目的是无论用户输入admin，还是adm" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://sosonemo.me/posts/php/laravel-route-pitfall/" />
+<meta property="og:url" content="https://sosonemo.me/posts/php/laravel-route-pitfall/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2014-12-05T04:20:59+00:00" />
 <meta property="article:modified_time" content="2014-12-05T04:20:59+00:00" />
+
 <meta itemprop="name" content="laravel route 重定向的一个小坑">
-<meta itemprop="description" content="今天做项目发现一个奇怪的现象，我的路由配置里有如下配置： 1 2 3 4 5 6 7 8 &lt;?php Route::group(array(&#39;prefix&#39;=&gt;&#39;admin&#39;,&#39;before&#39;=&gt;&#39;adminauth&#39;),function(){ // 管理员登录 Route::get(&#39;/&#39;,function(){ return Redirect::to(&#39;admin/login&#39;); }); Route::get(&#39;login&#39;,&#39;UserController@adminLogin&#39;); }; 目的是无论用户输入admin，还是adm">
-<meta itemprop="datePublished" content="2014-12-05T04:20:59&#43;00:00" />
-<meta itemprop="dateModified" content="2014-12-05T04:20:59&#43;00:00" />
+<meta itemprop="description" content="今天做项目发现一个奇怪的现象，我的路由配置里有如下配置： 1 2 3 4 5 6 7 8 &lt;?php Route::group(array(&#39;prefix&#39;=&gt;&#39;admin&#39;,&#39;before&#39;=&gt;&#39;adminauth&#39;),function(){ // 管理员登录 Route::get(&#39;/&#39;,function(){ return Redirect::to(&#39;admin/login&#39;); }); Route::get(&#39;login&#39;,&#39;UserController@adminLogin&#39;); }; 目的是无论用户输入admin，还是adm"><meta itemprop="datePublished" content="2014-12-05T04:20:59+00:00" />
+<meta itemprop="dateModified" content="2014-12-05T04:20:59+00:00" />
 <meta itemprop="wordCount" content="651">
-
-
-
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="laravel route 重定向的一个小坑"/>
 <meta name="twitter:description" content="今天做项目发现一个奇怪的现象，我的路由配置里有如下配置： 1 2 3 4 5 6 7 8 &lt;?php Route::group(array(&#39;prefix&#39;=&gt;&#39;admin&#39;,&#39;before&#39;=&gt;&#39;adminauth&#39;),function(){ // 管理员登录 Route::get(&#39;/&#39;,function(){ return Redirect::to(&#39;admin/login&#39;); }); Route::get(&#39;login&#39;,&#39;UserController@adminLogin&#39;); }; 目的是无论用户输入admin，还是adm"/>
@@ -133,7 +130,7 @@
       <p>今天做项目发现一个奇怪的现象，我的路由配置里有如下配置：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -143,15 +140,15 @@
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-<span class="nx">Route</span><span class="o">::</span><span class="na">group</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;prefix&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;before&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;adminauth&#39;</span><span class="p">),</span><span class="k">function</span><span class="p">(){</span>
-    <span class="c1">// 管理员登录
-</span><span class="c1"></span>    <span class="nx">Route</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="k">function</span><span class="p">(){</span>
-        <span class="k">return</span> <span class="nx">Redirect</span><span class="o">::</span><span class="na">to</span><span class="p">(</span><span class="s1">&#39;admin/login&#39;</span><span class="p">);</span>
-    <span class="p">});</span>
-    <span class="nx">Route</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">,</span><span class="s1">&#39;UserController@adminLogin&#39;</span><span class="p">);</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Route</span><span class="o">::</span><span class="na">group</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;prefix&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="s1">&#39;before&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;adminauth&#39;</span><span class="p">),</span><span class="k">function</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 管理员登录
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">Route</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="k">function</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">Redirect</span><span class="o">::</span><span class="na">to</span><span class="p">(</span><span class="s1">&#39;admin/login&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Route</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">,</span><span class="s1">&#39;UserController@adminLogin&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>目的是无论用户输入<code>admin</code>，还是<code>admin/login</code>都能跳转到登录界面。然而现实情况是输入<code>admin</code>之后，浏览器会无限重定向，firebug记录如下：</p>
 <blockquote>
@@ -280,7 +277,7 @@ RewriteRule ^ index.php [L]</p>
   <span class="copyright-year">
     &copy; 
     2012 - 
-    2021
+    2022
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

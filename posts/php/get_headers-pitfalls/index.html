@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.61.0 with theme even" />
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
 <link rel="canonical" href="https://sosonemo.me/posts/php/get_headers-pitfalls/" />
@@ -41,17 +41,14 @@
 <meta property="og:title" content="get_headers的一个小坑" />
 <meta property="og:description" content="前言 之前工作中有个需求，判断CDN上某个文件是否存在。很显然，用一个HTTP的HEAD请求就可以搞定。 在本地启动一个nginx服务，服务目录" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://sosonemo.me/posts/php/get_headers-pitfalls/" />
+<meta property="og:url" content="https://sosonemo.me/posts/php/get_headers-pitfalls/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-08-15T21:22:36+08:00" />
 <meta property="article:modified_time" content="2020-08-15T21:22:36+08:00" />
+
 <meta itemprop="name" content="get_headers的一个小坑">
-<meta itemprop="description" content="前言 之前工作中有个需求，判断CDN上某个文件是否存在。很显然，用一个HTTP的HEAD请求就可以搞定。 在本地启动一个nginx服务，服务目录">
-<meta itemprop="datePublished" content="2020-08-15T21:22:36&#43;08:00" />
-<meta itemprop="dateModified" content="2020-08-15T21:22:36&#43;08:00" />
-<meta itemprop="wordCount" content="803">
-
-
-
+<meta itemprop="description" content="前言 之前工作中有个需求，判断CDN上某个文件是否存在。很显然，用一个HTTP的HEAD请求就可以搞定。 在本地启动一个nginx服务，服务目录"><meta itemprop="datePublished" content="2020-08-15T21:22:36+08:00" />
+<meta itemprop="dateModified" content="2020-08-15T21:22:36+08:00" />
+<meta itemprop="wordCount" content="802">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="get_headers的一个小坑"/>
 <meta name="twitter:description" content="前言 之前工作中有个需求，判断CDN上某个文件是否存在。很显然，用一个HTTP的HEAD请求就可以搞定。 在本地启动一个nginx服务，服务目录"/>
@@ -133,25 +130,25 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#heading">前言</a></li>
-    <li><a href="#get-headers">get_headers</a></li>
-    <li><a href="#heading-1">改进</a></li>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#get_headers">get_headers</a></li>
+    <li><a href="#改进">改进</a></li>
     <li><a href="#curl">CURL</a></li>
-    <li><a href="#heading-2">总结</a></li>
+    <li><a href="#总结">总结</a></li>
   </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
-      <h2 id="heading">前言</h2>
+      <h2 id="前言">前言</h2>
 <p>之前工作中有个需求，判断CDN上某个文件是否存在。很显然，用一个HTTP的HEAD请求就可以搞定。</p>
 <p>在本地启动一个nginx服务，服务目录里放一个几百兆的视频文件。用<code>curl -I http://localhost/test/test.mp4</code>命令访问一下，同时打开wireshark抓包看看。如下图所示，nginx只响应了一个http的头信息。</p>
 <p><img src="https://raw.githubusercontent.com/nemoTyrant/pics/master/uPic/2020-08-15-pVETVA.jpg" alt=""></p>
-<h2 id="get-headers">get_headers</h2>
+<h2 id="get_headers">get_headers</h2>
 <p>php中有个函数<code>get_headers</code>，怪我太年轻啊，一看这名字就以为是通过<code>HEAD</code>方法获取url的头信息。我们写代码实测一下。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -169,49 +166,49 @@
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-<span class="nv">$rs</span> <span class="o">=</span> <span class="nx">get_headers</span><span class="p">(</span><span class="s1">&#39;http://localhost/test/test.mp4&#39;</span><span class="p">);</span>
-<span class="nx">print_r</span><span class="p">(</span><span class="nv">$rs</span><span class="p">);</span>
-
-<span class="k">Array</span>
-<span class="p">(</span>
-    <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
-    <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Server</span><span class="o">:</span> <span class="nx">nginx</span><span class="o">/</span><span class="mf">1.19</span><span class="o">.</span><span class="mi">2</span>
-    <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Date</span><span class="o">:</span> <span class="nx">Sat</span><span class="p">,</span> <span class="mi">15</span> <span class="nx">Aug</span> <span class="mi">2020</span> <span class="mi">14</span><span class="o">:</span><span class="mi">31</span><span class="o">:</span><span class="mi">51</span> <span class="nx">GMT</span>
-    <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">video</span><span class="o">/</span><span class="nx">mp4</span>
-    <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span> <span class="mi">368455569</span>
-    <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Last</span><span class="o">-</span><span class="nx">Modified</span><span class="o">:</span> <span class="nx">Fri</span><span class="p">,</span> <span class="mi">12</span> <span class="nx">Jun</span> <span class="mi">2020</span> <span class="mi">16</span><span class="o">:</span><span class="mi">26</span><span class="o">:</span><span class="mi">54</span> <span class="nx">GMT</span>
-    <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Connection</span><span class="o">:</span> <span class="nx">close</span>
-    <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">ETag</span><span class="o">:</span> <span class="s2">&#34;5ee3acce-15f62f91&#34;</span>
-    <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Accept</span><span class="o">-</span><span class="nx">Ranges</span><span class="o">:</span> <span class="nx">bytes</span>
-<span class="p">)</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$rs</span> <span class="o">=</span> <span class="nx">get_headers</span><span class="p">(</span><span class="s1">&#39;http://localhost/test/test.mp4&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">print_r</span><span class="p">(</span><span class="nv">$rs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">Array</span>
+</span></span><span class="line"><span class="cl"><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Server</span><span class="o">:</span> <span class="nx">nginx</span><span class="o">/</span><span class="mf">1.19</span><span class="o">.</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Date</span><span class="o">:</span> <span class="nx">Sat</span><span class="p">,</span> <span class="mi">15</span> <span class="nx">Aug</span> <span class="mi">2020</span> <span class="mi">14</span><span class="o">:</span><span class="mi">31</span><span class="o">:</span><span class="mi">51</span> <span class="nx">GMT</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">video</span><span class="o">/</span><span class="nx">mp4</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span> <span class="mi">368455569</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Last</span><span class="o">-</span><span class="nx">Modified</span><span class="o">:</span> <span class="nx">Fri</span><span class="p">,</span> <span class="mi">12</span> <span class="nx">Jun</span> <span class="mi">2020</span> <span class="mi">16</span><span class="o">:</span><span class="mi">26</span><span class="o">:</span><span class="mi">54</span> <span class="nx">GMT</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Connection</span><span class="o">:</span> <span class="nx">close</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">ETag</span><span class="o">:</span> <span class="s2">&#34;5ee3acce-15f62f91&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="nx">Accept</span><span class="o">-</span><span class="nx">Ranges</span><span class="o">:</span> <span class="nx">bytes</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>看起来没有问题。但是一抓包就露馅了。</p>
 <p><img src="https://raw.githubusercontent.com/nemoTyrant/pics/master/uPic/2020-08-15-SuwTYX.jpg" alt=""></p>
 <p><code>get_headers</code>发出去的并不是<code>HEAD</code>请求，而是<code>GET</code>请求，而且更流氓的是，当对方返回数据内容时，php粗暴地发送<code>RST</code>断开tcp连接。真是坑爹货啊。</p>
-<h2 id="heading-1">改进</h2>
+<h2 id="改进">改进</h2>
 <p>那<code>get_headers</code>到底能不能用<code>head</code>方法呢？其实也可以，从php7.1开始，<code>get_headers</code>多接受了一个<code>context</code>的参数，我们可以通过这个参数设置http请求方法。代码如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-<span class="nv">$context</span> <span class="o">=</span> <span class="nx">stream_context_create</span><span class="p">([</span><span class="s1">&#39;http&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;method&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;HEAD&#39;</span><span class="p">]]);</span>
-<span class="nv">$rs</span>      <span class="o">=</span> <span class="nx">get_headers</span><span class="p">(</span><span class="s1">&#39;http://localhost/test/test.mp4&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">$context</span><span class="p">);</span>
-<span class="nx">print_r</span><span class="p">(</span><span class="nv">$rs</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$context</span> <span class="o">=</span> <span class="nx">stream_context_create</span><span class="p">([</span><span class="s1">&#39;http&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;method&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;HEAD&#39;</span><span class="p">]]);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$rs</span>      <span class="o">=</span> <span class="nx">get_headers</span><span class="p">(</span><span class="s1">&#39;http://localhost/test/test.mp4&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">$context</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">print_r</span><span class="p">(</span><span class="nv">$rs</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>图就不贴了，效果和上边curl命令一样。</p>
 <h2 id="curl">CURL</h2>
 <p>php中还有一个重要的网络请求工具，那就是<code>curl</code>扩展，如果想用这个扩展完成这个功能，又该怎么写呢？其实也很简单。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -229,32 +226,30 @@
 </span><span class="lnt">16
 </span><span class="lnt">17
 </span><span class="lnt">18
-</span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-<span class="nv">$ch</span> <span class="o">=</span> <span class="nx">curl_init</span><span class="p">(</span><span class="s1">&#39;http://localhost/test/test.mp4&#39;</span><span class="p">);</span>
-<span class="nx">curl_setopt</span><span class="p">(</span><span class="nv">$ch</span><span class="p">,</span> <span class="nx">CURLOPT_NOBODY</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span> <span class="c1">// 设置不接受响应体，curl就会以HEAD方法发送请求
-</span><span class="c1"></span><span class="nx">curl_setopt</span><span class="p">(</span><span class="nv">$ch</span><span class="p">,</span> <span class="nx">CURLOPT_HEADER</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span> <span class="c1">// 请求结果中显示头信息
-</span><span class="c1"></span><span class="nx">curl_setopt</span><span class="p">(</span><span class="nv">$ch</span><span class="p">,</span> <span class="nx">CURLOPT_RETURNTRANSFER</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span> <span class="c1">// 请求结果作为返回值而非直接打印
-</span><span class="c1"></span><span class="nv">$rs</span> <span class="o">=</span> <span class="nx">curl_exec</span><span class="p">(</span><span class="nv">$ch</span><span class="p">);</span>
-<span class="k">echo</span> <span class="nv">$rs</span><span class="p">;</span>
-
-
-<span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
-<span class="nx">Server</span><span class="o">:</span> <span class="nx">nginx</span><span class="o">/</span><span class="mf">1.19</span><span class="o">.</span><span class="mi">2</span>
-<span class="nx">Date</span><span class="o">:</span> <span class="nx">Sat</span><span class="p">,</span> <span class="mi">15</span> <span class="nx">Aug</span> <span class="mi">2020</span> <span class="mi">14</span><span class="o">:</span><span class="mi">50</span><span class="o">:</span><span class="mi">42</span> <span class="nx">GMT</span>
-<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">video</span><span class="o">/</span><span class="nx">mp4</span>
-<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span> <span class="mi">368455569</span>
-<span class="nx">Last</span><span class="o">-</span><span class="nx">Modified</span><span class="o">:</span> <span class="nx">Fri</span><span class="p">,</span> <span class="mi">12</span> <span class="nx">Jun</span> <span class="mi">2020</span> <span class="mi">16</span><span class="o">:</span><span class="mi">26</span><span class="o">:</span><span class="mi">54</span> <span class="nx">GMT</span>
-<span class="nx">Connection</span><span class="o">:</span> <span class="nx">keep</span><span class="o">-</span><span class="nx">alive</span>
-<span class="nx">ETag</span><span class="o">:</span> <span class="s2">&#34;5ee3acce-15f62f91&#34;</span>
-<span class="nx">Accept</span><span class="o">-</span><span class="nx">Ranges</span><span class="o">:</span> <span class="nx">bytes</span>
-
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ch</span> <span class="o">=</span> <span class="nx">curl_init</span><span class="p">(</span><span class="s1">&#39;http://localhost/test/test.mp4&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">curl_setopt</span><span class="p">(</span><span class="nv">$ch</span><span class="p">,</span> <span class="nx">CURLOPT_NOBODY</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span> <span class="c1">// 设置不接受响应体，curl就会以HEAD方法发送请求
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">curl_setopt</span><span class="p">(</span><span class="nv">$ch</span><span class="p">,</span> <span class="nx">CURLOPT_HEADER</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span> <span class="c1">// 请求结果中显示头信息
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">curl_setopt</span><span class="p">(</span><span class="nv">$ch</span><span class="p">,</span> <span class="nx">CURLOPT_RETURNTRANSFER</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span> <span class="c1">// 请求结果作为返回值而非直接打印
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nv">$rs</span> <span class="o">=</span> <span class="nx">curl_exec</span><span class="p">(</span><span class="nv">$ch</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">echo</span> <span class="nv">$rs</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Server</span><span class="o">:</span> <span class="nx">nginx</span><span class="o">/</span><span class="mf">1.19</span><span class="o">.</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Date</span><span class="o">:</span> <span class="nx">Sat</span><span class="p">,</span> <span class="mi">15</span> <span class="nx">Aug</span> <span class="mi">2020</span> <span class="mi">14</span><span class="o">:</span><span class="mi">50</span><span class="o">:</span><span class="mi">42</span> <span class="nx">GMT</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">video</span><span class="o">/</span><span class="nx">mp4</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span> <span class="mi">368455569</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Last</span><span class="o">-</span><span class="nx">Modified</span><span class="o">:</span> <span class="nx">Fri</span><span class="p">,</span> <span class="mi">12</span> <span class="nx">Jun</span> <span class="mi">2020</span> <span class="mi">16</span><span class="o">:</span><span class="mi">26</span><span class="o">:</span><span class="mi">54</span> <span class="nx">GMT</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Connection</span><span class="o">:</span> <span class="nx">keep</span><span class="o">-</span><span class="nx">alive</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ETag</span><span class="o">:</span> <span class="s2">&#34;5ee3acce-15f62f91&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Accept</span><span class="o">-</span><span class="nx">Ranges</span><span class="o">:</span> <span class="nx">bytes</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>抓包可以发现的确是用了<code>HEAD</code>方法。</p>
-<h2 id="heading-2">总结</h2>
+<h2 id="总结">总结</h2>
 <p>日常工作中看似简单的函数也可能有坑，好在如果是网络方面的函数我们可以通过抓包的方式观察这个函数到底是在干什么。wireshark真香！</p>
 
     </div>
@@ -334,7 +329,7 @@
   <span class="copyright-year">
     &copy; 
     2012 - 
-    2021
+    2022
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
